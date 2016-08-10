@@ -1,6 +1,6 @@
 //
 //  AppDelegate+Analytics.m
-//  LuckyDraw
+//  Raffle
 //
 //  Created by Killua Liu on 1/19/16.
 //  Copyright © 2016 Syzygy. All rights reserved.

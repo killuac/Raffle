@@ -1,8 +1,8 @@
 //
 //  KLMainViewController.h
-//  Raffle
+//  LuckyDraw
 //
-//  Created by Killua Liu on 8/10/16.
+//  Created by Killua Liu on 3/17/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
@@ -12,3 +12,4 @@
 @interface KLMainViewController : UIViewController
 
 @end
+

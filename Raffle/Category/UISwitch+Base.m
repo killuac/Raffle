@@ -1,6 +1,6 @@
 //
 //  UISwitch+Base.m
-//  LuckyDraw
+//  Raffle
 //
 //  Created by Killua Liu on 12/31/15.
 //  Copyright © 2015 Syzygy. All rights reserved.

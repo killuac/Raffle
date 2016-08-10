@@ -1,6 +1,6 @@
 //
 //  UIToolbar+Base.h
-//  LuckyDraw
+//  Raffle
 //
 //  Created by Killua Liu on 3/16/16.
 //  Copyright © 2016 Syzygy. All rights reserved.

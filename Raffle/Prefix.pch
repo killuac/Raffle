@@ -1,13 +1,13 @@
 //
 //  Prefix.pch
-//  LuckyDraw
+//  Raffle
 //
 //  Created by Killua Liu on 8/31/15.
 //  Copyright (c) 2016 Syzygy. All rights reserved.
 //
 
-#ifndef LuckyDraw_Prefix_pch
-#define LuckyDraw_Prefix_pch
+#ifndef Raffle_Prefix_pch
+#define Raffle_Prefix_pch
 
 @import Foundation;
 @import ObjectiveC;
