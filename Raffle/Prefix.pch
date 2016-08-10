@@ -1,0 +1,43 @@
+//
+//  Prefix.pch
+//  LuckyDraw
+//
+//  Created by Killua Liu on 8/31/15.
+//  Copyright (c) 2016 Syzygy. All rights reserved.
+//
+
+#ifndef LuckyDraw_Prefix_pch
+#define LuckyDraw_Prefix_pch
+
+@import Foundation;
+@import ObjectiveC;
+
+@import Aspects;
+
+#import "KLUtilities.h"
+#import "KLSoundPlayer.h"
+#import "KLLocalizableConstant.h"
+
+#import "NSData+Base.h"
+#import "NSString+Base.h"
+#import "NSDate+Base.h"
+#import "NSLayoutConstraint+Base.h"
+
+#import "UIView+Base.h"
+#import "UIColor+Base.h"
+#import "UIFont+Base.h"
+#import "UILabel+Base.h"
+#import "UIImage+Base.h"
+#import "UIImageView+Base.h"
+#import "UIButton+Base.h"
+#import "UIBarButtonItem+Base.h"
+#import "UIToolbar+Base.h"
+#import "UITableViewCell+Base.h"
+#import "UIViewController+Base.h"
+#import "UIAlertController+Base.h"
+
+#import "JSONModel+Base.h"
+#import <UMMobClick/MobClick.h>
+#import <KVOController/KVOController.h>
+
+#endif

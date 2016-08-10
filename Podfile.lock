@@ -1,0 +1,24 @@
+PODS:
+  - Aspects (1.4.1)
+  - JSONModel (1.2.0)
+  - KVOController (1.1.0)
+  - RegExCategories (1.0)
+  - UMengAnalytics-NO-IDFA (4.0.5)
+
+DEPENDENCIES:
+  - Aspects
+  - JSONModel
+  - KVOController
+  - RegExCategories
+  - UMengAnalytics-NO-IDFA
+
+SPEC CHECKSUMS:
+  Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
+  JSONModel: 12523685c4b623553ccf844bbbf7007624317b2c
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  RegExCategories: e68befacacd5bda853c88f70ec745cb2d0cfb89c
+  UMengAnalytics-NO-IDFA: 965a219b05475ff2a4c09a164139a27bbaa0e25b
+
+PODFILE CHECKSUM: ab663659c16603e13a3855072a59626ada8a57ec
+
+COCOAPODS: 1.0.1
