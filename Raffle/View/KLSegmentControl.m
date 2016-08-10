@@ -77,7 +77,7 @@
     if (self = [super init]) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.defaultItemInset = KLViewDefaultMargin;
-        self.itemSizes = [NSMutableDictionary dictionaryWithCapacity:items.count];
+        self.itemSizes = [NSMutableDictionary dictionary];
         self.items = items;
         [self addSubviews];
         [self addObservers];
@@ -121,7 +121,7 @@
     [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
     
     // Add current selection mark
-    _currentSelectionMark = [[UIView alloc] init];
+    _currentSelectionMark = [UIView newAutoLayoutView];
     _currentSelectionMark.backgroundColor = [UIColor blackColor];
     _currentSelectionMark.userInteractionEnabled = NO;
     _currentSelectionMark.layer.zPosition = -1;
@@ -144,7 +144,6 @@
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification
 {
-    [self relayoutCollectionView];
     [self reloadData];
 }
 
@@ -173,10 +172,12 @@
 {
     if (self.items.count == 0) return;
     
+    [self relayoutCollectionView];
+    
     NSIndexPath *indexPath = [self.collectionView indexPathsForSelectedItems].firstObject;
     [self.collectionView reloadData];
     [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
 }
 
 - (void)selectSegmentAtIndex:(NSUInteger)index

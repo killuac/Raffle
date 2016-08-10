@@ -10,7 +10,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <RegExCategories/RegExCategories.h>
 
-#define ALPHABET_62 @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+NSString *const KLAlphabet62 = @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 @implementation NSString (Base)
 
@@ -68,12 +68,12 @@
 
 - (NSString *)toBase62String
 {
-    return [self encodeNumber:self.integerValue withAlphabet:ALPHABET_62];
+    return [self encodeNumber:self.integerValue withAlphabet:KLAlphabet62];
 }
 
 - (NSString *)fromBase62String
 {
-    return [self decodeWithAlphabet:ALPHABET_62];
+    return [self decodeWithAlphabet:KLAlphabet62];
 }
 
 - (NSString *)increment

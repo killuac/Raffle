@@ -13,7 +13,7 @@
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);
-    [self requestImageWithSize:CGSizeMake(SCREEN_WIDTH/5, SCREEN_HEIGHT/5) progressHandler:progressHandler resultHandler:resultHandler];
+    [self requestImageWithSize:CGSizeMake(SCREEN_WIDTH/3, SCREEN_HEIGHT/3) progressHandler:progressHandler resultHandler:resultHandler];
 }
 
 - (void)originalImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
@@ -31,11 +31,7 @@
     options.synchronous = NO;
     options.progressHandler = progressHandler;
     
-    [[PHImageManager defaultManager] requestImageForAsset:self
-                                               targetSize:size
-                                              contentMode:PHImageContentModeDefault
-                                                  options:options
-                                            resultHandler:resultHandler];
+    [[PHImageManager defaultManager] requestImageForAsset:self targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:resultHandler];
 }
 
 @end

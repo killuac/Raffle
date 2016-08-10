@@ -45,4 +45,22 @@
     return croppedImage;
 }
 
+- (UIImage *)brightenWithAlpha:(CGFloat)alpha
+{
+    UIGraphicsBeginImageContext(self.size);
+    CGRect imageRect = CGRectMake(0, 0, self.width, self.height);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [self drawInRect:imageRect];
+    
+    // Brightness overlay
+    CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:1.0 alpha:alpha].CGColor);
+    CGContextAddRect(context, imageRect);
+    CGContextFillPath(context);
+    
+    UIImage* resultImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return resultImage;
+}
+
 @end

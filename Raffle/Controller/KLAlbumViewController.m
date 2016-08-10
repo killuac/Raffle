@@ -10,6 +10,8 @@
 #import "KLAlbumCell.h"
 #import "KLImagePickerController.h"
 
+const CGFloat KLLineSpacing = 3.0;
+
 @interface KLAlbumViewController ()
 
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
@@ -20,6 +22,15 @@
 @end
 
 @implementation KLAlbumViewController
+
+static CGSize cellItemSize;
+
++ (void)load
+{
+    CGFloat width, height;
+    width = height = (SCREEN_WIDTH - KLLineSpacing * 3) / 4;
+    cellItemSize = CGSizeMake(width, height);
+}
 
 + (instancetype)viewControllerWithPageIndex:(NSUInteger)pageIndex photoLibrary:(KLPhotoLibrary *)photoLibrary
 {
@@ -45,21 +56,20 @@
 - (void)prepareForUI
 {
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
-    CGFloat w, h, spacing = 3.0f;
-    w = h = (self.view.width - spacing * 3) / 4;
-    flowLayout.itemSize = CGSizeMake(w, h);
-    flowLayout.minimumLineSpacing = spacing;
-    flowLayout.minimumInteritemSpacing = spacing;
+    flowLayout.itemSize = cellItemSize;
+    flowLayout.minimumLineSpacing = KLLineSpacing;
+    flowLayout.minimumInteritemSpacing = KLLineSpacing;
     
     self.collectionView.backgroundColor = [UIColor blackColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.collectionView.allowsMultipleSelection = YES;
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
 - (void)addObservers
 {
     self.KVOController = [FBKVOController controllerWithObserver:self];
-    [self.KVOController observe:self.photoLibrary keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
+    [self.KVOController observe:self.photoLibrary.selectedAssetCollection keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
 }
 
 - (void)reloadData

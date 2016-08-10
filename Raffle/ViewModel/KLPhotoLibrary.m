@@ -65,8 +65,10 @@
 
 - (void)setAssetCollections:(NSArray<PHAssetCollection *> *)assetCollections
 {
-    _assetCollections = assetCollections;
-    [self fetchSelectedAssetCollectionAssets];
+    if (assetCollections.count) {
+        _assetCollections = assetCollections;
+        [self fetchSelectedAssetCollectionAssets];
+    }
 }
 
 #pragma mark - PHPhotoLibraryChangeObserver
@@ -109,8 +111,7 @@
     options.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
     
     [self fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum options:options inGCDGroup:group];
-    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:options inGCDGroup:group];
-    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeMoment options:options inGCDGroup:group];
+    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:nil inGCDGroup:group];
     
     KLDispatchGroupMainNotify(group, ^{
         [self.assetCollectionArray sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(assetCount)) ascending:NO]]];
@@ -123,10 +124,11 @@
     KLDispatchGroupGlobalAsync(group, ^{
         PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:type subtype:PHAssetCollectionSubtypeAny options:options];
         [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([self isCoveredForSubtype:collection.assetCollectionSubtype]) {
+            if ([self isFetchForSubtype:collection.assetCollectionSubtype]) {
                 @synchronized (self) {
-                    if (collection.assetCount > 0)
+                    if (collection.assetCount > 0) {
                         [self.assetCollectionArray addObject:collection];
+                    }
                 }
             }
         }];
@@ -144,7 +146,7 @@
     return self.selectedAssetCollection.assets[index];
 }
 
-- (BOOL)isCoveredForSubtype:(PHAssetCollectionSubtype)subtype
+- (BOOL)isFetchForSubtype:(PHAssetCollectionSubtype)subtype
 {
     return (PHAssetCollectionSubtypeSmartAlbumPanoramas != subtype      &&
             PHAssetCollectionSubtypeSmartAlbumVideos != subtype         &&

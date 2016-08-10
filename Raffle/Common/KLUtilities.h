@@ -44,6 +44,10 @@ NS_INLINE CGFloat KLPointDistance(CGPoint p1, CGPoint p2) { return sqrtf(powf(p2
 NS_INLINE CGFloat KLRadianFromDegree(CGFloat degree) { return (degree * M_PI / 180.0); }
 
 
+NS_INLINE void KLDispatchOnce(dispatch_block_t block) {
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, block);
+}
 NS_INLINE void KLDispatchMainAsync(dispatch_block_t block) {
     dispatch_async(dispatch_get_main_queue(), block);
 }

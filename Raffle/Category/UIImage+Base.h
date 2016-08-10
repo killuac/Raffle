@@ -35,6 +35,7 @@ NS_INLINE UIImage *KLImageAvatarByGender(KLGenderType gender) {
 @property (nonatomic, assign, readonly) CGFloat height;
 
 - (UIImage *)originalImage;
-- (UIImage *)resizableCroppedImage; // Resize and crop in center
+- (UIImage *)resizableCroppedImage;             // Resize and crop in center
+- (UIImage *)brightenWithAlpha:(CGFloat)alpha;  // Value range (0, 1)
 
 @end

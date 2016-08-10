@@ -55,6 +55,7 @@
 
 - (void)prepareForUI
 {
+    self.view.backgroundColor = [UIColor blackColor];
     [self addPageViewController];
     [self addSubviews];
 }
@@ -90,7 +91,7 @@
     self.pageViewController.delegate = self;
     self.pageViewController.dataSource = self;
     self.pageScrollView.delegate = self;
-    self.pageViewController.view.backgroundColor = [UIColor blackColor];
+    self.pageViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
@@ -125,12 +126,11 @@
 
 - (void)updateViewConstraints
 {
-    NSDictionary *views = NSDictionaryOfVariableBindings(_segmentControl, _navigationBar);
+    UIView *pageView = self.pageViewController.view;
+    NSDictionary *views = NSDictionaryOfVariableBindings(_segmentControl, _navigationBar, pageView);
+    NSDictionary *metrics = @{ @"margin": @(2.0) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_segmentControl]" views:views]];
-    
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_navigationBar]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_navigationBar]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_segmentControl]-margin-[pageView]-margin-[_navigationBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
     
     [super updateViewConstraints];
 }
@@ -183,7 +183,6 @@
 {
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
     [self.segmentControl selectSegmentAtIndex:albumVC.pageIndex];
-    self.photoLibrary.selectedAssetCollectionIndex = albumVC.pageIndex;
 }
 
 #pragma mark - Segment control delegate
