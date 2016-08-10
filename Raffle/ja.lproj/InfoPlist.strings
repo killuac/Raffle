@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  LuckyDraw
+
+  Created by Killua Liu on 12/16/15.
+  Copyright (c) 2016 Syzygy. All rights reserved.
+*/
+
+"CFBundleDisplayName" = "抽選器";
+"NSHumanReadableCopyright" = "© 2016 Syzygy すべての著作権は";
