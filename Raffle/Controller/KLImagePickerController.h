@@ -14,7 +14,7 @@
 @protocol KLImagePickerControllerDelegate <NSObject>
 
 @optional
-- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImages:(NSArray<PHAsset *> *)assets;
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets;
 - (void)imagePickerControllerDidClose:(KLImagePickerController *)picker;
 
 @end

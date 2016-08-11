@@ -44,7 +44,7 @@
 			</dict>
 		</array>
 	</dict>
-	<key>KLContentViewController</key>
+	<key>KLDrawPoolViewController</key>
 	<dict>
 		<key>KLLogTrackedEvents</key>
 		<array>
@@ -74,27 +74,15 @@
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>AlbumVC_AddPhotoCompletion</string>
+				<string>AlbumVC_DonePhotoSelection</string>
 				<key>KLLogEventSelectorName</key>
-				<string>addPhotoCompletion:</string>
+				<string>donePhotoSelection:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>AlbumVC_CloseAlbum</string>
 				<key>KLLogEventSelectorName</key>
 				<string>closeAlbum:</string>
-			</dict>
-			<dict>
-				<key>KLLogEventName</key>
-				<string>AlbumVC_UnselectPhotos</string>
-				<key>KLLogEventSelectorName</key>
-				<string>unselectPhotos:</string>
-			</dict>
-			<dict>
-				<key>KLLogEventName</key>
-				<string>AlbumVC_SelectAllPhotos</string>
-				<key>KLLogEventSelectorName</key>
-				<string>selectAllPhotos:</string>
 			</dict>
 		</array>
 	</dict>

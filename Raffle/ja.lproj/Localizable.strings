@@ -25,7 +25,7 @@
 
 "Photos" = "写真";
 "Camera" = "カメラ";
-"SelectedPhotoCount" = "選択中の写真%lu枚";
+"SelectedPhotoCount" = "選択中の写真 %lu 枚";
 
 "AccessPhotosSetting" = "システムオプション%2$@から、%1$@よりあなたの写真をアクセスすることを許可します。";
 "AccessCameraSetting" = "システムオプション%2$@から、%1$@よりあなたのカメラをアクセルすることを許可します。";

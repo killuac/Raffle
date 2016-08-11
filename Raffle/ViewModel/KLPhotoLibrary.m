@@ -47,7 +47,8 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _assetCollectionArray = [NSMutableArray array];
+        _selectedAssets = [NSMutableArray array];
+        _assetCollections = [NSMutableArray array];
         [self.photoLibrary registerChangeObserver:self];
     }
     return self;
@@ -67,17 +68,27 @@
 {
     if (assetCollections.count) {
         _assetCollections = assetCollections;
-        [self fetchSelectedAssetCollectionAssets];
     }
 }
 
 #pragma mark - PHPhotoLibraryChangeObserver
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
-    
+    [self fetchAssetCollections];
 }
 
 #pragma mark - Public method
+- (NSUInteger)currentPageIndex
+{
+    if (_currentPageIndex == ULONG_MAX) {
+        return 0;
+    }
+    if (_currentPageIndex >= self.assetCollectionCount) {
+        return self.assetCollectionCount - 1;
+    }
+    return _currentPageIndex;
+}
+
 - (NSArray<NSString *> *)assetCollectionTitles
 {
     return [self.assetCollections valueForKeyPath:@"@unionOfObjects.localizedTitle"];
@@ -93,19 +104,10 @@
     return self.assetCollectionCount > 0;
 }
 
-- (void)setSelectedAssetCollectionIndex:(NSUInteger)selectedAssetCollectionIndex
-{
-    _selectedAssetCollectionIndex = selectedAssetCollectionIndex;
-    [self fetchSelectedAssetCollectionAssets];
-}
-
-- (NSUInteger)selectedCollectionAssetCount
-{
-    return self.selectedAssetCollection.assetCount;
-}
-
 - (void)fetchAssetCollections
 {
+    _assetCollectionArray = [NSMutableArray array];
+    
     dispatch_group_t group = dispatch_group_create();
     PHFetchOptions *options = [[PHFetchOptions alloc] init];
     options.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
@@ -135,17 +137,6 @@
     });
 }
 
-- (void)fetchSelectedAssetCollectionAssets
-{
-    _selectedAssetCollection = self.assetCollections[self.selectedAssetCollectionIndex];
-    [self.selectedAssetCollection fetchAssets];
-}
-
-- (PHAsset *)assetAtIndex:(NSUInteger)index
-{
-    return self.selectedAssetCollection.assets[index];
-}
-
 - (BOOL)isFetchForSubtype:(PHAssetCollectionSubtype)subtype
 {
     return (PHAssetCollectionSubtypeSmartAlbumPanoramas != subtype      &&
@@ -155,6 +146,32 @@
             PHAssetCollectionSubtypeSmartAlbumRecentlyAdded != subtype  &&
             PHAssetCollectionSubtypeSmartAlbumBursts != subtype         &&
             PHAssetCollectionSubtypeSmartAlbumSlomoVideos != subtype);
+}
+
+- (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index
+{
+    PHAssetCollection *assetCollection = self.assetCollections[index];
+    [assetCollection fetchAssets];
+    return assetCollection;
+}
+
+- (NSUInteger)assetCountAtIndex:(NSUInteger)index
+{
+    return [self assetCollectionAtIndex:index].assets.count;
+}
+
+- (void)addAsset:(PHAsset *)asset
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+    [self.selectedAssets addObject:asset];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+}
+
+- (void)removeAsset:(PHAsset *)asset
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+    [self.selectedAssets removeObject:asset];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
 }
 
 @end

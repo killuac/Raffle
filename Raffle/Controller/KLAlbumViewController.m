@@ -15,9 +15,7 @@ const CGFloat KLLineSpacing = 3.0;
 @interface KLAlbumViewController ()
 
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
-@property (nonatomic, strong) NSArray *assets;
-
-@property (nonatomic, strong) KLImagePickerController *imagePicker;
+@property (nonatomic, strong) PHAssetCollection *assetCollection;
 
 @end
 
@@ -42,6 +40,7 @@ static CGSize cellItemSize;
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _pageIndex = pageIndex;
         _photoLibrary = photoLibrary;
+        _assetCollection = [self.photoLibrary assetCollectionAtIndex:pageIndex];
     }
     return self;
 }
@@ -69,7 +68,7 @@ static CGSize cellItemSize;
 - (void)addObservers
 {
     self.KVOController = [FBKVOController controllerWithObserver:self];
-    [self.KVOController observe:self.photoLibrary.selectedAssetCollection keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
+    [self.KVOController observe:self.assetCollection keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
 }
 
 - (void)reloadData
@@ -80,13 +79,13 @@ static CGSize cellItemSize;
 #pragma mark <UICollectionViewDataSource>
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.photoLibrary.selectedCollectionAssetCount;
+    return self.assetCollection.assets.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithAsset:[self.photoLibrary assetAtIndex:indexPath.item]];
+    [cell configWithAsset:self.assetCollection.assets[indexPath.item]];
     
     return cell;
 }
@@ -94,7 +93,12 @@ static CGSize cellItemSize;
 #pragma mark <UICollectionViewDelegate>
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    
+    [self.photoLibrary addAsset:self.assetCollection.assets[indexPath.item]];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.photoLibrary removeAsset:self.assetCollection.assets[indexPath.item]];
 }
 
 @end

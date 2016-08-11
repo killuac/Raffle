@@ -46,6 +46,7 @@
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
+    self.userInteractionEnabled = !self.isSelected;
     self.titleLabel.textColor = selected ? [UIColor orangeColor] : [UIColor whiteColor];
 }
 
@@ -77,7 +78,6 @@
     if (self = [super init]) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.defaultItemInset = KLViewDefaultMargin;
-        self.itemSizes = [NSMutableDictionary dictionary];
         self.items = items;
         [self addSubviews];
         [self addObservers];
@@ -94,6 +94,7 @@
 - (void)setItems:(NSArray *)items
 {
     _items = items;
+    _itemSizes = [NSMutableDictionary dictionary];
     [items enumerateObjectsUsingBlock:^(NSString *item, NSUInteger idx, BOOL * _Nonnull stop) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:idx inSection:0];
         self.itemSizes[indexPath] = [NSValue valueWithCGSize:[item sizeWithFont:TITLE_LABEL_FONT]];
@@ -174,10 +175,22 @@
     
     [self relayoutCollectionView];
     
-    NSIndexPath *indexPath = [self.collectionView indexPathsForSelectedItems].firstObject;
+    NSIndexPath *indexPath = self.selectedIndexPath;
     [self.collectionView reloadData];
     [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+}
+
+- (NSIndexPath *)selectedIndexPath
+{
+    NSIndexPath *indexPath = [self.collectionView indexPathsForSelectedItems].firstObject;
+    if (indexPath.item == ULONG_MAX) {
+        return [NSIndexPath indexPathForItem:0 inSection:0];
+    }
+    if (indexPath.item >= self.items.count) {
+        return [NSIndexPath indexPathForItem:self.items.count-1 inSection:0];
+    }
+    return indexPath;
 }
 
 - (void)selectSegmentAtIndex:(NSUInteger)index
@@ -192,7 +205,7 @@
 - (void)scrollWithOffsetRate:(CGFloat)offsetRate
 {
     if (offsetRate == 0 || self.items.count == 1) return;
-    NSIndexPath *indexPath = [self.collectionView indexPathsForSelectedItems].firstObject;
+    NSIndexPath *indexPath = self.selectedIndexPath;
     if ((offsetRate < 0 && indexPath.item == 0) || (offsetRate > 0 && indexPath.item == self.items.count - 1)) return;
     
     KLSegmentCollectionViewCell *selCell = (id)[self.collectionView cellForItemAtIndexPath:indexPath];

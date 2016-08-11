@@ -25,7 +25,7 @@
 
 "Photos" = "照片";
 "Camera" = "相機";
-"SelectedPhotoCount" = "已選取%lu張照片";
+"SelectedPhotoCount" = "已選取 %lu 張照片";
 
 "AccessPhotosSetting" = "請在系統的%2$@選項中，允許%1$@訪問你的照片。";
 "AccessCameraSetting" = "請在系統的%2$@選項中，允許%1$@訪問你的相機。";

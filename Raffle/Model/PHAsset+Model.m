@@ -13,7 +13,7 @@
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);
-    [self requestImageWithSize:CGSizeMake(SCREEN_WIDTH/3, SCREEN_HEIGHT/3) progressHandler:progressHandler resultHandler:resultHandler];
+    [self requestImageWithSize:CGSizeMake(150, 150) progressHandler:progressHandler resultHandler:resultHandler];
 }
 
 - (void)originalImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler

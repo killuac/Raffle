@@ -13,9 +13,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>lu</string>
 			<key>one</key>
-			<string>%d Photo Selected</string>
+			<string>%lu Photo Selected</string>
 			<key>other</key>
-			<string>%d Photos Selected</string>
+			<string>%lu Photos Selected</string>
 		</dict>
 	</dict>
 </dict>

@@ -64,13 +64,14 @@
 {
     self.KVOController = [FBKVOController controllerWithObserver:self];
     [self.KVOController observe:self.photoLibrary keyPath:NSStringFromSelector(@selector(assetCollections)) options:0 action:@selector(reloadData)];
+    [self.KVOController observe:self.photoLibrary keyPath:NSStringFromSelector(@selector(selectedAssets)) options:0 action:@selector(selectedAssetsChanged)];
 }
 
 - (void)reloadData
 {
     self.pageScrollView.scrollEnabled = self.photoLibrary.isPageScrollEnabled;
     
-    UIViewController *viewController = [self viewControllerAtPageIndex:self.photoLibrary.selectedAssetCollectionIndex];
+    UIViewController *viewController = [self viewControllerAtPageIndex:self.photoLibrary.currentPageIndex];
     if (viewController) {
         [self.pageViewController setViewControllers:@[viewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     } else if (self.pageViewController.childViewControllers.count) {
@@ -83,6 +84,14 @@
     [self.segmentControl reloadData];
 }
 
+- (void)selectedAssetsChanged
+{
+    NSUInteger count = self.photoLibrary.selectedAssets.count;
+    self.navigationItem.title = count ? [NSString stringWithFormat:TITLE_SELECTED_PHOTO_COUNT, count] : nil;
+    self.navigationItem.rightBarButtonItem.enabled = count > 0;
+}
+
+#pragma mark - Subviews and controllers
 - (void)addPageViewController
 {
     _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
@@ -115,6 +124,10 @@
     
     _navigationItem = [[UINavigationItem alloc] init];
     _navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeAlbum:)];
+    _navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_DONE target:self action:@selector(donePhotoSelection:)];
+    _navigationItem.rightBarButtonItem.enabled = NO;
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldTitleFont]} forState:UIControlStateNormal];
+    
     _navigationBar = [[UINavigationBar alloc] init];
     _navigationBar.translatesAutoresizingMaskIntoConstraints = NO;
     _navigationBar.items = @[_navigationItem];
@@ -182,27 +195,34 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
+    self.photoLibrary.currentPageIndex = albumVC.pageIndex;
     [self.segmentControl selectSegmentAtIndex:albumVC.pageIndex];
 }
 
 #pragma mark - Segment control delegate
 - (void)segmentControl:(KLSegmentControl *)segmentControl didSelectSegmentAtIndex:(NSUInteger)index
 {
+    if (self.photoLibrary.currentPageIndex == index) return;
+    
     DECLARE_WEAK_SELF;
+    self.photoLibrary.currentPageIndex = index;
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
     UIPageViewControllerNavigationDirection direction = (albumVC.pageIndex < index) ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse;
     
     self.pageScrollView.delegate = nil;
-    self.photoLibrary.selectedAssetCollectionIndex = index;
     [self.pageViewController setViewControllers:@[[self viewControllerAtPageIndex:index]] direction:direction animated:YES completion:^(BOOL finished) {
         welf.pageScrollView.delegate = welf;
     }];
 }
 
 #pragma mark - Event handling
-- (void)addPhotoCompletion:(id)sender
+- (void)donePhotoSelection:(id)sender
 {
-    
+    [self dismissViewControllerAnimated:YES completion:^{
+        if ([self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
+            [self.delegate imagePickerController:self didFinishPickingImageAssets:self.photoLibrary.selectedAssets];
+        }
+    }];
 }
 
 - (void)closeAlbum:(id)sender
@@ -212,16 +232,6 @@
             [self.delegate imagePickerControllerDidClose:self];
         }
     }];
-}
-
-- (void)unselectPhotos:(id)sender
-{
-    
-}
-
-- (void)selectAllPhotos:(id)sender
-{
-    
 }
 
 @end
