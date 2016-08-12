@@ -15,6 +15,8 @@
 @property (nonatomic, assign, readonly) NSUInteger assetCount;
 @property (nonatomic, strong, readonly) NSArray<PHAsset *> *assets;
 
+@property (nonatomic, strong) NSIndexPath *indexPath;   // Index path which scroll to
+
 - (void)fetchAssets;
 - (void)posterImage:(KLAssetBlockType)resultHandler;
 

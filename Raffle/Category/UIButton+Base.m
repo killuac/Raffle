@@ -19,7 +19,7 @@
 
 + (void)load
 {
-    KLSwizzleMethod([self class], @selector(intrinsicContentSize), @selector(swizzle_intrinsicContentSize), NO);
+    KLClassSwizzleMethod([self class], @selector(intrinsicContentSize), @selector(swizzle_intrinsicContentSize), NO);
 }
 
 - (void)setStyle:(KLButonStyle)style

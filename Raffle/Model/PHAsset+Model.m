@@ -10,6 +10,16 @@
 
 @implementation PHAsset (Model)
 
+- (void)setIsSelected:(BOOL)isSelected
+{
+    objc_setAssociatedObject(self, @selector(isSelected), @(isSelected), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)isSelected
+{
+    return [objc_getAssociatedObject(self, @selector(isSelected)) boolValue];
+}
+
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);

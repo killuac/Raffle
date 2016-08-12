@@ -20,7 +20,7 @@
 
 + (void)load
 {
-    KLSwizzleMethod([self class], @selector(layoutSubviews), @selector(swizzle_layoutSubviews), NO);
+    KLClassSwizzleMethod([self class], @selector(layoutSubviews), @selector(swizzle_layoutSubviews), NO);
 }
 
 + (instancetype)toolbarWithItems:(NSArray<UIBarButtonItem *> *)items

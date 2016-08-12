@@ -11,7 +11,7 @@
 
 @implementation NSData (Base)
 
-- (NSString *)toMD5String
+- (NSString *)MD5String
 {
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
     CC_MD5(self.bytes, (CC_LONG)self.length, digest);
@@ -24,7 +24,7 @@
     return output;
 }
 
-- (NSString *)toSHA1String
+- (NSString *)SHA1String
 {
     unsigned char digest[CC_SHA1_DIGEST_LENGTH];
     CC_SHA1(self.bytes, (CC_LONG)self.length, digest);

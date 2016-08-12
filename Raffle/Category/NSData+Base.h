@@ -10,7 +10,7 @@
 
 @interface NSData (Base)
 
-- (NSString *)toMD5String;
-- (NSString *)toSHA1String;
+@property (nonatomic, copy, readonly) NSString *MD5String;
+@property (nonatomic, copy, readonly) NSString *SHA1String;
 
 @end

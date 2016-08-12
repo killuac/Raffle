@@ -12,7 +12,7 @@
 
 + (void)load
 {
-    KLSwizzleMethod([self class], @selector(initWithStyle:reuseIdentifier:), @selector(swizzle_initWithStyle:reuseIdentifier:), NO);
+    KLClassSwizzleMethod([self class], @selector(initWithStyle:reuseIdentifier:), @selector(swizzle_initWithStyle:reuseIdentifier:), NO);
 }
 
 - (instancetype)swizzle_initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier

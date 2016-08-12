@@ -64,17 +64,60 @@
     [self.photoLibrary unregisterChangeObserver:self];
 }
 
-- (void)setAssetCollections:(NSArray<PHAssetCollection *> *)assetCollections
-{
-    if (assetCollections.count) {
-        _assetCollections = assetCollections;
-    }
-}
-
 #pragma mark - PHPhotoLibraryChangeObserver
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
     [self fetchAssetCollections];
+}
+
+- (void)setAssetCollections:(NSArray<PHAssetCollection *> *)assetCollections
+{
+    _assetCollections = assetCollections;
+}
+
+- (void)fetchAssetCollections
+{
+    _assetCollectionArray = [NSMutableArray array];
+    
+    dispatch_group_t group = dispatch_group_create();
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    options.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
+    
+    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum options:options inGCDGroup:group];
+    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:nil inGCDGroup:group];
+    
+    KLDispatchGroupMainNotify(group, ^{
+        [self.assetCollectionArray sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(assetCount)) ascending:NO]]];
+        self.assetCollections = self.assetCollectionArray;
+    });
+}
+
+- (void)fetchAssetCollectionsWithType:(PHAssetCollectionType)type options:(PHFetchOptions *)options inGCDGroup:(dispatch_group_t)group
+{
+    KLDispatchGroupGlobalAsync(group, ^{
+        PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:type subtype:PHAssetCollectionSubtypeAny options:options];
+        [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([self isFetchForSubtype:collection.assetCollectionSubtype]) {
+                @synchronized (self) {
+                    if (collection.assetCount > 0) {
+                        [collection fetchAssets];
+                        [self.assetCollectionArray addObject:collection];
+                    }
+                }
+            }
+        }];
+    });
+}
+
+- (BOOL)isFetchForSubtype:(PHAssetCollectionSubtype)subtype
+{
+    return (PHAssetCollectionSubtypeSmartAlbumPanoramas != subtype      &&
+            PHAssetCollectionSubtypeSmartAlbumVideos != subtype         &&
+            PHAssetCollectionSubtypeSmartAlbumTimelapses != subtype     &&
+            PHAssetCollectionSubtypeSmartAlbumAllHidden != subtype      &&
+            PHAssetCollectionSubtypeSmartAlbumRecentlyAdded != subtype  &&
+            PHAssetCollectionSubtypeSmartAlbumBursts != subtype         &&
+            PHAssetCollectionSubtypeSmartAlbumSlomoVideos != subtype);
 }
 
 #pragma mark - Public method
@@ -104,55 +147,9 @@
     return self.assetCollectionCount > 0;
 }
 
-- (void)fetchAssetCollections
-{
-    _assetCollectionArray = [NSMutableArray array];
-    
-    dispatch_group_t group = dispatch_group_create();
-    PHFetchOptions *options = [[PHFetchOptions alloc] init];
-    options.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
-    
-    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum options:options inGCDGroup:group];
-    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:nil inGCDGroup:group];
-    
-    KLDispatchGroupMainNotify(group, ^{
-        [self.assetCollectionArray sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(assetCount)) ascending:NO]]];
-        self.assetCollections = self.assetCollectionArray;
-    });
-}
-
-- (void)fetchAssetCollectionsWithType:(PHAssetCollectionType)type options:(PHFetchOptions *)options inGCDGroup:(dispatch_group_t)group
-{
-    KLDispatchGroupGlobalAsync(group, ^{
-        PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:type subtype:PHAssetCollectionSubtypeAny options:options];
-        [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([self isFetchForSubtype:collection.assetCollectionSubtype]) {
-                @synchronized (self) {
-                    if (collection.assetCount > 0) {
-                        [self.assetCollectionArray addObject:collection];
-                    }
-                }
-            }
-        }];
-    });
-}
-
-- (BOOL)isFetchForSubtype:(PHAssetCollectionSubtype)subtype
-{
-    return (PHAssetCollectionSubtypeSmartAlbumPanoramas != subtype      &&
-            PHAssetCollectionSubtypeSmartAlbumVideos != subtype         &&
-            PHAssetCollectionSubtypeSmartAlbumTimelapses != subtype     &&
-            PHAssetCollectionSubtypeSmartAlbumAllHidden != subtype      &&
-            PHAssetCollectionSubtypeSmartAlbumRecentlyAdded != subtype  &&
-            PHAssetCollectionSubtypeSmartAlbumBursts != subtype         &&
-            PHAssetCollectionSubtypeSmartAlbumSlomoVideos != subtype);
-}
-
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index
 {
-    PHAssetCollection *assetCollection = self.assetCollections[index];
-    [assetCollection fetchAssets];
-    return assetCollection;
+    return self.assetCollections[index];
 }
 
 - (NSUInteger)assetCountAtIndex:(NSUInteger)index
@@ -163,6 +160,7 @@
 - (void)addAsset:(PHAsset *)asset
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+    asset.isSelected = YES;
     [self.selectedAssets addObject:asset];
     [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
 }
@@ -170,6 +168,7 @@
 - (void)removeAsset:(PHAsset *)asset
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+    asset.isSelected = NO;
     [self.selectedAssets removeObject:asset];
     [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
 }

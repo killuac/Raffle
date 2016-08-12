@@ -63,6 +63,8 @@ static CGSize cellItemSize;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.allowsMultipleSelection = YES;
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    
+    if (self.assetCollection.indexPath) [self reloadData];
 }
 
 - (void)addObservers
@@ -74,6 +76,16 @@ static CGSize cellItemSize;
 - (void)reloadData
 {
     [self.collectionView reloadData];
+    if (!self.assetCollection.indexPath) return;
+    [self.collectionView scrollToItemAtIndexPath:self.assetCollection.indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+}
+
+- (void)dealloc
+{
+    NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
+    if (indexPath.item > 0) {
+        self.assetCollection.indexPath = indexPath;
+    }
 }
 
 #pragma mark <UICollectionViewDataSource>

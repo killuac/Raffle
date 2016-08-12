@@ -67,6 +67,8 @@
 
 - (void)configWithAsset:(PHAsset *)asset
 {
+    self.selected = asset.isSelected;
+    
     [asset thumbnailImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
 //      TODO: Add load image progress
     } resultHandler:^(UIImage *image, NSDictionary *info) {

@@ -15,7 +15,7 @@
 + (void)load
 {
 #if DEBUG
-    KLSwizzleMethod([self class], NSSelectorFromString(@"dealloc"), @selector(swizzle_dealloc), NO);
+    KLClassSwizzleMethod([self class], NSSelectorFromString(@"dealloc"), @selector(swizzle_dealloc), NO);
 #endif
 }
 

@@ -184,7 +184,7 @@
 - (NSIndexPath *)selectedIndexPath
 {
     NSIndexPath *indexPath = [self.collectionView indexPathsForSelectedItems].firstObject;
-    if (indexPath.item == ULONG_MAX) {
+    if (indexPath.item == NSNotFound) {
         return [NSIndexPath indexPathForItem:0 inSection:0];
     }
     if (indexPath.item >= self.items.count) {

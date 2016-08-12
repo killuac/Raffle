@@ -46,7 +46,7 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
 
 - (void)loadConfiguration
 {
-    self.configs = [NSMutableDictionary dictionaryWithContentsOfURL:KLPlistFileURL(@"Analytics")];
+    self.configs = [NSMutableDictionary dictionaryWithContentsOfURL:KLURLPlistFile(@"Analytics")];
 }
 
 - (void)setConfigs:(NSDictionary *)configs

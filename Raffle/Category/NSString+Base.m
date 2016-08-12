@@ -15,16 +15,14 @@ NSString *const KLAlphabet62 = @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJK
 @implementation NSString (Base)
 
 #pragma mark - Digest
-- (NSString *)toMD5String
+- (NSString *)MD5String
 {
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
-    return [data toMD5String];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] MD5String];
 }
 
-- (NSString *)toSHA1String
+- (NSString *)SHA1String
 {
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
-    return [data toSHA1String];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] SHA1String];
 }
 
 //- (NSString *)SHA1String
@@ -42,6 +40,16 @@ NSString *const KLAlphabet62 = @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJK
 //}
 
 #pragma mark - Base 62
+- (NSString *)base62String
+{
+    return [self encodeNumber:self.integerValue withAlphabet:KLAlphabet62];
+}
+
+- (NSString *)stringFromBase62
+{
+    return [self decodeWithAlphabet:KLAlphabet62];
+}
+
 - (NSString *)encodeNumber:(NSInteger)number withAlphabet:(NSString *)alphabet
 {
     NSUInteger base = alphabet.length;
@@ -66,26 +74,25 @@ NSString *const KLAlphabet62 = @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJK
     return @(number).stringValue;
 }
 
-- (NSString *)toBase62String
-{
-    return [self encodeNumber:self.integerValue withAlphabet:KLAlphabet62];
-}
-
-- (NSString *)fromBase62String
-{
-    return [self decodeWithAlphabet:KLAlphabet62];
-}
-
 - (NSString *)increment
 {
-    NSInteger number = [self fromBase62String].integerValue + 1;
-    return [@(number).stringValue toBase62String];
+    NSInteger number = [self stringFromBase62].integerValue + 1;
+    return [@(number).stringValue base62String];
 }
 
 - (NSString *)decrement
 {
-    NSInteger number = [self fromBase62String].integerValue - 1;
-    return [@(number).stringValue toBase62String];
+    NSInteger number = [self stringFromBase62].integerValue - 1;
+    return [@(number).stringValue base62String];
+}
+
+#pragma mark - Localization
+- (NSString *)quotedString
+{
+    NSLocale *locale = [NSLocale currentLocale];
+    id bQuote = [locale objectForKey:NSLocaleQuotationBeginDelimiterKey];
+    id eQuote = [locale objectForKey:NSLocaleQuotationEndDelimiterKey];
+    return [NSString stringWithFormat:@"%@%@%@", bQuote, self, eQuote];
 }
 
 #pragma mark - Validation
@@ -151,15 +158,6 @@ NSString *const KLAlphabet62 = @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJK
 - (CGFloat)heightWithFont:(UIFont *)font
 {
     return [self sizeWithFont:font].height;
-}
-
-#pragma mark - Localization
-- (NSString *)quotedString
-{
-    NSLocale *locale = [NSLocale currentLocale];
-    id bQuote = [locale objectForKey:NSLocaleQuotationBeginDelimiterKey];
-    id eQuote = [locale objectForKey:NSLocaleQuotationEndDelimiterKey];
-    return [NSString stringWithFormat:@"%@%@%@", bQuote, self, eQuote];
 }
 
 @end

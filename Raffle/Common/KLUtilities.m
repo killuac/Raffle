@@ -28,35 +28,35 @@ NSURL *FetchOrCreateFileURL(NSString *path)
     return (lastPathComponent.length ? [pathURL URLByAppendingPathComponent:lastPathComponent] : pathURL);
 }
 
-NSURL *KLDocumentFileURL(NSString *fileName)
+NSURL *KLURLDocumentFile(NSString *fileName)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
     NSString *path = [docDir stringByAppendingPathComponent:fileName];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLCacheFileURL(NSString *fileName)
+NSURL *KLURLCacheFile(NSString *fileName)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     NSString *path = [docDir stringByAppendingPathComponent:fileName];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLTemporaryFileURL(NSString *fileName)
+NSURL *KLURLTemporaryFile(NSString *fileName)
 {
     NSString *tmpDir = NSTemporaryDirectory();
     NSString *path = [tmpDir stringByAppendingPathComponent:fileName];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLApplicationSupportFileURL(NSString *fileName)
+NSURL *KLURLApplicationSupportFile(NSString *fileName)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).firstObject;
     NSString *path = [docDir stringByAppendingPathComponent:fileName];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLPlistFileURL(NSString *fileName)
+NSURL *KLURLPlistFile(NSString *fileName)
 {
     return [[NSBundle mainBundle] URLForResource:fileName withExtension:@"plist"];
 }
@@ -86,7 +86,7 @@ NSArray* KLClassGetSubClasses(Class superClass)
     return classArray;
 }
 
-void KLSwizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod)
+void KLClassSwizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod)
 {
     // the method might not exist in the class, but in its superclass
     Method originalMethod = isClassMethod ? class_getClassMethod(class, originalSelector) : class_getInstanceMethod(class, originalSelector);

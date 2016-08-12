@@ -10,6 +10,16 @@
 
 @implementation PHAssetCollection (Model)
 
+- (void)setIndexPath:(NSIndexPath *)indexPath
+{
+    objc_setAssociatedObject(self, @selector(indexPath), indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSIndexPath *)indexPath
+{
+    return objc_getAssociatedObject(self, @selector(indexPath));
+}
+
 - (void)setFetchResult:(PHFetchResult *)fetchResult
 {
     objc_setAssociatedObject(self, @selector(fetchResult), fetchResult, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
