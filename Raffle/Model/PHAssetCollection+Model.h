@@ -11,13 +11,15 @@
 
 @interface PHAssetCollection (Model)
 
-@property (nonatomic, strong) PHFetchResult *fetchResult;
+@property (nonatomic, strong, readonly) PHFetchResult *fetchResult;
 @property (nonatomic, assign, readonly) NSUInteger assetCount;
 @property (nonatomic, strong, readonly) NSArray<PHAsset *> *assets;
 
-@property (nonatomic, strong) NSIndexPath *indexPath;   // Index path which scroll to
+@property (nonatomic, assign) CGPoint contentOffset;  // Remember scrolled content offset
 
-- (void)fetchAssets;
+- (void)fetchAssets:(KLVoidBlockType)completion;
+- (void)updateWithAssetCollection:(PHAssetCollection *)collection;
+
 - (void)posterImage:(KLAssetBlockType)resultHandler;
 
 @end

@@ -30,12 +30,13 @@ static CGSize cellItemSize;
     cellItemSize = CGSizeMake(width, height);
 }
 
-+ (instancetype)viewControllerWithPageIndex:(NSUInteger)pageIndex photoLibrary:(KLPhotoLibrary *)photoLibrary
+#pragma mark - Lifecycle
++ (instancetype)viewControllerWithPageIndex:(NSInteger)pageIndex photoLibrary:(KLPhotoLibrary *)photoLibrary
 {
     return [[self alloc] initWithPageIndex:pageIndex photoLibrary:photoLibrary];
 }
 
-- (instancetype)initWithPageIndex:(NSUInteger)pageIndex photoLibrary:(id)photoLibrary
+- (instancetype)initWithPageIndex:(NSInteger)pageIndex photoLibrary:(id)photoLibrary
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _pageIndex = pageIndex;
@@ -50,6 +51,7 @@ static CGSize cellItemSize;
     [super viewDidLoad];
     [self prepareForUI];
     [self addObservers];
+    [self reloadData];
 }
 
 - (void)prepareForUI
@@ -63,8 +65,6 @@ static CGSize cellItemSize;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.allowsMultipleSelection = YES;
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
-    
-    if (self.assetCollection.indexPath) [self reloadData];
 }
 
 - (void)addObservers
@@ -76,19 +76,11 @@ static CGSize cellItemSize;
 - (void)reloadData
 {
     [self.collectionView reloadData];
-    if (!self.assetCollection.indexPath) return;
-    [self.collectionView scrollToItemAtIndexPath:self.assetCollection.indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self.collectionView layoutIfNeeded];   // Must call it for set content offset working
+    [self.collectionView setContentOffset:self.assetCollection.contentOffset];
 }
 
-- (void)dealloc
-{
-    NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
-    if (indexPath.item > 0) {
-        self.assetCollection.indexPath = indexPath;
-    }
-}
-
-#pragma mark <UICollectionViewDataSource>
+#pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.assetCollection.assets.count;
@@ -97,20 +89,31 @@ static CGSize cellItemSize;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithAsset:self.assetCollection.assets[indexPath.item]];
+    PHAsset *asset = self.assetCollection.assets[indexPath.item];
+    [cell configWithAsset:asset];
+    
+    if (asset.isSelected) {
+        [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    }
     
     return cell;
 }
 
-#pragma mark <UICollectionViewDelegate>
+#pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    [self.photoLibrary addAsset:self.assetCollection.assets[indexPath.item]];
+    [self.photoLibrary selectAsset:self.assetCollection.assets[indexPath.item]];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.photoLibrary removeAsset:self.assetCollection.assets[indexPath.item]];
+    [self.photoLibrary deselectAsset:self.assetCollection.assets[indexPath.item]];
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    self.assetCollection.contentOffset = scrollView.contentOffset;
 }
 
 @end

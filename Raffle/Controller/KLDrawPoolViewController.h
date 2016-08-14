@@ -11,8 +11,8 @@
 
 @interface KLDrawPoolViewController : UICollectionViewController
 
-+ (instancetype)viewControllerWithPageIndex:(NSUInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel;
++ (instancetype)viewControllerWithPageIndex:(NSInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel;
 
-@property (nonatomic, assign, readonly) NSUInteger pageIndex;
+@property (nonatomic, assign, readonly) NSInteger pageIndex;
 
 @end

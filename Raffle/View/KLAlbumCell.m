@@ -51,6 +51,11 @@
     [super updateConstraints];
 }
 
+- (void)prepareForReuse
+{
+    self.selected = self.highlighted = NO;
+}
+
 - (void)setHighlighted:(BOOL)highlighted
 {
     [super setHighlighted:highlighted];
@@ -62,18 +67,17 @@
     [super setSelected:selected];
     self.checkmark.hidden = !selected;
     self.imageView.alpha = 1.0;
-    self.imageView.image = selected ? [self.imageView.image brightenWithAlpha:0.5] : self.originalImage;
+    self.imageView.image = self.isSelected ? [self.originalImage brightenWithAlpha:0.5] : self.originalImage;
 }
 
 - (void)configWithAsset:(PHAsset *)asset
 {
-    self.selected = asset.isSelected;
-    
     [asset thumbnailImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
 //      TODO: Add load image progress
     } resultHandler:^(UIImage *image, NSDictionary *info) {
         self.originalImage = image;
         self.imageView.image = image;
+        self.selected = asset.isSelected;
         [self setNeedsLayout];
     }];
 }

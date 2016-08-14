@@ -19,12 +19,12 @@
 @implementation KLDrawPoolViewController
 
 #pragma mark - Life cycle
-+ (instancetype)viewControllerWithPageIndex:(NSUInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel
++ (instancetype)viewControllerWithPageIndex:(NSInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel
 {
     return [[self alloc] initWithPageIndex:pageIndex viewModel:viewModel];
 }
 
-- (instancetype)initWithPageIndex:(NSUInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel
+- (instancetype)initWithPageIndex:(NSInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel
 {
     if (self = [super initWithCollectionViewLayout:[KLCircleLayout new]]) {
         _pageIndex = pageIndex;

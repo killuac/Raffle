@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong, readonly) PHPhotoLibrary *photoLibrary;
 @property (nonatomic, strong) NSMutableArray *assetCollectionArray;
+@property (nonatomic, strong) NSMutableArray *selectedAssetArray;
 
 @end
 
@@ -34,7 +35,7 @@
 {
     dispatch_block_t block = ^{
         if (PHAuthorizationStatusAuthorized == status) {
-            [self fetchAssetCollections];
+            [self fetchAssetCollections:nil];
         } else if (PHAuthorizationStatusDenied == status || PHAuthorizationStatusAuthorized == status) {
             handler();
         }
@@ -47,8 +48,8 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _selectedAssets = [NSMutableArray array];
-        _assetCollections = [NSMutableArray array];
+        _assetCollectionArray = [NSMutableArray array];
+        _selectedAssetArray = [NSMutableArray array];
         [self.photoLibrary registerChangeObserver:self];
     }
     return self;
@@ -65,20 +66,51 @@
 }
 
 #pragma mark - PHPhotoLibraryChangeObserver
+// This callback is invoked on an arbitrary serial queue
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
-    [self fetchAssetCollections];
+    [self fetchAssetCollections:^{
+        NSMutableArray *removedCollections = [NSMutableArray array];
+        [self.assetCollectionArray enumerateObjectsUsingBlock:^(PHAssetCollection *collection, NSUInteger idx, BOOL *stop) {
+            PHObjectChangeDetails *albumChanges = [changeInstance changeDetailsForObject:collection];
+            PHFetchResultChangeDetails *collectionChanges = [changeInstance changeDetailsForFetchResult:collection.fetchResult];
+            // Change album
+            if (albumChanges) {
+                if (albumChanges.objectWasDeleted && !collectionChanges) {
+                    [removedCollections addObject:collection];  // Remove a collection(album)
+                    [self removeSelectedAssetsInArray:collection.assets];
+                } else {
+                    PHAssetCollection *changedCollection = albumChanges.objectAfterChanges;
+                    [changedCollection updateWithAssetCollection:collection];
+                    [self.assetCollectionArray replaceObjectAtIndex:idx withObject:changedCollection];
+                    collection = changedCollection;
+                }
+            }
+            
+            // Change collection
+            if (collectionChanges && collectionChanges.hasIncrementalChanges) {
+                [self removeSelectedAssetsInArray:collectionChanges.removedObjects];
+                if (collectionChanges.fetchResultAfterChanges.count) {
+                    [collection fetchAssets:^{
+                        [collection.assets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+                            if ([self.selectedAssets containsObject:asset]) {
+                                asset.isSelected = YES;
+                            }
+                        }];
+                    }];
+                } else {
+                    [removedCollections addObject:collection];
+                    [self removeSelectedAssetsInArray:collection.assets];
+                }
+            }
+        }];
+        
+        [self.assetCollectionArray removeObjectsInArray:removedCollections];
+    }];
 }
 
-- (void)setAssetCollections:(NSArray<PHAssetCollection *> *)assetCollections
+- (void)fetchAssetCollections:(KLVoidBlockType)completion
 {
-    _assetCollections = assetCollections;
-}
-
-- (void)fetchAssetCollections
-{
-    _assetCollectionArray = [NSMutableArray array];
-    
     dispatch_group_t group = dispatch_group_create();
     PHFetchOptions *options = [[PHFetchOptions alloc] init];
     options.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
@@ -87,8 +119,10 @@
     [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:nil inGCDGroup:group];
     
     KLDispatchGroupMainNotify(group, ^{
+        [self willChangeValueForKey:NSStringFromSelector(@selector(assetCollections))];
         [self.assetCollectionArray sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(assetCount)) ascending:NO]]];
-        self.assetCollections = self.assetCollectionArray;
+        if (completion) completion();
+        [self didChangeValueForKey:NSStringFromSelector(@selector(assetCollections))];
     });
 }
 
@@ -99,8 +133,8 @@
         [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([self isFetchForSubtype:collection.assetCollectionSubtype]) {
                 @synchronized (self) {
-                    if (collection.assetCount > 0) {
-                        [collection fetchAssets];
+                    if (collection.assetCount > 0 && ![self.assetCollectionArray containsObject:collection]) {
+                        [collection fetchAssets:nil];
                         [self.assetCollectionArray addObject:collection];
                     }
                 }
@@ -120,16 +154,10 @@
             PHAssetCollectionSubtypeSmartAlbumSlomoVideos != subtype);
 }
 
-#pragma mark - Public method
-- (NSUInteger)currentPageIndex
+#pragma mark - Asset collections
+- (NSArray<PHAssetCollection *> *)assetCollections
 {
-    if (_currentPageIndex == ULONG_MAX) {
-        return 0;
-    }
-    if (_currentPageIndex >= self.assetCollectionCount) {
-        return self.assetCollectionCount - 1;
-    }
-    return _currentPageIndex;
+    return self.assetCollectionArray;
 }
 
 - (NSArray<NSString *> *)assetCollectionTitles
@@ -142,6 +170,16 @@
     return self.assetCollections.count;
 }
 
+- (NSInteger)currentPageIndex
+{
+    if (_currentPageIndex == NSNotFound) {
+        _currentPageIndex = 0;
+    } else if (_currentPageIndex >= self.assetCollectionCount) {
+        _currentPageIndex = self.assetCollectionCount - 1;
+    }
+    return _currentPageIndex;
+}
+
 - (BOOL)isPageScrollEnabled
 {
     return self.assetCollectionCount > 0;
@@ -149,7 +187,11 @@
 
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index
 {
-    return self.assetCollections[index];
+    PHAssetCollection *assetCollection = self.assetCollections[index];
+    [assetCollection.assets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+        asset.isSelected = [self.selectedAssetArray containsObject:asset];
+    }];
+    return assetCollection;
 }
 
 - (NSUInteger)assetCountAtIndex:(NSUInteger)index
@@ -157,19 +199,51 @@
     return [self assetCollectionAtIndex:index].assets.count;
 }
 
-- (void)addAsset:(PHAsset *)asset
+//- (NSMutableArray *)selectedAssetArray
+//{
+//    return [self mutableArrayValueForKey:@"_selectedAssetArray"];   // For KVO
+//}
+
+- (NSArray *)selectedAssets
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
-    asset.isSelected = YES;
-    [self.selectedAssets addObject:asset];
-    [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+    return self.selectedAssetArray;
 }
 
-- (void)removeAsset:(PHAsset *)asset
+#pragma mark - Update assets
+- (void)selectAsset:(PHAsset *)asset
+{
+    [self willChangeValueForSelectedAssets];
+    asset.isSelected = YES;
+    if (![self.selectedAssetArray containsObject:asset]) {
+        [self.selectedAssetArray addObject:asset];
+    }
+    [self didChangeValueForSelectedAssets];
+}
+
+- (void)deselectAsset:(PHAsset *)asset
+{
+    [self willChangeValueForSelectedAssets];
+    asset.isSelected = NO;
+    [self.selectedAssetArray removeObject:asset];
+    [self didChangeValueForSelectedAssets];
+}
+
+- (void)removeSelectedAssetsInArray:(NSArray *)array
+{
+    if (!self.selectedAssetArray.count || !array.count) return;
+    
+    [self willChangeValueForSelectedAssets];
+    [self.selectedAssetArray removeObjectsInArray:array];
+    [self didChangeValueForSelectedAssets];
+}
+
+- (void)willChangeValueForSelectedAssets
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
-    asset.isSelected = NO;
-    [self.selectedAssets removeObject:asset];
+}
+
+- (void)didChangeValueForSelectedAssets
+{
     [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
 }
 

@@ -13,16 +13,16 @@
 
 @property (nonatomic, strong, readonly) NSArray<PHAssetCollection *> *assetCollections;
 @property (nonatomic, strong, readonly) NSArray<NSString *> *assetCollectionTitles;
-@property (nonatomic, strong, readonly) NSMutableArray *selectedAssets;
+@property (nonatomic, strong, readonly) NSArray *selectedAssets;
 
-@property (nonatomic, assign) NSUInteger currentPageIndex;
+@property (nonatomic, assign) NSInteger currentPageIndex;
 @property (nonatomic, assign, readonly) BOOL isPageScrollEnabled;
 @property (nonatomic, assign, readonly) NSUInteger assetCollectionCount;
 
 - (void)checkAuthorization:(KLVoidBlockType)handler;
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index;
 
-- (void)addAsset:(PHAsset *)asset;
-- (void)removeAsset:(PHAsset *)asset;
+- (void)selectAsset:(PHAsset *)asset;
+- (void)deselectAsset:(PHAsset *)asset;
 
 @end

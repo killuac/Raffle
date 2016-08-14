@@ -11,7 +11,7 @@
 
 @interface KLMainViewModel : NSObject
 
-@property (nonatomic, assign) NSUInteger currentPageIndex;
+@property (nonatomic, assign) NSInteger currentPageIndex;
 @property (nonatomic, assign, readonly) NSUInteger drawPoolCount;
 @property (nonatomic, assign, readonly) BOOL isPageScrollEnabled;
 
