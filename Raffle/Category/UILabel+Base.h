@@ -13,6 +13,8 @@
 + (instancetype)labelWithText:(NSString *)text;
 + (instancetype)labelWithText:(NSString *)text attributes:(NSDictionary<NSString *, id> *)attributes;
 
+@property (nonatomic, assign) BOOL isAutoScroll;
+@property (nonatomic, assign, readonly) NSTimeInterval scrollDuration;
 @property (nonatomic, assign, readonly) CGFloat fontHeight;
 
 @end

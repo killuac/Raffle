@@ -60,6 +60,7 @@
     [self addSubviews];
 }
 
+#pragma mark - Observer
 - (void)addObservers
 {
     self.KVOController = [FBKVOController controllerWithObserver:self];

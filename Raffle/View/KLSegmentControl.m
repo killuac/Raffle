@@ -138,16 +138,6 @@
     [flowLayout invalidateLayout];
 }
 
-- (void)addObservers
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-}
-
-- (void)deviceOrientationDidChange:(NSNotification *)notification
-{
-    [self reloadData];
-}
-
 - (BOOL)isNeedResizeItem
 {
     CGFloat totalWidth = [self totalItemWidth];
@@ -161,6 +151,17 @@
         totalItemWidth += value.CGSizeValue.width;
     }];
     return totalItemWidth;
+}
+
+#pragma mark - Orientation observer
+- (void)addObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+    [self reloadData];
 }
 
 - (void)dealloc

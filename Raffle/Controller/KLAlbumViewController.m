@@ -67,6 +67,7 @@ static CGSize cellItemSize;
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
+#pragma mark - Observer
 - (void)addObservers
 {
     self.KVOController = [FBKVOController controllerWithObserver:self];

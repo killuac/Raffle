@@ -34,4 +34,32 @@
     return [self.text heightWithFont:self.font];
 }
 
+#pragma mark - Auto scroll
+- (void)setIsAutoScroll:(BOOL)isAutoScroll
+{
+    objc_setAssociatedObject(self, @selector(isAutoScroll), @(isAutoScroll), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)isAutoScroll
+{
+    return [objc_getAssociatedObject(self, @selector(isAutoScroll)) boolValue];
+}
+
+- (NSTimeInterval)scrollDuration
+{
+    return 0;
+}
+
+- (void)didMoveToWindow
+{
+    if (self.isAutoScroll && self.window) {
+        [self scrollLabelIfNeeded];
+    }
+}
+
+- (void)scrollLabelIfNeeded
+{
+    
+}
+
 @end

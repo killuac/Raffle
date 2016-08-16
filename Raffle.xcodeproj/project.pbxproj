@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4110BAC91D62E841001BCD38 /* KLStatusBar.m */; };
 		414AE9021D5B189F00680363 /* JSONModel+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 414AE8FF1D5B189F00680363 /* JSONModel+Base.m */; };
 		414AE9031D5B189F00680363 /* NSArray+Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 414AE9011D5B189F00680363 /* NSArray+Model.m */; };
 		415BFE791D5B1D01002053D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE731D5B1D01002053D6 /* InfoPlist.strings */; };
@@ -82,6 +83,8 @@
 /* Begin PBXFileReference section */
 		183101FB2A61C20C18B6A692 /* Pods-Raffle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Raffle.release.xcconfig"; path = "Pods/Target Support Files/Pods-Raffle/Pods-Raffle.release.xcconfig"; sourceTree = "<group>"; };
 		1C661C7D86BDECA7EBE90C73 /* Pods-Raffle.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Raffle.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Raffle/Pods-Raffle.debug.xcconfig"; sourceTree = "<group>"; };
+		4110BAC81D62E841001BCD38 /* KLStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLStatusBar.h; sourceTree = "<group>"; };
+		4110BAC91D62E841001BCD38 /* KLStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLStatusBar.m; sourceTree = "<group>"; };
 		414AE8FE1D5B189F00680363 /* JSONModel+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONModel+Base.h"; sourceTree = "<group>"; };
 		414AE8FF1D5B189F00680363 /* JSONModel+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSONModel+Base.m"; sourceTree = "<group>"; };
 		414AE9001D5B189F00680363 /* NSArray+Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Model.h"; sourceTree = "<group>"; };
@@ -240,6 +243,8 @@
 				415BFE8B1D5B20FC002053D6 /* KLDrawPoolCell.m */,
 				415BFE8C1D5B20FC002053D6 /* KLSegmentControl.h */,
 				415BFE8D1D5B20FC002053D6 /* KLSegmentControl.m */,
+				4110BAC81D62E841001BCD38 /* KLStatusBar.h */,
+				4110BAC91D62E841001BCD38 /* KLStatusBar.m */,
 				415BFE8E1D5B20FC002053D6 /* KLTableViewCell.h */,
 				415BFE8F1D5B20FC002053D6 /* KLTableViewCell.m */,
 			);
@@ -660,6 +665,7 @@
 				41FE17931D5B15AB00CABFCA /* UIColor+Base.m in Sources */,
 				41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */,
 				41FE178F1D5B15AB00CABFCA /* NSTimer+Base.m in Sources */,
+				4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */,
 				41FE17971D5B15AB00CABFCA /* UILabel+Base.m in Sources */,
 				414AE9021D5B189F00680363 /* JSONModel+Base.m in Sources */,
 				415BFEB11D5B2117002053D6 /* KLDrawPoolViewModel.m in Sources */,
