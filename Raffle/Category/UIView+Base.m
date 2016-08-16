@@ -69,29 +69,34 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
 
 - (void)constraintsEqualWidthAndHeight
 {
-    [NSLayoutConstraint activateConstraints:@[[NSLayoutConstraint constraintWithItem:self
-                                                                           attribute:NSLayoutAttributeWidth
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self
-                                                                           attribute:NSLayoutAttributeHeight
-                                                                          multiplier:1 constant:0]]];
+    [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+                                    toItem:self attribute:NSLayoutAttributeHeight multiplier:1 constant:0].active = YES;
 }
 
 - (void)constraintsCenterInSuperview
 {
-    NSLayoutConstraint *hConstraint = [NSLayoutConstraint constraintCenterXWithItem:self];
-    NSLayoutConstraint *vConstraint = [NSLayoutConstraint constraintCenterYWithItem:self];
-    [NSLayoutConstraint activateConstraints:@[hConstraint, vConstraint]];
+    [NSLayoutConstraint constraintCenterXWithItem:self].active = YES;
+    [NSLayoutConstraint constraintCenterYWithItem:self].active = YES;
 }
 
 - (void)constraintsCenterXWithView:(UIView *)view
 {
-    [NSLayoutConstraint activateConstraints:@[[NSLayoutConstraint constraintCenterXWithItem:self toItem:view]]];
+    [NSLayoutConstraint constraintCenterXWithItem:self toItem:view].active = YES;
 }
 
 - (void)constraintsCenterYWithView:(UIView *)view
 {
-    [NSLayoutConstraint activateConstraints:@[[NSLayoutConstraint constraintCenterYWithItem:self toItem:view]]];
+    [NSLayoutConstraint constraintCenterYWithItem:self toItem:view].active = YES;
+}
+
+- (void)constraintsTopLayoutGuide
+{
+    [NSLayoutConstraint constraintTopWithItem:self toTopLayoutGuide:self.viewController.topLayoutGuide].active = YES;
+}
+
+- (void)constraintsBottomLayoutGuide
+{
+    [NSLayoutConstraint constraintBottomWithItem:self toBottomLayoutGuide:self.viewController.bottomLayoutGuide].active = YES;
 }
 
 #pragma mark - Left/Right/Top/Bottom

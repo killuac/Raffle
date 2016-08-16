@@ -43,7 +43,7 @@
 {
     [self addPageViewController];
     [self addSubviews];
-    [self updateViewConstraints];
+    [self.view setNeedsUpdateConstraints];
 }
 
 - (void)reloadData

@@ -12,12 +12,22 @@
 
 @property (nonatomic, strong) UIWindow *statusBarWindow;
 @property (nonatomic, strong) UIView *snapshotView;
+@property (nonatomic, strong) UILabel *notificationLabel;
 
 @end
 
 @implementation KLStatusBar
 
 #pragma mark - Lifecycle
+static id sharedStatusBar = nil;
++ (instancetype)sharedStatusBar
+{
+    KLDispatchOnce(^{
+        sharedStatusBar = [self newAutoLayoutView];
+    });
+    return sharedStatusBar;
+}
+
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -30,7 +40,7 @@
 - (void)prepareForUI
 {
     self.clipsToBounds = YES;
-    self.translatesAutoresizingMaskIntoConstraints = NO;
+    self.transform = CGAffineTransformMakeTranslation(0, -self.statusBarHeight);
     [self.statusBarWindow.rootViewController.view addSubview:self];
     [self.statusBarWindow.rootViewController.view sendSubviewToBack:self];
     
@@ -39,6 +49,7 @@
         [self addSubview:self.snapshotView];
     }
     
+    [self setNeedsUpdateConstraints];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)]];
 }
 
@@ -56,8 +67,28 @@
     return _statusBarWindow;
 }
 
+- (UILabel *)notificationLabel
+{
+    if (_notificationLabel) return _notificationLabel;
+    
+    _notificationLabel = [UILabel new];
+    _notificationLabel.textAlignment = NSTextAlignmentCenter;
+    _notificationLabel.font = [UIFont defaultFont];
+    _notificationLabel.textColor = [UIColor titleColor];
+    [self addSubview:_notificationLabel];
+    
+    return _notificationLabel;
+}
+
 - (void)updateConstraints
 {
+    [self constraintsEqualWidthWithSuperView];
+    [NSLayoutConstraint constraintHeightWithItem:self constant:self.statusBarHeight].active = YES;
+    
+    [self.snapshotView constraintsEqualWidthWithSuperView];
+    [NSLayoutConstraint constraintTopWithItem:self.snapshotView].active = YES;
+    
+    [self.notificationLabel constraintsCenterInSuperview];
     
     [super updateConstraints];
 }
@@ -81,12 +112,28 @@
 #pragma mark - Notification message
 + (void)showNotificationWithMessage:(NSString *)message
 {
+    KLStatusBar *statusBar = [KLStatusBar sharedStatusBar];
+    statusBar.notificationLabel.text = message;
     
+    [UIView animateWithDefaultDuration:^{
+        statusBar.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        KLDispatchMainAfter(3, ^{
+            [self dismiss];
+        });
+    }];
 }
 
 + (void)dismiss
 {
-    
+    KLStatusBar *statusBar = [KLStatusBar sharedStatusBar];
+    [UIView animateWithDefaultDuration:^{
+        statusBar.transform = CGAffineTransformMakeTranslation(0, -statusBar.statusBarHeight);
+    } completion:^(BOOL finished) {
+        [statusBar removeFromSuperview];
+        statusBar.statusBarWindow.hidden = YES;
+        statusBar.statusBarWindow = nil;
+    }];
 }
 
 - (void)tapToDismiss:(UITapGestureRecognizer *)recognizer

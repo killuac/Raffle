@@ -40,6 +40,8 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 - (void)constraintsCenterInSuperview;
 - (void)constraintsCenterXWithView:(UIView *)view;
 - (void)constraintsCenterYWithView:(UIView *)view;
+- (void)constraintsTopLayoutGuide;
+- (void)constraintsBottomLayoutGuide;
 
 @property (nonatomic, assign) CGFloat left;
 @property (nonatomic, assign) CGFloat right;

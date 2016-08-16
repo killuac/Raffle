@@ -21,7 +21,7 @@
 {
     if (self = [super initWithFrame:frame]) {
         [self addSubviews];
-        [self updateConstraints];
+        [self setNeedsUpdateConstraints];
     }
     return self;
 }

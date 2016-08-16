@@ -141,10 +141,11 @@
 - (void)updateViewConstraints
 {
     UIView *pageView = self.pageViewController.view;
-    NSDictionary *views = NSDictionaryOfVariableBindings(_segmentControl, _navigationBar, pageView);
+    id<UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
+    NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, _segmentControl, _navigationBar, pageView);
     NSDictionary *metrics = @{ @"margin": @(2.0) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_segmentControl]-margin-[pageView]-margin-[_navigationBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-margin-[pageView]-margin-[_navigationBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
     
     [super updateViewConstraints];
 }

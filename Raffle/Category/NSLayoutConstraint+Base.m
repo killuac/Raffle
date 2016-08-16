@@ -10,6 +10,7 @@
 
 @implementation NSLayoutConstraint (Base)
 
+#pragma mark - Width and Height
 + (NSArray<__kindof NSLayoutConstraint *> *)constraintsWithVisualFormat:(NSString *)format views:(NSDictionary<NSString *, id> *)views
 {
     return [self constraintsWithVisualFormat:format options:0 metrics:nil views:views];
@@ -27,6 +28,7 @@
                                            toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:constant];
 }
 
+#pragma mark - Center
 + (instancetype)constraintCenterXWithItem:(UIView *)view
 {
     return [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
@@ -51,6 +53,7 @@
                                            toItem:view2 attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
 }
 
+#pragma mark - Edge
 + (instancetype)constraintTopWithItem:(UIView *)view
 {
     return [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
@@ -73,6 +76,18 @@
 {
     return [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
                                            toItem:view.superview attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
+}
+
++ (instancetype)constraintTopWithItem:(UIView *)view toTopLayoutGuide:(id<UILayoutSupport>)topLayoutGuide
+{
+    return [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+                                           toItem:topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+}
+
++ (instancetype)constraintBottomWithItem:(UIView *)view toBottomLayoutGuide:(id<UILayoutSupport>)bottomLayoutGuide
+{
+    return [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+                                           toItem:bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0];
 }
 
 @end

@@ -24,5 +24,7 @@
 + (instancetype)constraintBottomWithItem:(UIView *)view;
 + (instancetype)constraintLeadingWithItem:(UIView *)view;
 + (instancetype)constraintTrailingWithItem:(UIView *)view;
++ (instancetype)constraintTopWithItem:(UIView *)view toTopLayoutGuide:(id<UILayoutSupport>)topLayoutGuide;
++ (instancetype)constraintBottomWithItem:(UIView *)view toBottomLayoutGuide:(id<UILayoutSupport>)bottomLayoutGuide;
 
 @end
