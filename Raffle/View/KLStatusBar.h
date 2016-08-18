@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+// A subclass of UIWindow that overrides the hitTest method in order to allow tap events to pass through the window.
+@interface KLStatusWindow : UIWindow @end
+
+
 @interface KLStatusBar : UIView
 
 + (void)showNotificationWithMessage:(NSString *)message;

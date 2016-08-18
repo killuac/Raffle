@@ -47,7 +47,9 @@
 
 - (NSTimeInterval)scrollDuration
 {
-    return 0;
+    CGFloat scrollSpeed = 40.0;
+    CGFloat contentWidth = [self.text widthWithFont:self.font];
+    return (contentWidth > self.width) ? (contentWidth / scrollSpeed) : 0;
 }
 
 - (void)didMoveToWindow

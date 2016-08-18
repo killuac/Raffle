@@ -44,6 +44,13 @@
     [self addPageViewController];
     [self addSubviews];
     [self.view setNeedsUpdateConstraints];
+    
+    [self addTapGesture];
+}
+
+- (void)singleTap:(UITapGestureRecognizer *)recognizer
+{
+    [KLStatusBar showNotificationWithMessage:@""];
 }
 
 - (void)reloadData
