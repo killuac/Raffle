@@ -21,7 +21,7 @@
 {
     if (self = [super initWithFrame:frame]) {
         [self addSubviews];
-        [self setNeedsUpdateConstraints];
+        [self addConstraints];
     }
     return self;
 }
@@ -39,7 +39,7 @@
     [self.contentView addSubview:_checkmark];
 }
 
-- (void)updateConstraints
+- (void)addConstraints
 {
     [self.imageView constraintsEqualWithSuperView];
     
@@ -47,8 +47,6 @@
     NSDictionary *metrics = @{ @"margin": @(5) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-margin-|" options:0 metrics:metrics views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-margin-|" options:0 metrics:metrics views:views]];
-    
-    [super updateConstraints];
 }
 
 - (void)prepareForReuse

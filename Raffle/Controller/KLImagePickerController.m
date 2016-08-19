@@ -58,6 +58,7 @@
     self.view.backgroundColor = [UIColor blackColor];
     [self addPageViewController];
     [self addSubviews];
+    [self addViewConstraints];
 }
 
 #pragma mark - Observer
@@ -138,7 +139,7 @@
     [self.view addSubview:_navigationBar];
 }
 
-- (void)updateViewConstraints
+- (void)addViewConstraints
 {
     UIView *pageView = self.pageViewController.view;
     id<UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
@@ -146,8 +147,6 @@
     NSDictionary *metrics = @{ @"margin": @(2.0) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-margin-[pageView]-margin-[_navigationBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
-    
-    [super updateViewConstraints];
 }
 
 - (void)showAlert

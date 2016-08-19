@@ -19,6 +19,11 @@
     return nil;
 }
 
+- (CGFloat)statusBarHeight
+{
+    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? [super statusBarHeight] : 20;
+}
+
 @end
 
 
@@ -31,12 +36,8 @@ NSTimeInterval const KLStatusBarScrollDelay = 1.0;
 @property (nonatomic, strong) UIView *snapshotView;
 @property (nonatomic, strong) UILabel *notificationLabel;
 
-@property (nonatomic, strong) NSLayoutConstraint *statusBarTopConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *statusBarHeightConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *labelTopConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *labelHeightConstraint;
-
-@property (nonatomic, assign) NSTimeInterval duration;  // Showing duration
+@property (nonatomic, assign) BOOL isShowing;
+@property (nonatomic, assign, readonly) NSTimeInterval duration;    // Showing duration
 
 @end
 
@@ -50,22 +51,25 @@ static KLStatusBar *sharedStatusBar = nil;
     if (self = [super init]) {
         [self prepareForUI];
         [self addObservers];
-        [self addConstraints];
     }
     return self;
+}
+
+- (CGFloat)statusBarHeight
+{
+    return self.statusBarWindow.statusBarHeight;
 }
 
 - (void)prepareForUI
 {
     self.clipsToBounds = YES;
-    self.backgroundColor = [UIColor blueColor];
-    [self.statusBarWindow.rootViewController.view addSubview:self];
+    self.size = CGSizeMake(SCREEN_WIDTH, self.statusBarHeight);
+    self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.statusBarWindow addSubview:self];
+    [self.statusBarWindow addSubview:self.notificationLabel];
     
     self.snapshotView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:YES];
-    self.snapshotView.translatesAutoresizingMaskIntoConstraints = NO;
-    if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
-        [self addSubview:self.snapshotView];
-    }
+    [self addSubview:self.snapshotView];
 }
 
 - (UIWindow *)statusBarWindow
@@ -86,101 +90,103 @@ static KLStatusBar *sharedStatusBar = nil;
 {
     if (_notificationLabel) return _notificationLabel;
     
-    _notificationLabel = [UILabel newAutoLayoutView];
+    _notificationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -self.statusBarHeight, SCREEN_WIDTH, self.statusBarHeight)];
+    _notificationLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _notificationLabel.userInteractionEnabled = YES;
     _notificationLabel.textAlignment = NSTextAlignmentCenter;
     _notificationLabel.font = [UIFont defaultFont];
     _notificationLabel.textColor = [UIColor blackColor];
     _notificationLabel.isAutoScroll = YES;
-//    _notificationLabel.backgroundColor = [UIColor whiteColor];
-    [self.statusBarWindow.rootViewController.view addSubview:_notificationLabel];
-    [self.notificationLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)]];
+    _notificationLabel.backgroundColor = [UIColor whiteColor];
+    [_notificationLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)]];
     
     return _notificationLabel;
-}
-
-- (void)addConstraints
-{
-    [self constraintsEqualWidthWithSuperView];
-    self.statusBarTopConstraint = [NSLayoutConstraint constraintTopWithItem:self];
-    self.statusBarHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:self constant:self.statusBarHeight];
-    self.statusBarTopConstraint.active = self.statusBarHeightConstraint.active = YES;
-    
-    if (self.snapshotView.superview) {
-        [self.snapshotView constraintsEqualWidthWithSuperView];
-        [NSLayoutConstraint constraintTopWithItem:self.snapshotView].active = YES;
-    }
-    
-    [self.notificationLabel constraintsEqualWidthWithSuperView];
-    self.labelTopConstraint = [NSLayoutConstraint constraintTopWithItem:self.notificationLabel];
-    self.labelTopConstraint.constant = -self.statusBarHeight;
-    self.labelHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:self.notificationLabel constant:self.statusBarHeight];
-    self.labelTopConstraint.active = self.labelHeightConstraint.active = YES;
 }
 
 #pragma mark - Orientation observer
 - (void)addObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setNeedsUpdateConstraints) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateStatusBarFrame) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
-- (void)deviceOrientationDidChange:(NSNotification *)notification
+- (void)deviceOrientationDidChange
 {
     if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+        self.hidden = NO;
         if (!self.snapshotView.superview)
-            [self insertSubview:self.snapshotView atIndex:0];   // Replace animation
+            [self addSubview:self.snapshotView];    // Replace animation
     } else {
-        [self.snapshotView removeFromSuperview];                // Overlay animation
+        self.hidden = YES;
+        [self.snapshotView removeFromSuperview];    // Overlay animation
     }
+    
+    [self updateStatusBarFrame];
+}
+
+- (void)updateStatusBarFrame
+{
+    self.hidden = YES;
+    self.height = self.isShowing ? 0 : self.statusBarHeight;
+    self.notificationLabel.height = self.statusBarHeight;
 }
 
 #pragma mark - Notification message
 + (void)showNotificationWithMessage:(NSString *)message
 {
-    sharedStatusBar = [KLStatusBar newAutoLayoutView];
+    if (sharedStatusBar.isShowing) {
+        [sharedStatusBar dismissAnimated:NO];
+    }
+    sharedStatusBar = [KLStatusBar new];
     [sharedStatusBar showWithMessage:message];
 }
 
 + (void)dismiss
 {
-    [sharedStatusBar dismissStatusBar];
-}
-
-
-- (void)updateConstraints
-{
-    self.statusBarTopConstraint.constant = self.statusBarHeight;
-    self.statusBarHeightConstraint.constant = 0;
-    self.labelTopConstraint.constant = 0;
-    [super updateConstraints];
+    [sharedStatusBar dismissAnimated:YES];
 }
 
 - (void)showWithMessage:(NSString *)message
 {
+    sharedStatusBar.isShowing = YES;
+    
     self.notificationLabel.text = message;
+    [self.notificationLabel sizeToFit];
+    self.notificationLabel.height = self.statusBarHeight;
     NSTimeInterval scrollDuration = self.notificationLabel.scrollDuration;
     NSTimeInterval delay = (scrollDuration > 0) ? scrollDuration + KLStatusBarScrollDelay : self.duration;
     
     [UIView animateWithDefaultDuration:^{
-        [self.statusBarWindow.rootViewController.view layoutIfNeeded];
+        self.notificationLabel.top = 0;
+        self.frame = CGRectMake(0, self.statusBarHeight, self.width, 0);
     } completion:^(BOOL finished) {
         KLDispatchMainAfter(delay, ^{
-            [self.class dismiss];
+            [self dismissAnimated:YES];
         });
     }];
 }
 
-- (void)dismissStatusBar
+- (void)dismissAnimated:(BOOL)animated
 {
-    self.statusBarHeightConstraint.constant = self.statusBarHeight;
-    [UIView animateWithDefaultDuration:^{
-        [self layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.statusBarWindow.hidden = YES;
-        self.statusBarWindow = nil;
-        sharedStatusBar = nil;
-    }];
+    if (animated) {
+        [UIView animateWithDefaultDuration:^{
+            self.notificationLabel.top = -self.statusBarHeight;
+            self.frame = CGRectMake(0, 0, self.width, self.statusBarHeight);
+        } completion:^(BOOL finished) {
+            [self resetNil];
+        }];
+    } else {
+        [self resetNil];
+    }
+}
+
+- (void)resetNil
+{
+    self.statusBarWindow.hidden = YES;
+    self.statusBarWindow = nil;
+    
+    sharedStatusBar.isShowing = NO;
+    sharedStatusBar = nil;
 }
 
 - (NSTimeInterval)duration

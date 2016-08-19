@@ -43,14 +43,14 @@
 {
     [self addPageViewController];
     [self addSubviews];
-    [self.view setNeedsUpdateConstraints];
+    [self addViewConstraints];
     
     [self addTapGesture];
 }
 
 - (void)singleTap:(UITapGestureRecognizer *)recognizer
 {
-    [KLStatusBar showNotificationWithMessage:@""];
+    [KLStatusBar showNotificationWithMessage:@"UIViewController *viewController = [self viewControllerAtPageIndex:self.viewModel.currentPageIndex]"];
 }
 
 - (void)reloadData
@@ -118,7 +118,7 @@
     [self.toolbar addGestureRecognizer:longPress];
 }
 
-- (void)updateViewConstraints
+- (void)addViewConstraints
 {
     NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _toolbar);
     NSDictionary *metrics = @{ @"margin": @(10.0) };
@@ -126,8 +126,6 @@
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl(10)]-margin-[_toolbar]|"
                                                                                     options:NSLayoutFormatAlignAllCenterX metrics:metrics views:views]];
-    
-    [super updateViewConstraints];
 }
 
 #pragma mark - Page view controller datasource
