@@ -159,10 +159,10 @@
 - (void)addTextFieldInView:(UIView *)view ToArray:(NSMutableArray *)array
 {
     [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView *subView, NSUInteger idx, BOOL *stop) {
-        if (![subView isKindOfClass:[UITextField class]]) {
-            [self addTextFieldInView:subView ToArray:array];
-        } else {
+        if ([subView isKindOfClass:[UITextField class]] || [subView isKindOfClass:[UITextView class]]) {
             [array insertObject:subView atIndex:0];
+        } else {
+            [self addTextFieldInView:subView ToArray:array];
         }
     }];
 }

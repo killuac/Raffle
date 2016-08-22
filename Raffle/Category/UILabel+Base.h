@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+UIKIT_EXTERN const NSTimeInterval KLLabelScrollDelay;
+
 @interface UILabel (Base)
 
 + (instancetype)labelWithText:(NSString *)text;
 + (instancetype)labelWithText:(NSString *)text attributes:(NSDictionary<NSString *, id> *)attributes;
 
-@property (nonatomic, assign) BOOL isAutoScroll;
+@property (nonatomic, assign, readonly) BOOL isScrollable;
 @property (nonatomic, assign, readonly) NSTimeInterval scrollDuration;
-@property (nonatomic, assign, readonly) CGFloat fontHeight;
+
+- (void)scrollIfNeeded;
 
 @end

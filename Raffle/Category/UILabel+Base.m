@@ -8,6 +8,15 @@
 
 #import "UILabel+Base.h"
 
+NSTimeInterval const KLLabelScrollDelay = 1.0;
+
+@interface UILabel (Private)
+
+@property (nonatomic, strong) NSLayoutConstraint *leadingConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *trailingConstraint;
+
+@end
+
 @implementation UILabel (Base)
 
 + (instancetype)labelWithText:(NSString *)text
@@ -29,39 +38,73 @@
     return label;
 }
 
-- (CGFloat)fontHeight
-{
-    return [self.text heightWithFont:self.font];
-}
-
 #pragma mark - Auto scroll
-- (void)setIsAutoScroll:(BOOL)isAutoScroll
-{
-    objc_setAssociatedObject(self, @selector(isAutoScroll), @(isAutoScroll), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)isAutoScroll
-{
-    return [objc_getAssociatedObject(self, @selector(isAutoScroll)) boolValue];
-}
-
 - (NSTimeInterval)scrollDuration
 {
-    CGFloat scrollSpeed = 40.0;
+    CGFloat scrollSpeed = 50.0;
     CGFloat contentWidth = [self.text widthWithFont:self.font];
-    return (contentWidth > self.width) ? (contentWidth / scrollSpeed) : 0;
+    return self.isScrollable ? (contentWidth / scrollSpeed) : 0;
+}
+
+- (BOOL)isScrollable
+{
+    return ([self.text widthWithFont:self.font] > self.superview.width);
 }
 
 - (void)didMoveToWindow
 {
-    if (self.isAutoScroll && self.window) {
-        [self scrollLabelIfNeeded];
+    if (self.window) {
+        [self addContraints];
     }
 }
 
-- (void)scrollLabelIfNeeded
+- (void)scrollIfNeeded
 {
+    if (!self.isScrollable || !self.superview) {
+        [self.class cancelPreviousPerformRequestsWithTarget:self];
+        self.leadingConstraint.active = NO; return;
+    } else {
+        self.leadingConstraint.active = YES;
+    }
     
+    [self.layer removeAllAnimations];
+    [self performSelector:@selector(startScroll) withObject:nil afterDelay:KLLabelScrollDelay];
+}
+
+- (void)startScroll
+{
+    [UIView animateWithDuration:self.scrollDuration delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse animations:^{
+        self.leadingConstraint.active = NO;
+        self.trailingConstraint.active = YES;
+        [self.superview layoutIfNeeded];
+    } completion:nil];
+}
+
+#pragma mark - Constraints
+- (void)addContraints
+{
+    self.leadingConstraint = [NSLayoutConstraint constraintLeadingWithItem:self];
+    self.trailingConstraint = [NSLayoutConstraint constraintTrailingWithItem:self];
+}
+
+- (void)setLeadingConstraint:(NSLayoutConstraint *)leadingConstraint
+{
+    objc_setAssociatedObject(self, @selector(leadingConstraint), leadingConstraint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSLayoutConstraint *)leadingConstraint
+{
+    return objc_getAssociatedObject(self, @selector(leadingConstraint));
+}
+
+- (void)setTrailingConstraint:(NSLayoutConstraint *)trailingConstraint
+{
+    objc_setAssociatedObject(self, @selector(trailingConstraint), trailingConstraint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSLayoutConstraint *)trailingConstraint
+{
+    return objc_getAssociatedObject(self, @selector(trailingConstraint));
 }
 
 @end

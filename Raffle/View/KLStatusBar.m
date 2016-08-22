@@ -28,8 +28,6 @@
 
 
 #pragma mark - KLStatusBar
-NSTimeInterval const KLStatusBarScrollDelay = 1.0;
-
 @interface KLStatusBar ()
 
 @property (nonatomic, strong) UIWindow *statusBarWindow;
@@ -41,11 +39,13 @@ NSTimeInterval const KLStatusBarScrollDelay = 1.0;
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign, readonly) NSTimeInterval duration;    // Showing duration
 
+@property (nonatomic, strong) NSLayoutConstraint *labelCenterConstraint;
+
 @end
 
 @implementation KLStatusBar
 
-static KLStatusBar *sharedStatusBar = nil;
+KLStatusBar *sharedStatusBar = nil;
 
 #pragma mark - Lifecycle
 - (instancetype)init
@@ -123,7 +123,6 @@ static KLStatusBar *sharedStatusBar = nil;
     _messageLabel.textAlignment = NSTextAlignmentCenter;
     _messageLabel.font = [UIFont defaultFont];
     _messageLabel.textColor = [UIColor blackColor];
-    _messageLabel.isAutoScroll = YES;
     
     return _messageLabel;
 }
@@ -133,9 +132,17 @@ static KLStatusBar *sharedStatusBar = nil;
     NSDictionary *views = NSDictionaryOfVariableBindings(_contentView);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_contentView]|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-5-[_contentView]-5-|" views:views]];
+    [self.contentView layoutIfNeeded];  // For get content view's frame
     
     [self.messageLabel constraintsEqualHeightWithSuperView];
-    [NSLayoutConstraint constraintTopWithItem:self.messageLabel].active = YES;
+    [self.messageLabel constraintsCenterYWithView:self.contentView];
+    self.labelCenterConstraint = [NSLayoutConstraint constraintCenterXWithItem:self.messageLabel];
+}
+
+- (void)updateConstraints
+{
+    self.labelCenterConstraint.active = !self.messageLabel.isScrollable;
+    [super updateConstraints];
 }
 
 #pragma mark - Orientation observer
@@ -157,6 +164,9 @@ static KLStatusBar *sharedStatusBar = nil;
     }
     
     [self updateStatusBarFrame];
+    [self setNeedsUpdateConstraints];
+    [self.contentView layoutIfNeeded];
+    [self.messageLabel scrollIfNeeded];
 }
 
 - (void)updateStatusBarFrame
@@ -184,9 +194,11 @@ static KLStatusBar *sharedStatusBar = nil;
     sharedStatusBar.isShowing = YES;
     
     self.messageLabel.text = message;
-    NSTimeInterval scrollDuration = self.messageLabel.scrollDuration;
-    NSTimeInterval delay = (scrollDuration > 0) ? scrollDuration + KLStatusBarScrollDelay : self.duration;
+    [self.messageLabel scrollIfNeeded];
+    [self setNeedsUpdateConstraints];
     
+    NSTimeInterval scrollDuration = self.messageLabel.scrollDuration;
+    NSTimeInterval delay = self.messageLabel.isScrollable ? scrollDuration + KLLabelScrollDelay : self.duration;
     [UIView animateWithDefaultDuration:^{
         self.notificationView.top = 0;
         self.frame = CGRectMake(0, self.statusBarHeight, self.width, 0);
