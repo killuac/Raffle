@@ -66,7 +66,7 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
     NSString *pageViewName = self.configs[className][KLLogPageViewName];
     
     if (pageViewName && ![className isEqualToString:pageViewName]) {
-        NSLog(@"Analytics Warning: Page view name(%@) should be same with class name(%@)", pageViewName, className);
+        KLLog(@"Analytics Warning: Page view name(%@) should be same with class name(%@)", pageViewName, className);
     }
     
     return (pageViewName ? pageViewName : className);

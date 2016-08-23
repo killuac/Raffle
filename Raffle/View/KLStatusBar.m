@@ -165,7 +165,6 @@ KLStatusBar *sharedStatusBar = nil;
     
     [self updateStatusBarFrame];
     [self setNeedsUpdateConstraints];
-    [self.contentView layoutIfNeeded];
     [self.messageLabel scrollIfNeeded];
 }
 
@@ -219,6 +218,7 @@ KLStatusBar *sharedStatusBar = nil;
 
 - (void)resetNil
 {
+    [self.statusBarWindow.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.statusBarWindow.hidden = YES;
     self.statusBarWindow = nil;
     

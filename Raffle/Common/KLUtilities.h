@@ -28,6 +28,12 @@
 #define CVC_REUSE_IDENTIFIER    @"CollectionViewCellReuseIdentifier"
 #define DECLARE_WEAK_SELF       __weak typeof(self) welf = self
 
+#ifdef DEBUG
+#define KLLog(format, ...)      NSLog(@"%@:%d: %@", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__, [NSString stringWithFormat:format, ##__VA_ARGS__]);
+#else
+#define KLLog(format, ...)
+#endif
+
 
 typedef void (^KLVoidBlockType)(void);
 

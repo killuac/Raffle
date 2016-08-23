@@ -21,7 +21,7 @@
 
 - (void)swizzle_dealloc
 {
-    NSLog(@"FREE MEMORY: %@", NSStringFromClass([self class]));
+    KLLog(@"FREE MEMORY: %@", NSStringFromClass([self class]));
     [self swizzle_dealloc];
 }
 

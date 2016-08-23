@@ -9,6 +9,7 @@
 #ifndef Raffle_Prefix_pch
 #define Raffle_Prefix_pch
 
+#ifdef __OBJC__
 @import Foundation;
 @import ObjectiveC;
 
@@ -40,5 +41,6 @@
 #import "JSONModel+Base.h"
 #import <UMMobClick/MobClick.h>
 #import <KVOController/KVOController.h>
+#endif
 
 #endif

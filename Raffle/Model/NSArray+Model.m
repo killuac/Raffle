@@ -18,9 +18,7 @@
         jsonData = [NSJSONSerialization dataWithJSONObject:dictArray options:kNilOptions error:nil];
     }
     @catch (NSException *exception) {
-#ifdef DEBUG
-        NSLog(@"EXCEPTION: %@", exception.description);
-#endif
+        KLLog(@"EXCEPTION: %@", exception.description);
     }
     
     return jsonData;
