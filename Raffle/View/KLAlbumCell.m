@@ -11,7 +11,7 @@
 @interface KLAlbumCell ()
 
 @property (nonatomic, strong) UIImageView *checkmark;
-@property (nonatomic, strong) UIImage *originalImage;
+@property (nonatomic, strong) UIView *overlayView;
 
 @end
 
@@ -33,6 +33,11 @@
     _imageView.clipsToBounds = YES;
     [self.contentView addSubview:_imageView];
     
+    _overlayView = [UIView newAutoLayoutView];
+    _overlayView.hidden = YES;
+    _overlayView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    [self.imageView addSubview:_overlayView];
+    
     _checkmark = [UIImageView newAutoLayoutView];
     _checkmark.image = [UIImage imageNamed:@"icon_checkmark"];
     _checkmark.hidden = YES;
@@ -42,6 +47,7 @@
 - (void)addConstraints
 {
     [self.imageView constraintsEqualWithSuperView];
+    [self.overlayView constraintsEqualWithSuperView];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_checkmark);
     NSDictionary *metrics = @{ @"margin": @(5) };
@@ -65,7 +71,7 @@
     [super setSelected:selected];
     self.checkmark.hidden = !selected;
     self.imageView.alpha = 1.0;
-    self.imageView.image = self.isSelected ? [self.originalImage brightenWithAlpha:0.5] : self.originalImage;
+    self.overlayView.hidden = !selected;
 }
 
 - (void)configWithAsset:(PHAsset *)asset
@@ -73,7 +79,6 @@
     [asset thumbnailImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
 //      TODO: Add load image progress
     } resultHandler:^(UIImage *image, NSDictionary *info) {
-        self.originalImage = image;
         self.imageView.image = image;
         self.selected = asset.isSelected;
         [self setNeedsLayout];
