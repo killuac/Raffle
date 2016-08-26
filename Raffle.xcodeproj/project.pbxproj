@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4105A7911D6FDF8D00215D76 /* KLScaleTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7901D6FDF8D00215D76 /* KLScaleTransition.m */; };
+		4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7931D6FDFA900215D76 /* KLCircleTransition.m */; };
+		4105A7971D70120500215D76 /* KLBaseTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7961D70120500215D76 /* KLBaseTransition.m */; };
 		4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4110BAC91D62E841001BCD38 /* KLStatusBar.m */; };
 		414AE9021D5B189F00680363 /* JSONModel+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 414AE8FF1D5B189F00680363 /* JSONModel+Base.m */; };
 		414AE9031D5B189F00680363 /* NSArray+Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 414AE9011D5B189F00680363 /* NSArray+Model.m */; };
@@ -83,6 +86,12 @@
 /* Begin PBXFileReference section */
 		183101FB2A61C20C18B6A692 /* Pods-Raffle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Raffle.release.xcconfig"; path = "Pods/Target Support Files/Pods-Raffle/Pods-Raffle.release.xcconfig"; sourceTree = "<group>"; };
 		1C661C7D86BDECA7EBE90C73 /* Pods-Raffle.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Raffle.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Raffle/Pods-Raffle.debug.xcconfig"; sourceTree = "<group>"; };
+		4105A78F1D6FDF8D00215D76 /* KLScaleTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLScaleTransition.h; sourceTree = "<group>"; };
+		4105A7901D6FDF8D00215D76 /* KLScaleTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLScaleTransition.m; sourceTree = "<group>"; };
+		4105A7921D6FDFA900215D76 /* KLCircleTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLCircleTransition.h; sourceTree = "<group>"; };
+		4105A7931D6FDFA900215D76 /* KLCircleTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLCircleTransition.m; sourceTree = "<group>"; };
+		4105A7951D70120500215D76 /* KLBaseTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLBaseTransition.h; sourceTree = "<group>"; };
+		4105A7961D70120500215D76 /* KLBaseTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLBaseTransition.m; sourceTree = "<group>"; };
 		4110BAC81D62E841001BCD38 /* KLStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLStatusBar.h; sourceTree = "<group>"; };
 		4110BAC91D62E841001BCD38 /* KLStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLStatusBar.m; sourceTree = "<group>"; };
 		414AE8FE1D5B189F00680363 /* JSONModel+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONModel+Base.h"; sourceTree = "<group>"; };
@@ -232,6 +241,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4105A78E1D6FDF6700215D76 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				4105A7951D70120500215D76 /* KLBaseTransition.h */,
+				4105A7961D70120500215D76 /* KLBaseTransition.m */,
+				4105A7921D6FDFA900215D76 /* KLCircleTransition.h */,
+				4105A7931D6FDFA900215D76 /* KLCircleTransition.m */,
+				4105A78F1D6FDF8D00215D76 /* KLScaleTransition.h */,
+				4105A7901D6FDF8D00215D76 /* KLScaleTransition.m */,
+			);
+			path = Animation;
+			sourceTree = "<group>";
+		};
 		415BFE851D5B20FC002053D6 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,6 +298,7 @@
 		41FE17141D5B10A200CABFCA /* Raffle */ = {
 			isa = PBXGroup;
 			children = (
+				4105A78E1D6FDF6700215D76 /* Animation */,
 				41FE17551D5B153A00CABFCA /* Category */,
 				41FE17561D5B153A00CABFCA /* Common */,
 				41FE17571D5B153A00CABFCA /* Controller */,
@@ -629,6 +652,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4105A7971D70120500215D76 /* KLBaseTransition.m in Sources */,
 				415BFEAC1D5B210F002053D6 /* KLMoreViewController.m in Sources */,
 				41FE17991D5B15AB00CABFCA /* UITableViewCell+Base.m in Sources */,
 				41FE17901D5B15AB00CABFCA /* UIAlertController+Base.m in Sources */,
@@ -656,6 +680,7 @@
 				415BFE901D5B20FC002053D6 /* KLAlbumCell.m in Sources */,
 				415BFEA91D5B210F002053D6 /* KLCameraViewController.m in Sources */,
 				41FE179B1D5B15AB00CABFCA /* UIView+Base.m in Sources */,
+				4105A7911D6FDF8D00215D76 /* KLScaleTransition.m in Sources */,
 				41FE178C1D5B15AB00CABFCA /* NSDate+Base.m in Sources */,
 				41FE17911D5B15AB00CABFCA /* UIBarButtonItem+Base.m in Sources */,
 				415BFEA81D5B210F002053D6 /* KLAlbumViewController.m in Sources */,
@@ -663,6 +688,7 @@
 				415BFE9B1D5B2106002053D6 /* PHAsset+Model.m in Sources */,
 				415BFE931D5B20FC002053D6 /* KLSegmentControl.m in Sources */,
 				41FE17931D5B15AB00CABFCA /* UIColor+Base.m in Sources */,
+				4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */,
 				41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */,
 				41FE178F1D5B15AB00CABFCA /* NSTimer+Base.m in Sources */,
 				4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */,

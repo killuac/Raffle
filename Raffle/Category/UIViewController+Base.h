@@ -29,7 +29,7 @@
 
 + (instancetype)viewControllerWithViewModel:(id)viewModel;
 
-@property (nonatomic, assign) BOOL isLoadingData;
+@property (nonatomic, assign, getter=isLoadingData) BOOL loadingData;
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 @property (nonatomic, strong, readonly) UITabBar *tabBar;

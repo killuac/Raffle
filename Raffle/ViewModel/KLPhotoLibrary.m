@@ -94,7 +94,7 @@
                     [collection fetchAssets:^{
                         [collection.assets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
                             if ([self.selectedAssets containsObject:asset]) {
-                                asset.isSelected = YES;
+                                asset.selected = YES;
                             }
                         }];
                     }];
@@ -189,7 +189,7 @@
 {
     PHAssetCollection *assetCollection = self.assetCollections[index];
     [assetCollection.assets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
-        asset.isSelected = [self.selectedAssetArray containsObject:asset];
+        asset.selected = [self.selectedAssetArray containsObject:asset];
     }];
     return assetCollection;
 }
@@ -213,7 +213,7 @@
 - (void)selectAsset:(PHAsset *)asset
 {
     [self willChangeValueForSelectedAssets];
-    asset.isSelected = YES;
+    asset.selected = YES;
     if (![self.selectedAssetArray containsObject:asset]) {
         [self.selectedAssetArray addObject:asset];
     }
@@ -223,7 +223,7 @@
 - (void)deselectAsset:(PHAsset *)asset
 {
     [self willChangeValueForSelectedAssets];
-    asset.isSelected = NO;
+    asset.selected = NO;
     [self.selectedAssetArray removeObject:asset];
     [self didChangeValueForSelectedAssets];
 }

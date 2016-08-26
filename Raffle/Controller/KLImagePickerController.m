@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UINavigationBar *navigationBar;
 @property (nonatomic, strong) UINavigationItem *navigationItem;
 
+@property (nonatomic, strong) KLScaleTransition *scaleTransition;
+
 @end
 
 @implementation KLImagePickerController
@@ -38,6 +40,9 @@
 {
     if (self = [super init]) {
         _photoLibrary = photoLibrary;
+        self.scaleTransition = [KLScaleTransition transitionWithInteractive:NO];
+        self.modalPresentationStyle = UIModalPresentationCustom;
+        self.transitioningDelegate = self.scaleTransition;
     }
     return self;
 }

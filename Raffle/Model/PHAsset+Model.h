@@ -13,7 +13,7 @@ typedef void (^KLAssetBlockType)(UIImage *image, NSDictionary *info);
 
 @interface PHAsset (Model)
 
-@property (nonatomic, assign) BOOL isSelected;
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
 
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler;
 - (void)originalImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler;

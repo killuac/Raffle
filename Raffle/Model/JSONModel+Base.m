@@ -10,9 +10,9 @@
 
 @implementation JSONModel (Base)
 
-- (void)setIsSelected:(BOOL)isSelected
+- (void)setSelected:(BOOL)selected
 {
-    objc_setAssociatedObject(self, @selector(isSelected), @(isSelected), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(isSelected), @(selected), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)isSelected

@@ -11,7 +11,7 @@
 
 @interface JSONModel (Base)
 
-@property (nonatomic, assign) BOOL isSelected;
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
 
 + (instancetype)model;
 + (instancetype)modelWithString:(NSString *)string;

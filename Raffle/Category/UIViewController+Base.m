@@ -32,9 +32,9 @@
 }
 
 #pragma mark - Properties
-- (void)setIsLoadingData:(BOOL)isLoadingData
+- (void)setLoadingData:(BOOL)loadingData
 {
-    objc_setAssociatedObject(self, @selector(isLoadingData), @(isLoadingData), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(isLoadingData), @(loadingData), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)isLoadingData

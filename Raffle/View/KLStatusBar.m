@@ -36,7 +36,7 @@
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UILabel *messageLabel;
 
-@property (nonatomic, assign) BOOL isShowing;
+@property (nonatomic, assign, getter=isShowing) BOOL showing;
 @property (nonatomic, assign, readonly) NSTimeInterval duration;    // Showing duration
 
 @property (nonatomic, strong) NSLayoutConstraint *labelCenterConstraint;
@@ -190,7 +190,7 @@ KLStatusBar *sharedStatusBar = nil;
 
 - (void)showWithMessage:(NSString *)message
 {
-    sharedStatusBar.isShowing = YES;
+    sharedStatusBar.showing = YES;
     
     self.messageLabel.text = message;
     [self.messageLabel scrollIfNeeded];
@@ -222,7 +222,7 @@ KLStatusBar *sharedStatusBar = nil;
     self.statusBarWindow.hidden = YES;
     self.statusBarWindow = nil;
     
-    self.isShowing = NO;
+    self.showing = NO;
     sharedStatusBar = nil;
 }
 

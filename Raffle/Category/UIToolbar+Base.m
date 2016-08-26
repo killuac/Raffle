@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSArray *barButtonItems;      // Exclude flexible space bar button
 @property (nonatomic, strong) NSMutableArray *separators;
-@property (nonatomic, assign) BOOL isDistributed;
+@property (nonatomic, assign, getter=isDistributed) BOOL distributed;
 
 @end
 
@@ -25,7 +25,7 @@
 
 + (instancetype)toolbarWithItems:(NSArray<UIBarButtonItem *> *)items
 {
-    return [[self alloc] initWithItems:items isDistributed:NO separator:NO];
+    return [[self alloc] initWithItems:items distributed:NO separator:NO];
 }
 
 + (instancetype)toolbarWithDistributedItems:(NSArray<UIBarButtonItem *> *)items
@@ -35,15 +35,15 @@
 
 + (instancetype)toolbarWithDistributedItems:(NSArray<UIBarButtonItem *> *)items separator:(BOOL)separator
 {
-    return [[self alloc] initWithItems:items isDistributed:YES separator:separator];
+    return [[self alloc] initWithItems:items distributed:YES separator:separator];
 }
 
-- (instancetype)initWithItems:(NSArray<UIBarButtonItem *> *)items isDistributed:(BOOL)isDistributed separator:(BOOL)separator
+- (instancetype)initWithItems:(NSArray<UIBarButtonItem *> *)items distributed:(BOOL)distributed separator:(BOOL)separator
 {
     if (self = [super init]) {
         self.translucent = NO;
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        self.isDistributed = isDistributed;
+        self.distributed = distributed;
         self.separators = [NSMutableArray array];
         self.barButtonItems = items;
         NSMutableArray *barItems = [NSMutableArray arrayWithObject:[UIBarButtonItem flexibleSpaceBarButtonItem]];
@@ -71,9 +71,9 @@
     return self;
 }
 
-- (void)setIsDistributed:(BOOL)isDistributed
+- (void)setDistributed:(BOOL)distributed
 {
-    objc_setAssociatedObject(self, @selector(isDistributed), @(isDistributed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(isDistributed), @(distributed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)isDistributed

@@ -12,7 +12,6 @@ NSTimeInterval const KLLabelScrollDelay = 1.0;
 
 @interface UILabel (Private)
 
-@property (nonatomic, assign) BOOL isScrolling;
 @property (nonatomic, strong) NSLayoutConstraint *leadingConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *trailingConstraint;
 
@@ -40,16 +39,6 @@ NSTimeInterval const KLLabelScrollDelay = 1.0;
 }
 
 #pragma mark - Auto scroll
-- (void)setIsScrolling:(BOOL)isScrolling
-{
-    objc_setAssociatedObject(self, @selector(isScrolling), @(isScrolling), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)isScrolling
-{
-    return [objc_getAssociatedObject(self, @selector(isScrolling)) boolValue];
-}
-
 - (NSTimeInterval)scrollDuration
 {
     CGFloat scrollSpeed = 80.0;
