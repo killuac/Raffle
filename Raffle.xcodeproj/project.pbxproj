@@ -64,6 +64,8 @@
 		41FE17A11D5B160700CABFCA /* Analytics.plist in Resources */ = {isa = PBXBuildFile; fileRef = 41FE179D1D5B160700CABFCA /* Analytics.plist */; };
 		41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE179F1D5B160700CABFCA /* AppDelegate+Analytics.m */; };
 		CFF1CC9C5F50DB9B5B1B1C89 /* Pods_Raffle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */; };
+		E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */; };
+		E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -205,6 +207,10 @@
 		41FE179F1D5B160700CABFCA /* AppDelegate+Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Analytics.m"; sourceTree = "<group>"; };
 		41FE17A01D5B160700CABFCA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Raffle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E378808A1D733936000FFCA4 /* CAAnimationGroup+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimationGroup+Base.h"; sourceTree = "<group>"; };
+		E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimationGroup+Base.m"; sourceTree = "<group>"; };
+		E378808D1D733AD1000FFCA4 /* CAAnimation+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+Base.h"; sourceTree = "<group>"; };
+		E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+Base.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +250,10 @@
 		4105A78E1D6FDF6700215D76 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
+				E378808D1D733AD1000FFCA4 /* CAAnimation+Base.h */,
+				E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */,
+				E378808A1D733936000FFCA4 /* CAAnimationGroup+Base.h */,
+				E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */,
 				4105A7951D70120500215D76 /* KLBaseTransition.h */,
 				4105A7961D70120500215D76 /* KLBaseTransition.m */,
 				4105A7921D6FDFA900215D76 /* KLCircleTransition.h */,
@@ -691,8 +701,10 @@
 				4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */,
 				41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */,
 				41FE178F1D5B15AB00CABFCA /* NSTimer+Base.m in Sources */,
+				E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */,
 				4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */,
 				41FE17971D5B15AB00CABFCA /* UILabel+Base.m in Sources */,
+				E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */,
 				414AE9021D5B189F00680363 /* JSONModel+Base.m in Sources */,
 				415BFEB11D5B2117002053D6 /* KLDrawPoolViewModel.m in Sources */,
 				41FE17661D5B15A300CABFCA /* KLUtilities.m in Sources */,

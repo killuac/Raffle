@@ -39,6 +39,9 @@
 #import "UIViewController+Base.h"
 #import "UIAlertController+Base.h"
 
+#import "CAAnimation+Base.h"
+#import "CAAnimationGroup+Base.h"
+
 #import "JSONModel+Base.h"
 #import <UMMobClick/MobClick.h>
 #import <KVOController/KVOController.h>

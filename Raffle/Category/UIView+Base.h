@@ -82,9 +82,9 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 - (void)removeBlurBackground;
 
 + (void)animateWithDefaultDuration:(KLVoidBlockType)animations;
-+ (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(void (^)(BOOL finished))completion;
++ (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion;
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations;
-+ (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(void (^)(BOOL finished))completion;
++ (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion;
 - (void)animateSpringScale;
 
 @end

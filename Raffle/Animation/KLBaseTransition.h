@@ -10,7 +10,7 @@
 
 @interface KLBaseTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
-+ (instancetype)transitionWithInteractive:(BOOL)interactive;    // Must retain the instance with property
++ (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled;  // Must retain the instance with property
 
 @property (nonatomic, assign, readonly, getter=isPresenting) BOOL presenting;
 @property (nonatomic, assign, readonly, getter=isInteractive) BOOL interactive;
@@ -18,9 +18,10 @@
 
 @property (nonatomic, assign, readonly) NSTimeInterval duration;
 @property (nonatomic, strong, readonly) id <UIViewControllerContextTransitioning> transitionContext;
+@property (nonatomic, strong, readonly) UINavigationController *navigationController;
 
 // Below methods need overwrite by subclass if needed
-- (void)animateModalTransition:(id <UIViewControllerContextTransitioning>)transitionContext;
-- (void)animateNavigationTransition:(id <UIViewControllerContextTransitioning>)transitionContext;
+- (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView;
+- (void)animateNavigationTransitionFromView:(UIView *)fromView toView:(UIView *)toView;
 
 @end

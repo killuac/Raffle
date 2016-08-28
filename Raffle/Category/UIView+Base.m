@@ -398,7 +398,7 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
     [UIView animateWithDefaultDuration:animations completion:nil];
 }
 
-+ (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(void (^)(BOOL finished))completion
++ (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion
 {
     [UIView animateWithDuration:KLViewDefaultAnimationDuration animations:animations completion:completion];
 }
@@ -408,7 +408,7 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
     [UIView animateSpringWithDefaultDuration:animations completion:nil];
 }
 
-+ (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(void (^)(BOOL finished))completion
++ (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion
 {
     [UIView animateWithDuration:KLViewDefaultAnimationDuration
                           delay:0

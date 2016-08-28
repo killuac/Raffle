@@ -10,22 +10,23 @@
 
 @interface KLBaseTransition ()
 
-@property (nonatomic, weak) UIViewController *viewController;   // Presented VC or Navigation Controller
+@property (nonatomic, assign) BOOL gestureEnabled;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, weak) UIViewController *viewController;   // Presented VC or Navigation Controller
 
 @end
 
 @implementation KLBaseTransition
 
-+ (instancetype)transitionWithInteractive:(BOOL)interactive
++ (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled
 {
-    return [[self alloc] initWithInteractive:interactive];
+    return [[self alloc] initWithGestureEnabled:gestureEnabled];
 }
 
-- (instancetype)initWithInteractive:(BOOL)interactive
+- (instancetype)initWithGestureEnabled:(BOOL)gestureEnabled
 {
     if (self = [super init]) {
-        _interactive = interactive;
+        _gestureEnabled = gestureEnabled;
     }
     return self;
 }
@@ -33,6 +34,11 @@
 - (void)dealloc
 {
     [self removeInteractiveGesture];
+}
+
+- (UINavigationController *)navigationController
+{
+    return (self.isModalTransition) ? self.viewController.navigationController : (id)self.viewController;
 }
 
 #pragma mark - UIViewControllerAnimatedTransitioning
@@ -43,25 +49,30 @@
 
 - (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext
 {
-    return [CATransaction animationDuration];
+    return 0.35;
 }
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext
 {
     _transitionContext = transitionContext;
+    UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+    
     if (self.isModalTransition) {
-        [self animateModalTransition:transitionContext];
+        [self animateModalTransitionFromView:fromView toView:toView];
     } else {
-        [self animateNavigationTransition:transitionContext];
+        [self animateNavigationTransitionFromView:fromView toView:toView];
     }
 }
 
-- (void)animateModalTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+// Up <-> Down
+- (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
 //  Implement by subclass
 }
 
-- (void)animateNavigationTransition:(id<UIViewControllerContextTransitioning>)transitionContext
+// Left <-> Right
+- (void)animateNavigationTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
 //  Implement by subclass
 }
@@ -82,13 +93,14 @@
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
 {
     UIView *recognizerView = recognizer.view;
-    CGPoint location = [recognizer locationInView:recognizerView];
+    CGPoint translation = [recognizer translationInView:recognizerView];
     CGPoint velocity = [recognizer velocityInView:recognizerView];
     
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
+            _interactive = YES;
             if (self.isModalTransition) {
-                if (velocity.x != 0) return;
+                if (ABS(velocity.x) >= recognizerView.width) return;
                 [self.viewController dismissViewControllerAnimated:YES completion:nil];
             } else {
                 [(UINavigationController *)self.viewController popViewControllerAnimated:YES];
@@ -96,31 +108,25 @@
             break;
             
         case UIGestureRecognizerStateChanged: {
-            CGFloat ratio = self.isModalTransition ? (location.y / recognizerView.height) : (location.x / recognizerView.width);
+            CGFloat ratio = self.isModalTransition ? (translation.y / recognizerView.height) : (translation.x / recognizerView.width);
             [self updateInteractiveTransition:ratio];
             break;
         }
             
         case UIGestureRecognizerStateEnded: {
-            BOOL flag = self.isModalTransition ? location.y > recognizerView.height/3 : location.x > recognizerView.width/2;
-            if (self.presenting) {
-                if (flag) {
-                    [self finishInteractiveTransition];
-                } else {
-                    [self cancelInteractiveTransition];
-                }
+            _interactive = NO;
+            BOOL isDismiss = self.isModalTransition ? velocity.y > recognizerView.height/3 : velocity.x > recognizerView.width/2;
+            if (isDismiss) {
+                [self finishInteractiveTransition];
             } else {
-                if (!flag) {
-                    [self finishInteractiveTransition];
-                } else {
-                    [self cancelInteractiveTransition];
-                }
+                [self cancelInteractiveTransition];
             }
             break;
         }
             
         case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateCancelled:
+            _interactive = NO;
             [self cancelInteractiveTransition];
             break;
             
@@ -142,7 +148,7 @@
                                                                        sourceController:(UIViewController *)sourceVC
 {
     _presenting = YES; _modalTransition = YES;
-    if (self.isInteractive) {
+    if (self.gestureEnabled) {
         [self addInteractiveGestureToViewController:presentedVC];
     }
     
@@ -155,11 +161,7 @@
     return self;
 }
 
-- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id <UIViewControllerAnimatedTransitioning>)transitionAnimator
-{
-    return self.isInteractive ? self : nil;
-}
-
+// Only enable interactive gesture for dismissal
 - (id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)transitionAnimator
 {
     return self.isInteractive ? self : nil;
@@ -176,17 +178,18 @@
     NSUInteger fromIndex = [navigationController.viewControllers indexOfObject:fromVC];
     NSUInteger toIndex = [navigationController.viewControllers indexOfObject:toVC];
     _presenting = (toIndex > fromIndex); _modalTransition = NO;
-    if (self.isInteractive) {
+    if (self.gestureEnabled) {
         [self addInteractiveGestureToViewController:navigationController];
     }
     
     return self;
 }
 
+// Only enable interactive gesture for dismissal
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>)transitionAnimator
 {
-    return self.isInteractive ? self : nil;
+    return (self.isInteractive) ? self : nil;
 }
 
 @end

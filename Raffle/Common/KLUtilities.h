@@ -36,6 +36,7 @@
 
 
 typedef void (^KLVoidBlockType)(void);
+typedef void (^KLBOOLBlockType)(BOOL finished);
 
 NS_INLINE CGFloat KLPointDistance(CGPoint p1, CGPoint p2) { return sqrtf(powf(p2.x-p1.x, 2) + powf(p2.y-p1.y, 2)); }
 NS_INLINE CGFloat KLRadianFromDegree(CGFloat degree) { return (degree * M_PI / 180.0); }

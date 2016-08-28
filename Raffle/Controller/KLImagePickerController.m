@@ -16,8 +16,8 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) KLSegmentControl *segmentControl;
-@property (nonatomic, strong) UINavigationBar *navigationBar;
-@property (nonatomic, strong) UINavigationItem *navigationItem;
+@property (nonatomic, strong) UINavigationBar *bottomBar;
+@property (nonatomic, strong) UINavigationItem *bottomBarItem;
 
 @property (nonatomic, strong) KLScaleTransition *scaleTransition;
 
@@ -40,8 +40,7 @@
 {
     if (self = [super init]) {
         _photoLibrary = photoLibrary;
-        self.scaleTransition = [KLScaleTransition transitionWithInteractive:NO];
-        self.modalPresentationStyle = UIModalPresentationCustom;
+        self.scaleTransition = [KLScaleTransition transitionWithGestureEnabled:NO];
         self.transitioningDelegate = self.scaleTransition;
     }
     return self;
@@ -94,8 +93,8 @@
 - (void)selectedAssetsChanged
 {
     NSUInteger count = self.photoLibrary.selectedAssets.count;
-    self.navigationItem.title = count ? [NSString stringWithFormat:TITLE_SELECTED_PHOTO_COUNT, count] : nil;
-    self.navigationItem.rightBarButtonItem.enabled = count > 0;
+    self.bottomBarItem.title = count ? [NSString stringWithFormat:TITLE_SELECTED_PHOTO_COUNT, count] : nil;
+    self.bottomBarItem.rightBarButtonItem.enabled = count > 0;
 }
 
 #pragma mark - Subviews and controllers
@@ -129,29 +128,29 @@
     _segmentControl.delegate = self;
     [self.view addSubview:_segmentControl];
     
-    _navigationItem = [[UINavigationItem alloc] init];
-    _navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeAlbum:)];
-    _navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_DONE target:self action:@selector(donePhotoSelection:)];
-    _navigationItem.rightBarButtonItem.enabled = NO;
-    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldTitleFont]} forState:UIControlStateNormal];
+    _bottomBarItem = [[UINavigationItem alloc] init];
+    _bottomBarItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeAlbum:)];
+    _bottomBarItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_DONE target:self action:@selector(donePhotoSelection:)];
+    _bottomBarItem.rightBarButtonItem.enabled = NO;
+    [self.bottomBarItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldTitleFont]} forState:UIControlStateNormal];
     
-    _navigationBar = [[UINavigationBar alloc] init];
-    _navigationBar.translatesAutoresizingMaskIntoConstraints = NO;
-    _navigationBar.items = @[_navigationItem];
-    _navigationBar.tintColor = [UIColor whiteColor];
-    _navigationBar.barTintColor = [UIColor darkBackgroundColor];
-    _navigationBar.titleTextAttributes = @{ NSForegroundColorAttributeName : _navigationBar.tintColor };
-    [self.view addSubview:_navigationBar];
+    _bottomBar = [[UINavigationBar alloc] init];
+    _bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+    _bottomBar.items = @[_bottomBarItem];
+    _bottomBar.tintColor = [UIColor whiteColor];
+    _bottomBar.barTintColor = [UIColor darkBackgroundColor];
+    _bottomBar.titleTextAttributes = @{ NSForegroundColorAttributeName : _bottomBar.tintColor };
+    [self.view addSubview:_bottomBar];
 }
 
 - (void)addViewConstraints
 {
     UIView *pageView = self.pageViewController.view;
     id<UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
-    NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, _segmentControl, _navigationBar, pageView);
+    NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, _segmentControl, _bottomBar, pageView);
     NSDictionary *metrics = @{ @"margin": @(2.0) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-margin-[pageView]-margin-[_navigationBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-margin-[pageView]-margin-[_bottomBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
 }
 
 - (void)showAlert

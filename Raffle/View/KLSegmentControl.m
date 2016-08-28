@@ -263,7 +263,7 @@
     }];
 }
 
-- (void)animateSelectCellAtIndexPath:(NSIndexPath *)indexPath completion:(void (^)(BOOL finished))completion
+- (void)animateSelectCellAtIndexPath:(NSIndexPath *)indexPath completion:(KLBOOLBlockType)completion
 {
     KLSegmentCollectionViewCell *cell = (id)[self.collectionView cellForItemAtIndexPath:indexPath];
     [UIView animateWithDefaultDuration:^{
