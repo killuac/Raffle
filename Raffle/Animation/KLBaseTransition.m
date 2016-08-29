@@ -12,6 +12,8 @@
 
 @property (nonatomic, assign) BOOL gestureEnabled;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, assign) CGPoint startLocation;
+
 @property (nonatomic, weak) UIViewController *viewController;   // Presented VC or Navigation Controller
 
 @end
@@ -27,18 +29,24 @@
 {
     if (self = [super init]) {
         _gestureEnabled = gestureEnabled;
+        self.transitionOrientation = KLTransitionOrientationVertical;
     }
     return self;
 }
 
-- (void)dealloc
+- (BOOL)isVertical
 {
-    [self removeInteractiveGesture];
+    return self.transitionOrientation == KLTransitionOrientationVertical;
 }
 
 - (UINavigationController *)navigationController
 {
     return (self.isModalTransition) ? self.viewController.navigationController : (id)self.viewController;
+}
+
+- (void)dealloc
+{
+    [self removeInteractiveGesture];
 }
 
 #pragma mark - UIViewControllerAnimatedTransitioning
@@ -49,14 +57,19 @@
 
 - (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext
 {
-    return 0.35;
+    return 0.4;
 }
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext
 {
     _transitionContext = transitionContext;
+    UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
     UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+
+    fromView.frame = [transitionContext initialFrameForViewController:fromVC];
+    toView.frame = [transitionContext finalFrameForViewController:toVC];    // For solve orientation changed issue
     
     if (self.isModalTransition) {
         [self animateModalTransitionFromView:fromView toView:toView];
@@ -81,11 +94,11 @@
 - (void)addInteractiveGestureToViewController:(UIViewController *)viewController
 {
     self.viewController = viewController;
-    if (self.isModalTransition) {
+    if (self.isVertical) {
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     } else {
         self.panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-        ((UIScreenEdgePanGestureRecognizer *)self.panGesture).edges = UIRectEdgeLeft;
+        [(id)self.panGesture setEdges:UIRectEdgeLeft];
     }
     [viewController.view addGestureRecognizer:self.panGesture];
 }
@@ -99,8 +112,8 @@
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
             _interactive = YES;
+            _startLocation = [recognizer locationInView:recognizerView.superview];
             if (self.isModalTransition) {
-                if (ABS(velocity.x) >= recognizerView.width) return;
                 [self.viewController dismissViewControllerAnimated:YES completion:nil];
             } else {
                 [(UINavigationController *)self.viewController popViewControllerAnimated:YES];
@@ -108,14 +121,15 @@
             break;
             
         case UIGestureRecognizerStateChanged: {
-            CGFloat ratio = self.isModalTransition ? (translation.y / recognizerView.height) : (translation.x / recognizerView.width);
-            [self updateInteractiveTransition:ratio];
+            CGFloat ratio = self.isVertical ? (translation.y / recognizerView.height) : ((translation.x + self.startLocation.x) / recognizerView.width);
+            [self updateInteractiveTransition:ratio/2];
             break;
         }
             
         case UIGestureRecognizerStateEnded: {
             _interactive = NO;
-            BOOL isDismiss = self.isModalTransition ? velocity.y > recognizerView.height/3 : velocity.x > recognizerView.width/2;
+            CGFloat offset = self.isVertical ? MAX(velocity.y, translation.y - self.startLocation.y/2) : MAX(velocity.x, translation.x - self.startLocation.x/2);
+            BOOL isDismiss = self.isVertical ? offset > recognizerView.height/4 : offset > recognizerView.width/2;
             if (isDismiss) {
                 [self finishInteractiveTransition];
             } else {

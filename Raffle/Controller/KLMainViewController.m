@@ -24,10 +24,10 @@
 @implementation KLMainViewController
 
 #pragma mark - Life cycle
-- (instancetype)initWithViewModel:(id)viewModel
+- (instancetype)init
 {
     if (self = [super init]) {
-        _viewModel = viewModel;
+        _viewModel = [KLMainViewModel new];
     }
     return self;
 }
@@ -169,7 +169,10 @@
 
 - (void)slideMenu:(id)sender
 {
-    
+    KLMoreViewController *moreVC = [KLMoreViewController viewController];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moreVC];
+    navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (void)takePhoto:(id)sender
@@ -192,6 +195,7 @@
     
     KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
     imagePicker.delegate = self.pageViewController.viewControllers.firstObject; // FIXME: maybe nil
+    imagePicker.transitioningDelegate = imagePicker.scaleTransition;
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 

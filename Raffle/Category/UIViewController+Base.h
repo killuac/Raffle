@@ -27,6 +27,7 @@
 
 @interface UIViewController (Base) <KLViewControllerProtocol, UITextFieldDelegate>
 
++ (instancetype)viewController;
 + (instancetype)viewControllerWithViewModel:(id)viewModel;
 
 @property (nonatomic, assign, getter=isLoadingData) BOOL loadingData;

@@ -23,6 +23,7 @@
 
 "ReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始する";
 
+"DrawPool" = "賞金プール";
 "Photos" = "写真";
 "Camera" = "カメラ";
 "SelectedPhotoCount" = "選択中の写真 %lu 枚";

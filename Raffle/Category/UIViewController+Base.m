@@ -26,6 +26,11 @@
 }
 
 #pragma mark - Lifecycle
++ (instancetype)viewController
+{
+    return [[self alloc] init];
+}
+
 + (instancetype)viewControllerWithViewModel:(id)viewModel
 {
     return [[self alloc] initWithViewModel:viewModel];

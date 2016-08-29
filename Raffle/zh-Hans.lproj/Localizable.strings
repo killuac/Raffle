@@ -23,6 +23,7 @@
 
 "ReloadAllPhotos" = "重新加载所有照片，开始新一轮抽奖。";
 
+"DrawPool" = "奖池";
 "Photos" = "照片";
 "Camera" = "相机";
 "SelectedPhotoCount" = "已选择 %lu 张照片";

@@ -20,7 +20,7 @@
 {
     [self setupApplication];
     
-    self.window.rootViewController = [KLMainViewController viewControllerWithViewModel:[KLMainViewModel new]];
+    self.window.rootViewController = [KLMainViewController viewController];
     [self.window makeKeyAndVisible];
     
     return YES;

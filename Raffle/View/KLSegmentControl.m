@@ -8,7 +8,8 @@
 
 #import "KLSegmentControl.h"
 
-#define TITLE_LABEL_FONT    [UIFont subtitleFont]
+#define TITLE_LABEL_FONT        [UIFont subtitleFont]
+#define SELECTION_MARK_MARGIN   UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 8.0 : 5.0
 
 #pragma mark - Class: KLSegmentCollectionViewCell
 @interface KLSegmentCollectionViewCell : UICollectionViewCell
@@ -88,7 +89,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-    return CGSizeMake(self.width, 36);
+    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? CGSizeMake(self.width, 36) : CGSizeMake(self.width, 30);
 }
 
 - (void)setItems:(NSArray *)items
@@ -250,7 +251,7 @@
 
 - (void)setCurrentSelectionMarkFrameByCell:(KLSegmentCollectionViewCell *)cell
 {
-    CGFloat dy = (cell.height - cell.titleLabel.intrinsicContentHeight - 8) / 2;
+    CGFloat dy = (cell.height - cell.titleLabel.intrinsicContentHeight - SELECTION_MARK_MARGIN) / 2;
     self.currentSelectionMark.frame = CGRectInset(cell.frame, self.itemInset/3, dy);
     self.currentSelectionMark.layer.cornerRadius = self.currentSelectionMark.height / 2;
 }

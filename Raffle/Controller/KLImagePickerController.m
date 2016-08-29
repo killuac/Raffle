@@ -19,7 +19,8 @@
 @property (nonatomic, strong) UINavigationBar *bottomBar;
 @property (nonatomic, strong) UINavigationItem *bottomBarItem;
 
-@property (nonatomic, strong) KLScaleTransition *scaleTransition;
+@property (nonatomic, strong) NSLayoutConstraint *scHeightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *barHeightConstraint;
 
 @end
 
@@ -40,8 +41,7 @@
 {
     if (self = [super init]) {
         _photoLibrary = photoLibrary;
-        self.scaleTransition = [KLScaleTransition transitionWithGestureEnabled:NO];
-        self.transitioningDelegate = self.scaleTransition;
+        _scaleTransition = [KLScaleTransition transitionWithGestureEnabled:NO];
     }
     return self;
 }
@@ -151,6 +151,25 @@
     NSDictionary *metrics = @{ @"margin": @(2.0) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-margin-[pageView]-margin-[_bottomBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
+    
+    self.scHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_segmentControl constant:0];
+    self.barHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomBar constant:0];
+}
+
+- (void)updateViewConstraints
+{
+    self.scHeightConstraint.active = YES;
+    self.scHeightConstraint.constant = self.segmentControl.intrinsicContentHeight;
+    
+    self.barHeightConstraint.active = YES;
+    self.barHeightConstraint.constant = self.bottomBarHeight;
+    
+    [super updateViewConstraints];
+}
+
+- (CGFloat)bottomBarHeight
+{
+    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 44 : 34;
 }
 
 - (void)showAlert
@@ -193,6 +212,7 @@
 #pragma mark - Scroll delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (scrollView.width == 0) return;
     CGFloat offsetRate = (scrollView.contentOffset.x - scrollView.width) / scrollView.width;
     [self.segmentControl scrollWithOffsetRate:offsetRate];
 }

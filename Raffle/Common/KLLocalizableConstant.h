@@ -26,6 +26,7 @@
 
 #define TIP_RELOAD_ALL_PHOTOS           NSLocalizedString(@"ReloadAllPhotos", "")
 
+#define TITLE_DRAW_POOL                 NSLocalizedString(@"DrawPool", "")
 #define TITLE_PHOTOS                    NSLocalizedString(@"Photos", "")
 #define TITLE_CAMERA                    NSLocalizedString(@"Camera", "")
 #define TITLE_SELECTED_PHOTO_COUNT      NSLocalizedString(@"SelectedPhotoCount", "")
