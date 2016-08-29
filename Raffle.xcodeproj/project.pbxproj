@@ -66,6 +66,8 @@
 		CFF1CC9C5F50DB9B5B1B1C89 /* Pods_Raffle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */; };
 		E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */; };
 		E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */; };
+		E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */; };
+		E37880951D74930D000FFCA4 /* CAShapeLayer+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -211,6 +213,10 @@
 		E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimationGroup+Base.m"; sourceTree = "<group>"; };
 		E378808D1D733AD1000FFCA4 /* CAAnimation+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+Base.h"; sourceTree = "<group>"; };
 		E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+Base.m"; sourceTree = "<group>"; };
+		E37880901D74925B000FFCA4 /* CABasicAnimation+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CABasicAnimation+Base.h"; sourceTree = "<group>"; };
+		E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CABasicAnimation+Base.m"; sourceTree = "<group>"; };
+		E37880931D74930D000FFCA4 /* CAShapeLayer+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Base.h"; sourceTree = "<group>"; };
+		E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+Base.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +260,10 @@
 				E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */,
 				E378808A1D733936000FFCA4 /* CAAnimationGroup+Base.h */,
 				E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */,
+				E37880901D74925B000FFCA4 /* CABasicAnimation+Base.h */,
+				E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */,
+				E37880931D74930D000FFCA4 /* CAShapeLayer+Base.h */,
+				E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */,
 				4105A7951D70120500215D76 /* KLBaseTransition.h */,
 				4105A7961D70120500215D76 /* KLBaseTransition.m */,
 				4105A7921D6FDFA900215D76 /* KLCircleTransition.h */,
@@ -688,6 +698,7 @@
 				41FE17951D5B15AB00CABFCA /* UIImage+Base.m in Sources */,
 				41FE179A1D5B15AB00CABFCA /* UIToolbar+Base.m in Sources */,
 				415BFE901D5B20FC002053D6 /* KLAlbumCell.m in Sources */,
+				E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */,
 				415BFEA91D5B210F002053D6 /* KLCameraViewController.m in Sources */,
 				41FE179B1D5B15AB00CABFCA /* UIView+Base.m in Sources */,
 				4105A7911D6FDF8D00215D76 /* KLScaleTransition.m in Sources */,
@@ -698,6 +709,7 @@
 				415BFE9B1D5B2106002053D6 /* PHAsset+Model.m in Sources */,
 				415BFE931D5B20FC002053D6 /* KLSegmentControl.m in Sources */,
 				41FE17931D5B15AB00CABFCA /* UIColor+Base.m in Sources */,
+				E37880951D74930D000FFCA4 /* CAShapeLayer+Base.m in Sources */,
 				4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */,
 				41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */,
 				41FE178F1D5B15AB00CABFCA /* NSTimer+Base.m in Sources */,

@@ -9,7 +9,7 @@
 #import "KLSegmentControl.h"
 
 #define TITLE_LABEL_FONT        [UIFont subtitleFont]
-#define SELECTION_MARK_MARGIN   UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 8.0 : 5.0
+#define SELECTION_MARK_MARGIN   (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 8.0 : 5.0)
 
 #pragma mark - Class: KLSegmentCollectionViewCell
 @interface KLSegmentCollectionViewCell : UICollectionViewCell

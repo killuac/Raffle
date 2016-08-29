@@ -12,13 +12,13 @@
 
 + (void)load
 {
-    KLClassSwizzleMethod([self class], @selector(animation), @selector(swizzle_animation), YES);
+    KLClassSwizzleMethod([self class], @selector(init), @selector(swizzle_init), NO);
 }
 
-+ (instancetype)swizzle_animation
+- (instancetype)swizzle_init
 {
-    CAAnimation *animation = [self swizzle_animation];
-    animation.delegate = animation;
+    id animation = [self swizzle_init];
+    [animation setDelegate:animation];
     return animation;
 }
 

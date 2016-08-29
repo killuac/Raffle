@@ -10,40 +10,44 @@
 
 @implementation KLCircleTransition
 
+- (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext
+{
+    return [CATransaction animationDuration];
+}
+
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
     UIView *containerView = self.transitionContext.containerView;
+    CGFloat radius = KLPointDistance(CGPointZero, containerView.center);
+    CGPathRef startPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:0.1 startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
+    CGPathRef endPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:radius startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
     
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+    CAShapeLayer *maskLayer = [CAShapeLayer layerWithPath:endPath];
+    CABasicAnimation *pathAnimation = [CABasicAnimation animationWithDuration:self.duration keyPath:@"path"];
+    // Avoid screen flash
+    pathAnimation.removedOnCompletion = NO;
+    pathAnimation.fillMode = kCAFillModeBoth;
+    
     if (self.isPresenting) {
         [containerView addSubview:toView];
-        CATransform3D scaleTransform = CATransform3DMakeScale(0.94, 0.94, 1);
-        scaleTransform.m34 = 1.0/-500.0;
-        toView.layer.transform = self.isVertical ? CATransform3DMakeTranslation(0, toView.height, 0) : CATransform3DMakeTranslation(toView.width, 0, 0);
-        [UIView animateWithDuration:self.duration animations:^{
-            toView.layer.transform = CATransform3DIdentity;
-            fromView.alpha = 0.7;
-            fromView.layer.transform = scaleTransform;
-        } completion:^(BOOL finished) {
-            [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
-        }];
-    }
-    else {
+        toView.layer.mask = maskLayer;
+        
+        pathAnimation.fromValue = (__bridge id)startPath;
+        pathAnimation.toValue = (__bridge id)endPath;
+    } else {
         [containerView insertSubview:toView belowSubview:fromView];
+        fromView.layer.mask = maskLayer;
         
-        fromView.layer.shadowColor = [UIColor blackColor].CGColor;
-        fromView.layer.shadowOpacity = 0.3;
-        fromView.layer.shadowOffset = self.isVertical ? CGSizeMake(0, -3) : CGSizeMake(-3, 0);
-        fromView.layer.shadowRadius = 5.0;
-        
-        [UIView animateWithDuration:self.duration animations:^{
-            toView.alpha = 1;
-            toView.transform = CGAffineTransformIdentity;
-            fromView.layer.transform = self.isVertical ? CATransform3DMakeTranslation(0, fromView.height, 0) : CATransform3DMakeTranslation(fromView.width, 0, 0);
-        } completion:^(BOOL finished) {
-            [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
-        }];
+        pathAnimation.fromValue = (__bridge id)endPath;
+        pathAnimation.toValue = (__bridge id)startPath;
     }
+    
+    [maskLayer addAnimation:pathAnimation forKey:@"pathAnimation"];
+    [pathAnimation setCompletionBlock:^(BOOL isFinished) {
+        fromView.layer.mask = nil;
+        toView.layer.mask = nil;
+        [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
+    }];
 }
 
 @end
