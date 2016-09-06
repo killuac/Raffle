@@ -78,7 +78,7 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
     [UIViewController aspect_hookSelector:@selector(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
         if ([self isNeedLoggingForAspectInfo:aspectInfo]) {
             NSString *pageViewName = [self pageViewNameForAspectInfo:aspectInfo];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            KLDispatchGlobalAsync(^{
                 [MobClick beginLogPageView:pageViewName];
             });
         }
@@ -87,7 +87,7 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
     [UIViewController aspect_hookSelector:@selector(viewWillDisappear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
         if ([self isNeedLoggingForAspectInfo:aspectInfo]) {
             NSString *pageViewName = [self pageViewNameForAspectInfo:aspectInfo];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            KLDispatchGlobalAsync(^{
                 [MobClick endLogPageView:pageViewName];
             });
         }
@@ -103,12 +103,11 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
             KLAspectHandlerBlock block = event[KLLogEventHandlerBlock];
             
             [clazz aspect_hookSelector:selector withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                KLDispatchGlobalAsync(^{
                     if (block) {
                         block(aspectInfo);
-                    } else {
-                        [MobClick event:event[KLLogEventName]];
                     }
+                    [MobClick event:event[KLLogEventName]];
                 });
             } error:NULL];
         }];

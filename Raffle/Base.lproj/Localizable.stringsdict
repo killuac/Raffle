@@ -5,8 +5,8 @@
 	<key>SelectedPhotoCount</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@count@</string>
-		<key>count</key>
+		<string>%#@selectedPhotos@</string>
+		<key>selectedPhotos</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>

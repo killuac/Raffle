@@ -30,11 +30,14 @@
 
 - (void)addSubviews
 {
-    _titleLabel = [UILabel newAutoLayoutView];
-    _titleLabel.font = TITLE_LABEL_FONT;
-    _titleLabel.textColor = [UIColor whiteColor];
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:_titleLabel];
+    [self.contentView addSubview:({
+        _titleLabel = [UILabel newAutoLayoutView];
+        _titleLabel.font = TITLE_LABEL_FONT;
+        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel;
+    })];
+    
     [_titleLabel constraintsCenterInSuperview];
 }
 
@@ -80,6 +83,7 @@
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.defaultItemInset = KLViewDefaultMargin;
         self.items = items;
+        
         [self addSubviews];
         [self addObservers];
         [self relayoutCollectionView];
@@ -105,29 +109,35 @@
 - (void)addSubviews
 {
     // Add collection view
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.minimumLineSpacing = 0;
-    flowLayout.minimumInteritemSpacing = 0;
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, self.defaultItemInset, 0, self.defaultItemInset);
-    
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
-    _collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-    _collectionView.backgroundColor = [UIColor darkBackgroundColor];
-    _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.dataSource = self;
-    _collectionView.delegate = self;
-    [self addSubview:_collectionView];
-    [self.collectionView constraintsEqualWithSuperView];
-    [self.collectionView registerClass:[KLSegmentCollectionViewCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
-    [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    [self addSubview:({
+        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+        flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        flowLayout.minimumLineSpacing = 0;
+        flowLayout.minimumInteritemSpacing = 0;
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, self.defaultItemInset, 0, self.defaultItemInset);
+        
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+        _collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        _collectionView.backgroundColor = [UIColor darkBackgroundColor];
+        _collectionView.showsHorizontalScrollIndicator = NO;
+        _collectionView.dataSource = self;
+        _collectionView.delegate = self;
+        
+        [_collectionView constraintsEqualWithSuperView];
+        [_collectionView registerClass:[KLSegmentCollectionViewCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+        [_collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        
+        _collectionView;
+    })];
     
     // Add current selection mark
-    _currentSelectionMark = [UIView newAutoLayoutView];
-    _currentSelectionMark.backgroundColor = [UIColor blackColor];
-    _currentSelectionMark.userInteractionEnabled = NO;
-    _currentSelectionMark.layer.zPosition = -1;
-    [self.collectionView addSubview:_currentSelectionMark];
+    [self.collectionView addSubview:({
+        _currentSelectionMark = [UIView newAutoLayoutView];
+        _currentSelectionMark.backgroundColor = [UIColor blackColor];
+        _currentSelectionMark.userInteractionEnabled = NO;
+        _currentSelectionMark.layer.zPosition = -1;
+        _currentSelectionMark;
+    })];
 }
 
 - (void)relayoutCollectionView

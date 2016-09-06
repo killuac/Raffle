@@ -10,7 +10,7 @@
 #import "PHAsset+Model.h"
 
 typedef NS_ENUM(NSUInteger, KLDrawMode) {
-    KLDrawModePrize,
+    KLDrawModePrize = 1,
     KLDrawModeAttendee
 };
 

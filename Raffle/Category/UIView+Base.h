@@ -20,7 +20,6 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 @optional
 - (void)addSubviews;
 - (void)addSubviews:(NSArray *)subviews;
-- (void)addContraints;
 
 - (void)addTapGesture;
 - (void)removeTapGesture;

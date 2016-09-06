@@ -86,19 +86,19 @@ NSArray* KLClassGetSubClasses(Class superClass)
     return classArray;
 }
 
-void KLClassSwizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod)
+void KLClassSwizzleMethod(Class clazz, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod)
 {
     // the method might not exist in the class, but in its superclass
-    Method originalMethod = isClassMethod ? class_getClassMethod(class, originalSelector) : class_getInstanceMethod(class, originalSelector);
-    Method swizzledMethod = isClassMethod ? class_getClassMethod(class, swizzledSelector) : class_getInstanceMethod(class, swizzledSelector);
+    Method originalMethod = isClassMethod ? class_getClassMethod(clazz, originalSelector) : class_getInstanceMethod(clazz, originalSelector);
+    Method swizzledMethod = isClassMethod ? class_getClassMethod(clazz, swizzledSelector) : class_getInstanceMethod(clazz, swizzledSelector);
     
     // class_addMethod will fail if original method already exists
-    Class cls = isClassMethod ? object_getClass(class) : class;
+    Class cls = isClassMethod ? object_getClass(clazz) : clazz;
     BOOL isAddMethod = class_addMethod(cls, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
     
     // the method doesn’t exist and we just added one
     if (isAddMethod) {
-        class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+        class_replaceMethod(clazz, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
     } else {
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }

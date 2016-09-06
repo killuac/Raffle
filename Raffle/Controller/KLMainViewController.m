@@ -43,7 +43,6 @@
 {
     [self addPageViewController];
     [self addSubviews];
-    [self addViewConstraints];
 }
 
 - (void)reloadData
@@ -93,32 +92,32 @@
 - (void)addSubviews
 {
 //  Page control
-    _pageControl = [UIPageControl newAutoLayoutView];
-    _pageControl.enabled = NO;
-    _pageControl.numberOfPages = self.viewModel.drawPoolCount;
-    _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    [self.view addSubview:_pageControl];
+    [self.view addSubview:({
+        _pageControl = [UIPageControl newAutoLayoutView];
+        _pageControl.enabled = NO;
+        _pageControl.numberOfPages = self.viewModel.drawPoolCount;
+        _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+        _pageControl;
+    })];
     
 //  Toolbar
-    UIBarButtonItem *reloadItem = [UIBarButtonItem barButtonItemWithImageName:@"button_reload" target:self action:@selector(reloadPhotos:)];
-    UIBarButtonItem *addItem = [UIBarButtonItem barButtonItemWithImageName:@"button_add" target:self action:@selector(addPhotos:)];
-    UIBarButtonItem *menuItem = [UIBarButtonItem barButtonItemWithImageName:@"button_menu" target:self action:@selector(slideMenu:)];
-    _toolbar = [UIToolbar toolbarWithItems:@[reloadItem, addItem, menuItem]];
-    [self.toolbar setSeparatorColor:[UIColor separatorColor]];
-    [self.view addSubview:_toolbar];
+    [self.view addSubview:({
+        UIBarButtonItem *reloadItem = [UIBarButtonItem barButtonItemWithImageName:@"button_reload" target:self action:@selector(reloadPhotos:)];
+        UIBarButtonItem *addItem = [UIBarButtonItem barButtonItemWithImageName:@"button_add" target:self action:@selector(addPhotos:)];
+        UIBarButtonItem *menuItem = [UIBarButtonItem barButtonItemWithImageName:@"button_menu" target:self action:@selector(slideMenu:)];
+        
+        _toolbar = [UIToolbar toolbarWithItems:@[reloadItem, addItem, menuItem]];
+        [self.toolbar setSeparatorColor:[UIColor separatorColor]];
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
+        [self.toolbar addGestureRecognizer:longPress];
+        
+        _toolbar;
+    })];
     
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
-    [self.toolbar addGestureRecognizer:longPress];
-}
-
-- (void)addViewConstraints
-{
     NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _toolbar);
-    NSDictionary *metrics = @{ @"margin": @(10.0) };
-    
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl(10)]-margin-[_toolbar]|"
-                                                                                    options:NSLayoutFormatAlignAllCenterX metrics:metrics views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl(10)]-10-[_toolbar]|" options:NSLayoutFormatAlignAllCenterX views:views]];
 }
 
 #pragma mark - Page view controller datasource

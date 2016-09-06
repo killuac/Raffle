@@ -16,6 +16,11 @@
     return [self constraintsWithVisualFormat:format options:0 metrics:nil views:views];
 }
 
++ (NSArray<__kindof NSLayoutConstraint *> *)constraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts views:(NSDictionary<NSString *, id> *)views
+{
+	return [self constraintsWithVisualFormat:format options:opts metrics:nil views:views];
+}
+
 + (instancetype)constraintWidthWithItem:(UIView *)view constant:(CGFloat)constant
 {
     return [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual

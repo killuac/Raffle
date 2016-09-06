@@ -21,38 +21,38 @@
 {
     if (self = [super initWithFrame:frame]) {
         [self addSubviews];
-        [self addConstraints];
     }
     return self;
 }
 
 - (void)addSubviews
 {
-    _imageView = [UIImageView newAutoLayoutView];
-    _imageView.contentMode = UIViewContentModeScaleAspectFill;
-    _imageView.clipsToBounds = YES;
-    [self.contentView addSubview:_imageView];
+    [self.contentView addSubview:({
+        _imageView = [UIImageView newAutoLayoutView];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.clipsToBounds = YES;
+        _imageView;
+    })];
     
-    _overlayView = [UIView newAutoLayoutView];
-    _overlayView.hidden = YES;
-    _overlayView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    [self.imageView addSubview:_overlayView];
+    [self.imageView addSubview:({
+        _overlayView = [UIView newAutoLayoutView];
+        _overlayView.hidden = YES;
+        _overlayView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+        _overlayView;
+    })];
     
-    _checkmark = [UIImageView newAutoLayoutView];
-    _checkmark.image = [UIImage imageNamed:@"icon_checkmark"];
-    _checkmark.hidden = YES;
-    [self.contentView addSubview:_checkmark];
-}
-
-- (void)addConstraints
-{
-    [self.imageView constraintsEqualWithSuperView];
-    [self.overlayView constraintsEqualWithSuperView];
+    [self.contentView addSubview:({
+        _checkmark = [UIImageView newAutoLayoutView];
+        _checkmark.image = [UIImage imageNamed:@"icon_checkmark"];
+        _checkmark.hidden = YES;
+        _checkmark;
+    })];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_checkmark);
-    NSDictionary *metrics = @{ @"margin": @(5) };
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-margin-|" options:0 metrics:metrics views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-margin-|" options:0 metrics:metrics views:views]];
+    [self.imageView constraintsEqualWithSuperView];
+    [self.overlayView constraintsEqualWithSuperView];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-5-|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-5-|" views:views]];
 }
 
 - (void)prepareForReuse

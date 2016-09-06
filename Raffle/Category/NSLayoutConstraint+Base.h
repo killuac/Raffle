@@ -11,6 +11,7 @@
 @interface NSLayoutConstraint (Base)
 
 + (NSArray<__kindof NSLayoutConstraint *> *)constraintsWithVisualFormat:(NSString *)format views:(NSDictionary<NSString *, id> *)views;
++ (NSArray<__kindof NSLayoutConstraint *> *)constraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts views:(NSDictionary<NSString *, id> *)views;
 
 + (instancetype)constraintWidthWithItem:(UIView *)view constant:(CGFloat)constant;
 + (instancetype)constraintHeightWithItem:(UIView *)view constant:(CGFloat)constant;

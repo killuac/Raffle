@@ -70,4 +70,4 @@ FOUNDATION_EXPORT NSURL *KLURLApplicationSupportFile(NSString *fileName);
 FOUNDATION_EXPORT NSURL *KLURLPlistFile(NSString *fileName);
 
 FOUNDATION_EXPORT NSArray *KLClassGetSubClasses(Class superClass);
-FOUNDATION_EXPORT void KLClassSwizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod);
+FOUNDATION_EXPORT void KLClassSwizzleMethod(Class clazz, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod);

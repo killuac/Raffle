@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G1004" minimumToolsVersion="Automatic">
+    <entity name="DrawPool" syncable="YES">
+        <attribute name="creationDate" attributeType="Date" syncable="YES"/>
+        <attribute name="drawMode" attributeType="Integer 16" minValueString="1" maxValueString="2" defaultValueString="1" syncable="YES"/>
+        <relationship name="photos" toMany="YES" deletionRule="Cascade" destinationEntity="Photo" syncable="YES"/>
+    </entity>
+    <entity name="Photo" syncable="YES">
+        <attribute name="assetLocalIdentifier" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="DrawPool" positionX="180" positionY="-39" width="128" height="88"/>
+        <element name="Photo" positionX="-36" positionY="18" width="128" height="58"/>
+    </elements>
 </model>

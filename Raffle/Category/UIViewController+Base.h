@@ -14,7 +14,6 @@
 - (instancetype)initWithViewModel:(id)viewModel;
 
 - (void)prepareForUI;
-- (void)addViewConstraints;
 - (void)setupNavigationBar;
 
 - (void)loadData;

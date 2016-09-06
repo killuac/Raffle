@@ -62,7 +62,6 @@
     self.view.backgroundColor = [UIColor blackColor];
     [self addPageViewController];
     [self addSubviews];
-    [self addViewConstraints];
 }
 
 #pragma mark - Observer
@@ -124,33 +123,34 @@
 
 - (void)addSubviews
 {
-    _segmentControl = [KLSegmentControl segmentControlWithItems:nil];
-    _segmentControl.delegate = self;
-    [self.view addSubview:_segmentControl];
+    [self.view addSubview:({
+        _segmentControl = [KLSegmentControl segmentControlWithItems:nil];
+        _segmentControl.delegate = self;
+        _segmentControl;
+    })];
     
-    _bottomBarItem = [[UINavigationItem alloc] init];
-    _bottomBarItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeAlbum:)];
-    _bottomBarItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_DONE target:self action:@selector(donePhotoSelection:)];
-    _bottomBarItem.rightBarButtonItem.enabled = NO;
-    [self.bottomBarItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldTitleFont]} forState:UIControlStateNormal];
+    [self.view addSubview:({
+        _bottomBarItem = [[UINavigationItem alloc] init];
+        _bottomBarItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeAlbum:)];
+        _bottomBarItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_DONE target:self action:@selector(donePhotoSelection:)];
+        _bottomBarItem.rightBarButtonItem.enabled = NO;
+        [self.bottomBarItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldTitleFont]} forState:UIControlStateNormal];
+        
+        _bottomBar = [[UINavigationBar alloc] init];
+        _bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+        _bottomBar.items = @[_bottomBarItem];
+        _bottomBar.tintColor = [UIColor whiteColor];
+        _bottomBar.barTintColor = [UIColor darkBackgroundColor];
+        _bottomBar.titleTextAttributes = @{ NSForegroundColorAttributeName : _bottomBar.tintColor };
+        
+        _bottomBar;
+    })];
     
-    _bottomBar = [[UINavigationBar alloc] init];
-    _bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
-    _bottomBar.items = @[_bottomBarItem];
-    _bottomBar.tintColor = [UIColor whiteColor];
-    _bottomBar.barTintColor = [UIColor darkBackgroundColor];
-    _bottomBar.titleTextAttributes = @{ NSForegroundColorAttributeName : _bottomBar.tintColor };
-    [self.view addSubview:_bottomBar];
-}
-
-- (void)addViewConstraints
-{
-    UIView *pageView = self.pageViewController.view;
-    id<UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
+    UIView *pageView = self.pageViewController.view; id<UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
     NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, _segmentControl, _bottomBar, pageView);
-    NSDictionary *metrics = @{ @"margin": @(2.0) };
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-margin-[pageView]-margin-[_bottomBar]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing metrics:metrics views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-2-[pageView]-2-[_bottomBar]|"
+                                                                                    options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
     
     self.scHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_segmentControl constant:0];
     self.barHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomBar constant:0];
