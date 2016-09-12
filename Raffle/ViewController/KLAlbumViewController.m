@@ -31,17 +31,17 @@ static CGSize cellItemSize;
 }
 
 #pragma mark - Lifecycle
-+ (instancetype)viewControllerWithPageIndex:(NSInteger)pageIndex photoLibrary:(KLPhotoLibrary *)photoLibrary
++ (instancetype)viewControllerWithPhotoLibrary:(KLPhotoLibrary *)photoLibrary atPageIndex:(NSUInteger)pageIndex
 {
-    return [[self alloc] initWithPageIndex:pageIndex photoLibrary:photoLibrary];
+    return [[self alloc] initWithPhotoLibrary:photoLibrary atPageIndex:pageIndex];
 }
 
-- (instancetype)initWithPageIndex:(NSInteger)pageIndex photoLibrary:(id)photoLibrary
+- (instancetype)initWithPhotoLibrary:(KLPhotoLibrary *)photoLibrary atPageIndex:(NSUInteger)pageIndex
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
-        _pageIndex = pageIndex;
         _photoLibrary = photoLibrary;
-        _assetCollection = [self.photoLibrary assetCollectionAtIndex:pageIndex];
+        _pageIndex = pageIndex;
+        _assetCollection = [photoLibrary assetCollectionAtIndex:pageIndex];
     }
     return self;
 }

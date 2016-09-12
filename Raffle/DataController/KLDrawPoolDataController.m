@@ -1,35 +1,30 @@
 //
-//  KLDrawPoolViewModel.m
+//  KLDrawPoolDataController.m
 //  Raffle
 //
 //  Created by Killua Liu on 7/31/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import "KLDrawPoolViewModel.h"
+#import "KLDrawPoolDataController.h"
 
-@interface KLDrawPoolViewModel ()
+@interface KLDrawPoolDataController ()
 
 @property (nonatomic, strong) KLDrawPoolModel *drawPool;
 
 @end
 
-@implementation KLDrawPoolViewModel
-
-+ (instancetype)viewModelWithModel:(KLDrawPoolModel *)model
-{
-    return [[self alloc] initWithModel:model];
-}
+@implementation KLDrawPoolDataController
 
 - (instancetype)initWithModel:(KLDrawPoolModel *)model
 {
-    if (self = [super init]) {
+    if (self = [self init]) {
         _drawPool = model;
     }
     return self;
 }
 
-- (NSUInteger)photoCount
+- (NSUInteger)itemCount
 {
     return self.drawPool.photoCount;
 }

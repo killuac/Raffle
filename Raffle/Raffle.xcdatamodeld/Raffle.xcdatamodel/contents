@@ -8,8 +8,9 @@
     <entity name="Photo" syncable="YES">
         <attribute name="assetLocalIdentifier" attributeType="String" syncable="YES"/>
     </entity>
+    <fetchRequest name="DrawPools" entity="DrawPool" includePropertyValues="YES" returnObjectsAsFaults="YES" returnDistinctResults="YES"/>
     <elements>
-        <element name="DrawPool" positionX="180" positionY="-39" width="128" height="88"/>
+        <element name="DrawPool" positionX="180" positionY="-39" width="128" height="90"/>
         <element name="Photo" positionX="-36" positionY="18" width="128" height="58"/>
     </elements>
 </model>

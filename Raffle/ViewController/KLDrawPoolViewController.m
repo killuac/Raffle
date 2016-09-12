@@ -7,30 +7,37 @@
 //
 
 #import "KLDrawPoolViewController.h"
+#import "KLMainViewController.h"
 #import "KLDrawPoolCell.h"
 #import "KLCircleLayout.h"
 
 @interface KLDrawPoolViewController ()
 
-@property (nonatomic, strong) KLDrawPoolViewModel *viewModel;
+@property (nonatomic, strong) KLMainDataController *mainDC;
+@property (nonatomic, strong) KLDrawPoolDataController *drawPoolDC;
 
 @end
 
 @implementation KLDrawPoolViewController
 
 #pragma mark - Life cycle
-+ (instancetype)viewControllerWithPageIndex:(NSInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel
++ (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex
 {
-    return [[self alloc] initWithPageIndex:pageIndex viewModel:viewModel];
+    return [[self alloc] initWithDataController:dataController atPageIndex:pageIndex];
 }
 
-- (instancetype)initWithPageIndex:(NSInteger)pageIndex viewModel:(KLDrawPoolViewModel *)viewModel
+- (instancetype)initWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex
 {
     if (self = [super initWithCollectionViewLayout:[KLCircleLayout new]]) {
-        _pageIndex = pageIndex;
-        _viewModel = viewModel;
+        _mainDC = dataController;
+        _drawPoolDC = [dataController drawPoolDataControllerAtIndex:pageIndex];
     }
     return self;
+}
+
+- (NSUInteger)pageIndex
+{
+    return self.drawPoolDC.pageIndex;
 }
 
 - (void)viewDidLoad
@@ -48,13 +55,13 @@
 #pragma mark - Collection view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.viewModel.photoCount;
+    return self.drawPoolDC.itemCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KLDrawPoolCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithAsset:[self.viewModel assetAtIndex:indexPath.item]];
+    [cell configWithAsset:[self.drawPoolDC assetAtIndex:indexPath.item]];
     
     return cell;
 }

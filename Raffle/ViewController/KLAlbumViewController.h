@@ -12,8 +12,8 @@
 
 @interface KLAlbumViewController : UICollectionViewController
 
-+ (instancetype)viewControllerWithPageIndex:(NSInteger)pageIndex photoLibrary:(KLPhotoLibrary *)photoLibrary;
++ (instancetype)viewControllerWithPhotoLibrary:(KLPhotoLibrary *)photoLibrary atPageIndex:(NSUInteger)pageIndex;
 
-@property (nonatomic, assign, readonly) NSInteger pageIndex;
+@property (nonatomic, assign, readonly) NSUInteger pageIndex;
 
 @end

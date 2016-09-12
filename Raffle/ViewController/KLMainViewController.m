@@ -13,7 +13,7 @@
 
 @interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
-@property (nonatomic, strong) KLMainViewModel *viewModel;
+@property (nonatomic, strong) KLMainDataController *dataController;
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
@@ -27,7 +27,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _viewModel = [KLMainViewModel new];
+        _dataController = [KLMainDataController new];
     }
     return self;
 }
@@ -47,9 +47,9 @@
 
 - (void)reloadData
 {
-    self.pageScrollView.scrollEnabled = self.viewModel.isPageScrollEnabled;
+    self.pageScrollView.scrollEnabled = self.dataController.isPageScrollEnabled;
     
-    UIViewController *viewController = [self viewControllerAtPageIndex:self.viewModel.currentPageIndex];
+    UIViewController *viewController = [self viewControllerAtPageIndex:self.dataController.currentPageIndex];
     if (viewController) {
         [self.pageViewController setViewControllers:@[viewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     } else if (self.pageViewController.childViewControllers.count) {
@@ -95,7 +95,7 @@
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
         _pageControl.enabled = NO;
-        _pageControl.numberOfPages = self.viewModel.drawPoolCount;
+        _pageControl.numberOfPages = self.dataController.pageCount;
         _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
         _pageControl;
     })];
@@ -139,10 +139,9 @@
 
 - (KLDrawPoolViewController *)viewControllerAtPageIndex:(NSUInteger)index
 {
-    if (self.viewModel.drawPoolCount == 0 || index >= self.viewModel.drawPoolCount) return nil;
+    if (self.dataController.pageCount == 0 || index >= self.dataController.pageCount) return nil;
     
-    KLDrawPoolViewModel *poolViewModel = [self.viewModel drawPoolViewModelAtIndex:index];
-    KLDrawPoolViewController *VC = [KLDrawPoolViewController viewControllerWithPageIndex:index viewModel:poolViewModel];
+    KLDrawPoolViewController *VC = [KLDrawPoolViewController viewControllerWithDataController:self.dataController atPageIndex:index];
     
     return VC;
 }
@@ -150,8 +149,8 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed
 {
     if (completed) {
-        self.viewModel.currentPageIndex = [pageViewController.viewControllers.firstObject pageIndex];
-        self.pageControl.currentPage = self.viewModel.currentPageIndex;
+        self.dataController.currentPageIndex = [pageViewController.viewControllers.firstObject pageIndex];
+        self.pageControl.currentPage = self.dataController.currentPageIndex;
     }
 }
 

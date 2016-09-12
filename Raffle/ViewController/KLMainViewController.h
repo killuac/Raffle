@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KLMainViewModel.h"
+#import "KLMainDataController.h"
 
 @interface KLMainViewController : UIViewController
 

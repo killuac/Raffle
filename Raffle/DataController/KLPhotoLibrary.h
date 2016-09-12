@@ -6,18 +6,13 @@
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "KLDataController.h"
 #import "PHAssetCollection+Model.h"
 
-@interface KLPhotoLibrary : NSObject
+@interface KLPhotoLibrary : KLDataController
 
 @property (nonatomic, strong, readonly) NSArray<PHAssetCollection *> *assetCollections;
-@property (nonatomic, strong, readonly) NSArray<NSString *> *assetCollectionTitles;
 @property (nonatomic, strong, readonly) NSArray *selectedAssets;
-
-@property (nonatomic, assign) NSInteger currentPageIndex;
-@property (nonatomic, assign, readonly) BOOL isPageScrollEnabled;
-@property (nonatomic, assign, readonly) NSUInteger assetCollectionCount;
 
 - (void)checkAuthorization:(KLVoidBlockType)handler;
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index;

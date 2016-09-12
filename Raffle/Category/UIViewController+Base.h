@@ -11,7 +11,7 @@
 @protocol KLViewControllerProtocol <KLViewProtocol>
 
 @optional
-- (instancetype)initWithViewModel:(id)viewModel;
+- (instancetype)initWithDataController:(id)dataController;
 
 - (void)prepareForUI;
 - (void)setupNavigationBar;
@@ -27,7 +27,7 @@
 @interface UIViewController (Base) <KLViewControllerProtocol, UITextFieldDelegate>
 
 + (instancetype)viewController;
-+ (instancetype)viewControllerWithViewModel:(id)viewModel;
++ (instancetype)viewControllerWithDataController:(id)dataController;
 
 @property (nonatomic, assign, getter=isLoadingData) BOOL loadingData;
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;

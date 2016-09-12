@@ -85,7 +85,7 @@
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
     }
     
-    self.segmentControl.items = self.photoLibrary.assetCollectionTitles;
+    self.segmentControl.items = self.photoLibrary.segmentTitles;
     [self.segmentControl reloadData];
 }
 
@@ -202,9 +202,9 @@
 
 - (KLAlbumViewController *)viewControllerAtPageIndex:(NSUInteger)index
 {
-    if (self.photoLibrary.assetCollectionCount == 0 || index >= self.photoLibrary.assetCollectionCount) return nil;
+    if (self.photoLibrary.pageCount == 0 || index >= self.photoLibrary.pageCount) return nil;
     
-    KLAlbumViewController *albumVC = [KLAlbumViewController viewControllerWithPageIndex:index photoLibrary:self.photoLibrary];
+    KLAlbumViewController *albumVC = [KLAlbumViewController viewControllerWithPhotoLibrary:self.photoLibrary atPageIndex:index];
     
     return albumVC;
 }

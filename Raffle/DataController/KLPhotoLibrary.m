@@ -160,29 +160,14 @@
     return self.assetCollectionArray;
 }
 
-- (NSArray<NSString *> *)assetCollectionTitles
-{
-    return [self.assetCollections valueForKeyPath:@"@unionOfObjects.localizedTitle"];
-}
-
-- (NSUInteger)assetCollectionCount
+- (NSUInteger)pageCount
 {
     return self.assetCollections.count;
 }
 
-- (NSInteger)currentPageIndex
+- (NSArray<NSString *> *)segmentTitles
 {
-    if (_currentPageIndex == NSNotFound) {
-        _currentPageIndex = 0;
-    } else if (_currentPageIndex >= self.assetCollectionCount) {
-        _currentPageIndex = self.assetCollectionCount - 1;
-    }
-    return _currentPageIndex;
-}
-
-- (BOOL)isPageScrollEnabled
-{
-    return self.assetCollectionCount > 0;
+    return [self.assetCollections valueForKeyPath:@"@unionOfObjects.localizedTitle"];
 }
 
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index
@@ -194,20 +179,15 @@
     return assetCollection;
 }
 
-- (NSUInteger)assetCountAtIndex:(NSUInteger)index
+- (NSArray *)selectedAssets
 {
-    return [self assetCollectionAtIndex:index].assets.count;
+    return self.selectedAssetArray;
 }
 
 //- (NSMutableArray *)selectedAssetArray
 //{
 //    return [self mutableArrayValueForKey:@"_selectedAssetArray"];   // For KVO
 //}
-
-- (NSArray *)selectedAssets
-{
-    return self.selectedAssetArray;
-}
 
 #pragma mark - Update assets
 - (void)selectAsset:(PHAsset *)asset

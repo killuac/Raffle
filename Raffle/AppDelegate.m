@@ -62,57 +62,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
-}
-
-#pragma mark - Core Data stack
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-
-- (NSManagedObjectModel *)managedObjectModel
-{
-    if (_managedObjectModel) return _managedObjectModel;
-    
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:APP_BUNDLE_NAME withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
-}
-
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
-    if (_persistentStoreCoordinator) return _persistentStoreCoordinator;
-    
-    NSError *error = nil;
-    NSURL *storeURL = KLURLDocumentFile([APP_BUNDLE_NAME stringByAppendingPathExtension:@"sqlite"]);
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        KLLog(@"Unresolved error %@, %@", error.localizedDescription, error.userInfo);
-        abort();
-    }
-    return _persistentStoreCoordinator;
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (_managedObjectContext) return _managedObjectContext;
-    
-    _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    _managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
-    return _managedObjectContext;
-}
-
-#pragma mark - Core Data Saving support
-- (void)saveContext
-{
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext) return;
-    
-    NSError *error = nil;
-    if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-        NSLog(@"Unresolved error %@, %@", error.localizedDescription, error.userInfo);
-        abort();
-    }
 }
 
 @end

@@ -31,9 +31,9 @@
     return [[self alloc] init];
 }
 
-+ (instancetype)viewControllerWithViewModel:(id)viewModel
++ (instancetype)viewControllerWithDataController:(id)dataController
 {
-    return [[self alloc] initWithViewModel:viewModel];
+    return [[self alloc] initWithDataController:(id)dataController];
 }
 
 #pragma mark - Properties

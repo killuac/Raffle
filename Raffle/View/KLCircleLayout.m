@@ -12,7 +12,7 @@
 
 @property (nonatomic, assign) CGPoint center;
 @property (nonatomic, assign) CGFloat radius;
-@property (nonatomic, assign) NSInteger cellCount;
+@property (nonatomic, assign) NSUInteger cellCount;
 
 @end
 
@@ -54,7 +54,7 @@
 - (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect
 {
     NSMutableArray* attributes = [NSMutableArray array];
-    for (NSInteger i = 0; i < self.cellCount; i++) {
+    for (NSUInteger i = 0; i < self.cellCount; i++) {
         NSIndexPath* indexPath = [NSIndexPath indexPathForItem:i inSection:0];
         [attributes addObject:[self layoutAttributesForItemAtIndexPath:indexPath]];
     }

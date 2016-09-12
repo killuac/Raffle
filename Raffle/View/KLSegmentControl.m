@@ -123,12 +123,12 @@
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
         
-        [_collectionView constraintsEqualWithSuperView];
         [_collectionView registerClass:[KLSegmentCollectionViewCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
         [_collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         
         _collectionView;
     })];
+    [self.collectionView constraintsEqualWithSuperView];
     
     // Add current selection mark
     [self.collectionView addSubview:({
