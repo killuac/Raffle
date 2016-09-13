@@ -40,7 +40,7 @@
 				<key>KLLogEventName</key>
 				<string>MainVC_ShowDrawModes</string>
 				<key>KLLogEventSelectorName</key>
-				<string>showDrawModes:</string>
+				<string>changeDrawModes:</string>
 			</dict>
 		</array>
 	</dict>

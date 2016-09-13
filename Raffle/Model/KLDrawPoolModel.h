@@ -6,7 +6,7 @@
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-@import JSONModel;
+#import <CoreData/CoreData.h>
 #import "PHAsset+Model.h"
 
 typedef NS_ENUM(NSUInteger, KLDrawMode) {
@@ -14,7 +14,7 @@ typedef NS_ENUM(NSUInteger, KLDrawMode) {
     KLDrawModeAttendee
 };
 
-@interface KLDrawPoolModel : JSONModel
+@interface KLDrawPoolModel : NSManagedObject
 
 @property (nonatomic, strong) NSDate *creationDate;
 @property (nonatomic, assign) KLDrawMode drawMode;

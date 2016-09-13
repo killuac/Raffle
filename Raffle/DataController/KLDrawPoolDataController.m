@@ -29,9 +29,9 @@
     return self.drawPool.photoCount;
 }
 
-- (PHAsset *)assetAtIndex:(NSUInteger)index
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath
 {
-    return self.drawPool.assets[index];
+    return self.drawPool.assets[indexPath.item];
 }
 
 @end

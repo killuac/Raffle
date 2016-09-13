@@ -11,8 +11,6 @@
 		4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7931D6FDFA900215D76 /* KLCircleTransition.m */; };
 		4105A7971D70120500215D76 /* KLBaseTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7961D70120500215D76 /* KLBaseTransition.m */; };
 		4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4110BAC91D62E841001BCD38 /* KLStatusBar.m */; };
-		414AE9021D5B189F00680363 /* JSONModel+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 414AE8FF1D5B189F00680363 /* JSONModel+Base.m */; };
-		414AE9031D5B189F00680363 /* NSArray+Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 414AE9011D5B189F00680363 /* NSArray+Model.m */; };
 		415BFE791D5B1D01002053D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE731D5B1D01002053D6 /* InfoPlist.strings */; };
 		415BFE7A1D5B1D01002053D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE751D5B1D01002053D6 /* Localizable.strings */; };
 		415BFE7B1D5B1D01002053D6 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE771D5B1D01002053D6 /* Localizable.stringsdict */; };
@@ -99,10 +97,6 @@
 		4105A7961D70120500215D76 /* KLBaseTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLBaseTransition.m; sourceTree = "<group>"; };
 		4110BAC81D62E841001BCD38 /* KLStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLStatusBar.h; sourceTree = "<group>"; };
 		4110BAC91D62E841001BCD38 /* KLStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLStatusBar.m; sourceTree = "<group>"; };
-		414AE8FE1D5B189F00680363 /* JSONModel+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONModel+Base.h"; sourceTree = "<group>"; };
-		414AE8FF1D5B189F00680363 /* JSONModel+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSONModel+Base.m"; sourceTree = "<group>"; };
-		414AE9001D5B189F00680363 /* NSArray+Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Model.h"; sourceTree = "<group>"; };
-		414AE9011D5B189F00680363 /* NSArray+Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Model.m"; sourceTree = "<group>"; };
 		415BFE741D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		415BFE761D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		415BFE781D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = Base; path = Base.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -431,12 +425,8 @@
 		41FE17581D5B153A00CABFCA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				414AE8FE1D5B189F00680363 /* JSONModel+Base.h */,
-				414AE8FF1D5B189F00680363 /* JSONModel+Base.m */,
 				415BFE951D5B2106002053D6 /* KLDrawPoolModel.h */,
 				415BFE971D5B2106002053D6 /* KLDrawPoolModel.m */,
-				414AE9001D5B189F00680363 /* NSArray+Model.h */,
-				414AE9011D5B189F00680363 /* NSArray+Model.m */,
 				415BFE981D5B2106002053D6 /* PHAsset+Model.h */,
 				415BFE961D5B2106002053D6 /* PHAsset+Model.m */,
 				415BFE991D5B2106002053D6 /* PHAssetCollection+Model.h */,
@@ -692,7 +682,6 @@
 				E3684C4C1D86DBFD004E4636 /* KLMoreViewController.m in Sources */,
 				41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */,
 				415BFE9C1D5B2106002053D6 /* KLDrawPoolModel.m in Sources */,
-				414AE9031D5B189F00680363 /* NSArray+Model.m in Sources */,
 				41FE17651D5B15A300CABFCA /* KLSoundPlayer.m in Sources */,
 				41FE17961D5B15AB00CABFCA /* UIImageView+Base.m in Sources */,
 				E3684C451D86DBFD004E4636 /* KLMainDataController.m in Sources */,
@@ -724,7 +713,6 @@
 				4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */,
 				41FE17971D5B15AB00CABFCA /* UILabel+Base.m in Sources */,
 				E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */,
-				414AE9021D5B189F00680363 /* JSONModel+Base.m in Sources */,
 				41FE17661D5B15A300CABFCA /* KLUtilities.m in Sources */,
 				415BFE941D5B20FC002053D6 /* KLTableViewCell.m in Sources */,
 				41FE17231D5B10A300CABFCA /* Raffle.xcdatamodeld in Sources */,

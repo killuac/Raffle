@@ -29,11 +29,6 @@
     return self;
 }
 
-- (instancetype)initWithModel:(id)model
-{
-    return [self init];    // Must overwrite by subclass
-}
-
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
     if (_managedObjectContext) [self saveContext];
@@ -97,7 +92,6 @@
     return _managedObjectContext;
 }
 
-#pragma mark - Core Data Saving support
 - (void)saveContext
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;

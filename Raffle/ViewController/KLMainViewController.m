@@ -197,9 +197,9 @@
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-- (void)showDrawModes:(id)sender
+- (void)changeDrawModes:(id)sender
 {
-    
+//    TODO: Show or Hide reload button
 }
 
 @end

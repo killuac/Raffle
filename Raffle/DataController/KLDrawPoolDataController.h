@@ -13,6 +13,4 @@
 
 @property (nonatomic, assign) NSUInteger pageIndex;
 
-- (PHAsset *)assetAtIndex:(NSUInteger)index;
-
 @end

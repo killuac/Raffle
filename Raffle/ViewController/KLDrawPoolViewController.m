@@ -61,7 +61,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KLDrawPoolCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithAsset:[self.drawPoolDC assetAtIndex:indexPath.item]];
+    [cell configWithAsset:[self.drawPoolDC objectAtIndexPath:indexPath]];
     
     return cell;
 }

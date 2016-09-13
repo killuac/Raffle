@@ -12,6 +12,7 @@
 #ifdef __OBJC__
 @import Foundation;
 @import ObjectiveC;
+@import CoreData;
 
 @import Aspects;
 
@@ -44,7 +45,6 @@
 #import "CABasicAnimation+Base.h"
 #import "CAAnimationGroup+Base.h"
 
-#import "JSONModel+Base.h"
 #import <UMMobClick/MobClick.h>
 #import <KVOController/KVOController.h>
 #endif
