@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 
 typedef NS_ENUM(NSUInteger, KLDataChangeType) {
     KLDataChangeTypeInsert = 1,
@@ -35,17 +34,6 @@ typedef NS_ENUM(NSUInteger, KLDataChangeType) {
 - (instancetype)initWithModel:(id)model;
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath;
 
-- (NSArray *)fetchAll;
-- (id)fetchByKey:(NSString *)key;
-- (NSArray *)fetchByParameters:(NSDictionary *)parameters;
-
-- (void)createWithModel:(id)model;
-- (void)updateWithModel:(id)model;
-- (void)saveWithModels:(NSArray *)models;
-
-- (void)deleteWithModel:(id)model;
-- (void)deleteByKey:(NSString *)key;
-
 @end
 
 
@@ -64,9 +52,5 @@ typedef NS_ENUM(NSUInteger, KLDataChangeType) {
 @property (nonatomic, assign, readonly) NSUInteger itemCount;
 @property (nonatomic, assign, readonly) BOOL isPageScrollEnabled;
 @property (nonatomic, strong, readonly) NSArray<NSString *> *segmentTitles;
-
-@property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end

@@ -21,7 +21,7 @@
 
 - (CGFloat)statusBarHeight
 {
-    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? [super statusBarHeight] : 20;
+    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? super.statusBarHeight : 20;
 }
 
 @end

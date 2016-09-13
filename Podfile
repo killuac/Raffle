@@ -6,8 +6,8 @@ inhibit_all_warnings!
 target 'Raffle' do
 
 pod 'Aspects'
-pod 'JSONModel'
 pod 'KVOController'
+pod 'MagicalRecord'
 pod 'RegExCategories'
 pod 'UMengAnalytics-NO-IDFA'
 

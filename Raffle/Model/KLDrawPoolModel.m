@@ -10,14 +10,32 @@
 
 @implementation KLDrawPoolModel
 
-- (NSUInteger )photoCount
+@dynamic creationDate;
+@dynamic drawMode;
+@dynamic photos;
+@dynamic assets;
+
++ (NSString *)entityName
 {
-    return self.assetLocalIdentifiers.count;
+    return @"DrawPool";
 }
 
-+ (NSArray *)fetchAllGroups
+- (NSUInteger)photoCount
 {
-    return nil;
+    return self.photos.count;
+}
+
+- (NSArray<PHAsset *> *)assets
+{
+    NSArray *localIdentifiers = [self.photos valueForKeyPath:@"@distinctUnionOfObjects.localizedTitle"];
+    PHFetchResult<PHAsset *> *results = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
+    
+    NSMutableArray *assetArray = [NSMutableArray array];
+    [results enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (asset) [assetArray addObject:asset];
+    }];
+    
+    return assetArray;
 }
 
 @end

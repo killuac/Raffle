@@ -67,6 +67,8 @@
 		E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */; };
 		E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */; };
 		E37880951D74930D000FFCA4 /* CAShapeLayer+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */; };
+		E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF311D88553E008F3421 /* KLPhotoModel.m */; };
+		E3DDDF351D8858CE008F3421 /* KLMoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +216,10 @@
 		E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CABasicAnimation+Base.m"; sourceTree = "<group>"; };
 		E37880931D74930D000FFCA4 /* CAShapeLayer+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Base.h"; sourceTree = "<group>"; };
 		E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+Base.m"; sourceTree = "<group>"; };
+		E3DDDF301D88553E008F3421 /* KLPhotoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoModel.h; sourceTree = "<group>"; };
+		E3DDDF311D88553E008F3421 /* KLPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPhotoModel.m; sourceTree = "<group>"; };
+		E3DDDF331D8858CE008F3421 /* KLMoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLMoreDataController.h; sourceTree = "<group>"; };
+		E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLMoreDataController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -427,6 +433,8 @@
 			children = (
 				415BFE951D5B2106002053D6 /* KLDrawPoolModel.h */,
 				415BFE971D5B2106002053D6 /* KLDrawPoolModel.m */,
+				E3DDDF301D88553E008F3421 /* KLPhotoModel.h */,
+				E3DDDF311D88553E008F3421 /* KLPhotoModel.m */,
 				415BFE981D5B2106002053D6 /* PHAsset+Model.h */,
 				415BFE961D5B2106002053D6 /* PHAsset+Model.m */,
 				415BFE991D5B2106002053D6 /* PHAssetCollection+Model.h */,
@@ -453,6 +461,8 @@
 				E3684C321D86DBFD004E4636 /* KLDrawPoolDataController.m */,
 				E3684C331D86DBFD004E4636 /* KLMainDataController.h */,
 				E3684C341D86DBFD004E4636 /* KLMainDataController.m */,
+				E3DDDF331D8858CE008F3421 /* KLMoreDataController.h */,
+				E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */,
 				E3684C351D86DBFD004E4636 /* KLPhotoLibrary.h */,
 				E3684C361D86DBFD004E4636 /* KLPhotoLibrary.m */,
 			);
@@ -672,6 +682,7 @@
 				E3684C4F1D86DC20004E4636 /* KLDataController.m in Sources */,
 				41FE17901D5B15AB00CABFCA /* UIAlertController+Base.m in Sources */,
 				41FE179C1D5B15AB00CABFCA /* UIViewController+Base.m in Sources */,
+				E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */,
 				41FE178D1D5B15AB00CABFCA /* NSLayoutConstraint+Base.m in Sources */,
 				415BFE9D1D5B2106002053D6 /* PHAssetCollection+Model.m in Sources */,
 				415BFE911D5B20FC002053D6 /* KLCircleLayout.m in Sources */,
@@ -699,6 +710,7 @@
 				41FE178C1D5B15AB00CABFCA /* NSDate+Base.m in Sources */,
 				41FE17911D5B15AB00CABFCA /* UIBarButtonItem+Base.m in Sources */,
 				E3684C481D86DBFD004E4636 /* KLCameraViewController.m in Sources */,
+				E3DDDF351D8858CE008F3421 /* KLMoreDataController.m in Sources */,
 				41FE17171D5B10A200CABFCA /* main.m in Sources */,
 				415BFE9B1D5B2106002053D6 /* PHAsset+Model.m in Sources */,
 				415BFE931D5B20FC002053D6 /* KLSegmentControl.m in Sources */,

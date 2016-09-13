@@ -15,6 +15,7 @@
 @import CoreData;
 
 @import Aspects;
+@import MagicalRecord;
 
 #import "KLUtilities.h"
 #import "KLSoundPlayer.h"
