@@ -17,9 +17,12 @@
     image = (image.width == image.height) ? image : [image resizableCroppedImage];
     
     UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
+    
     CGSize cornerRadii = CGSizeMake(radius, radius);
     UIBezierPath *roundedPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:corners cornerRadii:cornerRadii];
     [roundedPath addClip];
+    [image drawInRect:self.bounds];
+    
     roundedPath.lineWidth = width;
     roundedPath.lineJoinStyle = kCGLineJoinRound;
     if (color) {
@@ -28,7 +31,6 @@
     }
     [roundedPath closePath];
     
-    [image drawInRect:self.bounds];
     self.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 }

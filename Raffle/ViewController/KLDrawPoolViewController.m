@@ -8,10 +8,11 @@
 
 #import "KLDrawPoolViewController.h"
 #import "KLMainViewController.h"
-#import "KLDrawPoolCell.h"
+#import "KLImagePickerController.h"
 #import "KLCircleLayout.h"
+#import "KLDrawPoolCell.h"
 
-@interface KLDrawPoolViewController ()
+@interface KLDrawPoolViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *mainDC;
 @property (nonatomic, strong) KLDrawPoolDataController *drawPoolDC;
@@ -31,6 +32,7 @@
     if (self = [super initWithCollectionViewLayout:[KLCircleLayout new]]) {
         _mainDC = dataController;
         _drawPoolDC = [dataController drawPoolDataControllerAtIndex:pageIndex];
+        _drawPoolDC.delegate = self;
     }
     return self;
 }
@@ -49,7 +51,7 @@
 - (void)prepareForUI
 {
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLDrawPoolCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
 #pragma mark - Collection view data source
@@ -66,6 +68,22 @@
     return cell;
 }
 
+#pragma mark - Data controller delegate
+- (void)controllerDidChangeContent:(KLDrawPoolDataController *)controller
+{
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    for (NSUInteger i = 0; i < self.drawPoolDC.itemCount; i++) {
+        [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+    }
+    [self.collectionView insertItemsAtIndexPaths:indexPaths];
+}
+
+#pragma mark - KLImagePickerController delegate
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.drawPoolDC addPhotos:assets];
+}
+
 #pragma mark - Event handling
 - (void)startDraw:(id)sender
 {
@@ -80,6 +98,11 @@
 - (void)shakeToStart:(id)sender
 {
     
+}
+
+- (void)switchDrawMode:(id)sender
+{
+//    TODO: Show or Hide reload button
 }
 
 @end

@@ -27,7 +27,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _dataController = [KLMainDataController new];
+        _dataController = [KLMainDataController dataController];
     }
     return self;
 }
@@ -102,9 +102,9 @@
     
 //  Toolbar
     [self.view addSubview:({
-        UIBarButtonItem *reloadItem = [UIBarButtonItem barButtonItemWithImageName:@"button_reload" target:self action:@selector(reloadPhotos:)];
-        UIBarButtonItem *addItem = [UIBarButtonItem barButtonItemWithImageName:@"button_add" target:self action:@selector(addPhotos:)];
-        UIBarButtonItem *menuItem = [UIBarButtonItem barButtonItemWithImageName:@"button_menu" target:self action:@selector(slideMenu:)];
+        UIBarButtonItem *reloadItem = [UIBarButtonItem barButtonItemWithImageName:@"button_reload" target:self action:@selector(reloadDrawPool:)];
+        UIBarButtonItem *addItem = [UIBarButtonItem barButtonItemWithImageName:@"button_add" target:self action:@selector(addPhotosToDrawPool:)];
+        UIBarButtonItem *menuItem = [UIBarButtonItem barButtonItemWithImageName:@"button_menu" target:self action:@selector(showMoreDrawPools:)];
         
         _toolbar = [UIToolbar toolbarWithItems:@[reloadItem, addItem, menuItem]];
         [self.toolbar setSeparatorColor:[UIColor separatorColor]];
@@ -155,32 +155,22 @@
 }
 
 #pragma mark - Event handling
-- (void)addPhotos:(id)sender
+- (void)addPhotosToDrawPool:(id)sender
 {
     
 }
 
-- (void)reloadPhotos:(id)sender
+- (void)reloadDrawPool:(id)sender
 {
     
 }
 
-- (void)slideMenu:(id)sender
+- (void)showMoreDrawPools:(id)sender
 {
     KLMoreViewController *moreVC = [KLMoreViewController viewController];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moreVC];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
-}
-
-- (void)takePhoto:(id)sender
-{
-    
-}
-
-- (void)choosePhoto:(id)sender
-{
-    
 }
 
 - (void)longPressTakePhoto:(UILongPressGestureRecognizer *)recognizer
@@ -192,14 +182,9 @@
     if (!CGRectContainsPoint(frame, [recognizer locationInView:view])) return;
     
     KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-    imagePicker.delegate = self.pageViewController.viewControllers.firstObject; // FIXME: maybe nil
+    imagePicker.delegate = self.pageViewController.viewControllers.firstObject;
     imagePicker.transitioningDelegate = imagePicker.scaleTransition;
     [self presentViewController:imagePicker animated:YES completion:nil];
-}
-
-- (void)changeDrawModes:(id)sender
-{
-//    TODO: Show or Hide reload button
 }
 
 @end

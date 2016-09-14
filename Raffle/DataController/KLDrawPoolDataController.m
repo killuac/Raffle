@@ -34,4 +34,32 @@
     return self.drawPool.assets[indexPath.item];
 }
 
+- (void)addPhotos:(NSArray<PHAsset *> *)assets
+{
+    if (self.drawPool.isInserted) {
+        [[NSManagedObjectContext MR_rootSavingContext] MR_saveOnlySelfAndWait];
+    }
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+            KLPhotoModel *photoModel = [KLPhotoModel MR_createEntityInContext:localContext];
+            photoModel.assetLocalIdentifier = asset.localIdentifier;
+            photoModel.drawPool = [self.drawPool MR_inContext:localContext];
+        }];
+    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+        if (error) {
+            KLLog(@"%@", error);
+        } else {
+            [self didChangeContent];
+        }
+    }];
+}
+
+- (void)didChangeContent
+{
+    if ([self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
+        [self.delegate controllerDidChangeContent:self];
+    }
+}
+
 @end

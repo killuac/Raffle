@@ -24,7 +24,7 @@
 - (void)prepareForUI
 {
     self.title = TITLE_DRAW_POOL;
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeDrawPool:)];
+    self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeMoreDrawPools:)];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 }
@@ -47,7 +47,7 @@
 }
 
 #pragma mark - Event handling
-- (void)closeDrawPool:(id)sender
+- (void)closeMoreDrawPools:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -12,15 +12,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, KLDrawMode) {
-    KLDrawModePrize = 1,
-    KLDrawModeAttendee
+    KLDrawModeAttendee = 1,
+    KLDrawModePrize = 2,
 };
 
 @interface KLDrawPoolModel : NSManagedObject
 
 @property (nonatomic, strong) NSDate *creationDate;
 @property (nonatomic, assign) KLDrawMode drawMode;
-@property (nonatomic, strong) NSSet<KLPhotoModel *> *photos;
+@property (nonatomic, strong) NSOrderedSet<KLPhotoModel *> *photos;
 
 @property (nonatomic, strong, readonly) NSArray<PHAsset *> *assets;
 @property (nonatomic, assign, readonly) NSUInteger photoCount;
@@ -30,10 +30,16 @@ typedef NS_ENUM(NSUInteger, KLDrawMode) {
 
 @interface KLDrawPoolModel (CoreDataGeneratedAccessors)
 
+- (void)insertObject:(KLPhotoModel *)value inPhotosAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromPhotosAtIndex:(NSUInteger)idx;
+- (void)insertPhotos:(NSArray<KLPhotoModel *> *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removePhotosAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInPhotosAtIndex:(NSUInteger)idx withObject:(KLPhotoModel *)value;
+- (void)replacePhotosAtIndexes:(NSIndexSet *)indexes withPhotos:(NSArray<KLPhotoModel *> *)values;
 - (void)addPhotosObject:(KLPhotoModel *)value;
 - (void)removePhotosObject:(KLPhotoModel *)value;
-- (void)addPhotos:(NSSet<KLPhotoModel *> *)values;
-- (void)removePhotos:(NSSet<KLPhotoModel *> *)values;
+- (void)addPhotos:(NSOrderedSet<KLPhotoModel *> *)values;
+- (void)removePhotos:(NSOrderedSet<KLPhotoModel *> *)values;
 
 @end
 

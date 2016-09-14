@@ -10,6 +10,26 @@
 
 @implementation KLDrawPoolCell
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self addSubviews];
+    }
+    return self;
+}
+
+- (void)addSubviews
+{
+    [self.contentView addSubview:({
+        _imageView = [UIImageView newAutoLayoutView];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.clipsToBounds = YES;
+        _imageView;
+    })];
+    
+    [self.imageView constraintsEqualWithSuperView];
+}
+
 - (void)configWithAsset:(PHAsset *)asset
 {
     [asset thumbnailImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
@@ -23,8 +43,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.contentView.layer.cornerRadius = self.width / 2;
-//    [self.imageView setCornerRadius:self.width / 2];
+    [self.imageView setCornerRadius:self.width / 2 borderWidth:2 borderColor:[UIColor whiteColor]];
 }
 
 @end

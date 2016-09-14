@@ -20,14 +20,19 @@
     return @"DrawPool";
 }
 
+- (void)awakeFromInsert
+{
+    self.creationDate = [NSDate date];
+}
+
 - (NSUInteger)photoCount
 {
-    return self.photos.count;
+    return self.assets.count;
 }
 
 - (NSArray<PHAsset *> *)assets
 {
-    NSArray *localIdentifiers = [self.photos valueForKeyPath:@"@distinctUnionOfObjects.localizedTitle"];
+    NSArray *localIdentifiers = [self.photos.set valueForKeyPath:@"@distinctUnionOfObjects.assetLocalIdentifier"];
     PHFetchResult<PHAsset *> *results = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
     
     NSMutableArray *assetArray = [NSMutableArray array];

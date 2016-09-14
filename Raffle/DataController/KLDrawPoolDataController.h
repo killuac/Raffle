@@ -13,4 +13,6 @@
 
 @property (nonatomic, assign) NSUInteger pageIndex;
 
+- (void)addPhotos:(NSArray<PHAsset *> *)assets;
+
 @end

@@ -15,7 +15,6 @@
 @import CoreData;
 
 @import Aspects;
-@import MagicalRecord;
 
 #import "KLUtilities.h"
 #import "KLSoundPlayer.h"
@@ -46,6 +45,7 @@
 #import "CABasicAnimation+Base.h"
 #import "CAAnimationGroup+Base.h"
 
+#import <MagicalRecord/MagicalRecord.h>
 #import <UMMobClick/MobClick.h>
 #import <KVOController/KVOController.h>
 #endif

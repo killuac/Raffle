@@ -30,6 +30,7 @@
 {
     [self setupAppearance];
     [self setupAppAnalytics];
+    [MagicalRecord setupCoreDataStack];
 }
 
 - (void)setupAppearance

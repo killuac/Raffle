@@ -17,6 +17,17 @@
 
 @implementation KLMainDataController
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _drawPools = [KLDrawPoolModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]];
+        if (self.pageCount == 0) {
+            _drawPools = @[[KLDrawPoolModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]]];
+        }
+    }
+    return self;
+}
+
 - (NSUInteger)pageCount
 {
     return self.drawPools.count;

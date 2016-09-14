@@ -3,7 +3,7 @@
     <entity name="DrawPool" representedClassName="KLDrawPoolModel" syncable="YES">
         <attribute name="creationDate" attributeType="Date" syncable="YES"/>
         <attribute name="drawMode" attributeType="Integer 16" minValueString="1" maxValueString="2" defaultValueString="1" syncable="YES"/>
-        <relationship name="photos" toMany="YES" deletionRule="Cascade" destinationEntity="Photo" inverseName="drawPool" inverseEntity="Photo" syncable="YES"/>
+        <relationship name="photos" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Photo" inverseName="drawPool" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <entity name="Photo" representedClassName="KLPhotoModel" syncable="YES">
         <attribute name="assetLocalIdentifier" attributeType="String" syncable="YES"/>
