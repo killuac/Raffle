@@ -10,7 +10,7 @@
 
 #define TITLE_LABEL_FONT        [UIFont subtitleFont]
 #define TITLE_LABEL_COLOR       KLColorWithRGB(127, 132, 137)
-#define SELECTION_MARK_MARGIN   (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 8.0 : 5.0)
+#define SELECTION_MARK_MARGIN   (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 8.0 : 5.0)
 
 #pragma mark - Class: KLSegmentCollectionViewCell
 @interface KLSegmentCollectionViewCell : UICollectionViewCell
@@ -39,7 +39,7 @@
         _titleLabel;
     })];
     
-    [_titleLabel constraintsCenterInSuperview];
+    [self.titleLabel constraintsCenterInSuperview];
 }
 
 - (void)setHighlighted:(BOOL)highlighted
@@ -94,7 +94,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? CGSizeMake(self.width, 36) : CGSizeMake(self.width, 30);
+    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? CGSizeMake(self.width, 36) : CGSizeMake(self.width, 30);
 }
 
 - (void)setItems:(NSArray *)items
@@ -118,7 +118,7 @@
         flowLayout.sectionInset = UIEdgeInsetsMake(0, self.defaultItemInset, 0, self.defaultItemInset);
         
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
-        _collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _collectionView.backgroundColor = [UIColor darkBackgroundColor];
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.dataSource = self;
@@ -129,11 +129,10 @@
         
         _collectionView;
     })];
-    [self.collectionView constraintsEqualWithSuperView];
     
     // Add current selection mark
     [self.collectionView addSubview:({
-        _currentSelectionMark = [UIView newAutoLayoutView];
+        _currentSelectionMark = [UIView new];
         _currentSelectionMark.backgroundColor = [UIColor blackColor];
         _currentSelectionMark.userInteractionEnabled = NO;
         _currentSelectionMark.layer.zPosition = -1;
@@ -168,12 +167,14 @@
 #pragma mark - Orientation observer
 - (void)addObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
-- (void)deviceOrientationDidChange:(NSNotification *)notification
+- (void)orientationDidChange:(NSNotification *)notification
 {
-    [self reloadData];
+    KLDispatchMainAfter(1.0/60, ^{
+        [self reloadData];  // For solve rotation issue
+    });
 }
 
 - (void)dealloc
@@ -186,6 +187,7 @@
 {
     if (self.items.count == 0) return;
     
+    [self layoutIfNeeded];
     [self relayoutCollectionView];
     
     NSIndexPath *indexPath = self.selectedIndexPath;
@@ -236,7 +238,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat width = [self.itemSizes[indexPath] CGSizeValue].width;
-    return CGSizeMake(width + self.itemInset * 2, self.height);
+    return CGSizeMake(width + self.itemInset * 2, self.intrinsicContentHeight);
 }
 
 #pragma mark - Collection view data source

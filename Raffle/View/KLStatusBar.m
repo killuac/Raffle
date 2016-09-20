@@ -149,10 +149,10 @@ KLStatusBar *sharedStatusBar = nil;
 - (void)addObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateStatusBarFrame) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
-- (void)deviceOrientationDidChange
+- (void)orientationDidChange
 {
     if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
         self.hidden = NO;

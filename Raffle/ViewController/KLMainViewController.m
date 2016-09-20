@@ -11,6 +11,8 @@
 #import "KLImagePickerController.h"
 #import "KLMoreViewController.h"
 
+#define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
+
 @interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
@@ -47,6 +49,7 @@
 {
     [self addPageViewController];
     [self addSubviews];
+    [self addTapGesture];
 }
 
 - (void)reloadData
@@ -138,10 +141,14 @@
     [self.addPhotoButton constraintsCenterInSuperview];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _switchModeButton, _reloadButton, _menuButton);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[_switchModeButton]->=0-[_reloadButton]->=0-[_menuButton]-15-|" options:NSLayoutFormatAlignAllCenterY views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl][_reloadButton]-15-|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[_switchModeButton(44)]->=0-[_reloadButton(44)]->=0-[_menuButton(44)]-10-|" options:NSLayoutFormatAlignAllCenterY views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl][_reloadButton]-5-|" views:views]];
+    
     [self.pageControl constraintsCenterXWithView:self.view];
     [self.reloadButton constraintsCenterXWithView:self.view];
+    [self.reloadButton constraintsEqualWidthAndHeight];
+    [self.switchModeButton constraintsEqualWidthAndHeight];
+    [self.menuButton constraintsEqualWidthAndHeight];
 }
 
 #pragma mark - Page view controller datasource
@@ -178,20 +185,54 @@
     }
 }
 
+#pragma mark - Motion
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake) {
+        [self startDraw:event];
+    }
+}
+
 #pragma mark - Animation
 - (void)setAddPhotoButtonHidden:(BOOL)hidden
 {
-    
+    [UIView animateWithDefaultDuration:^{
+        self.addPhotoButton.transform = hidden ? MINIMUM_SCALE : CGAffineTransformIdentity;
+    }];
 }
 
 - (void)setBottomButtonsHidden:(BOOL)hidden
 {
+    [self setReloadButtonHidden:hidden];
     
+    if (!hidden) self.switchModeButton.hidden = hidden;
+    [UIView animateWithDefaultDuration:^{
+        self.switchModeButton.transform = hidden ? CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.reloadButton.height), M_PI) : CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        self.switchModeButton.hidden = hidden;
+    }];
+    
+    if (!hidden) self.menuButton.hidden = hidden;
+    [UIView animateWithDefaultDuration:^{
+        self.menuButton.transform = hidden ? CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.reloadButton.height), M_PI) : CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        self.menuButton.hidden = hidden;
+    }];
 }
 
 - (void)setReloadButtonHidden:(BOOL)hidden
 {
-    
+    if (!hidden) self.reloadButton.hidden = hidden;
+    [UIView animateWithDefaultDuration:^{
+        self.reloadButton.transform = hidden ? CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.reloadButton.height), M_PI) : CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        self.reloadButton.hidden = hidden;
+    }];
 }
 
 #pragma mark - Event handling
@@ -199,6 +240,11 @@
 {
     [self setAddPhotoButtonHidden:YES];
     [self setBottomButtonsHidden:YES];
+}
+
+- (void)singleTap:(UITapGestureRecognizer *)recognizer
+{
+    [self stopDraw:recognizer];
 }
 
 - (void)stopDraw:(id)sender
@@ -217,7 +263,7 @@
     [self setReloadButtonHidden:YES];
     
     [UIView animateWithDefaultDuration:^{
-        self.switchModeButton.transform = CGAffineTransformMakeScale(0.001, 0.001);
+        self.switchModeButton.transform = MINIMUM_SCALE;
     } completion:^(BOOL finished) {
         [UIView animateWithDefaultDuration:^{
             self.switchModeButton.transform = CGAffineTransformIdentity;

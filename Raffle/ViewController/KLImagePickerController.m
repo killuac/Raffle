@@ -49,8 +49,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self prepareForUI];
     [self addObservers];
+    [self prepareForUI];
     
     [self.photoLibrary checkAuthorization:^{
         [self showAlert];
@@ -70,6 +70,7 @@
     self.KVOController = [FBKVOController controllerWithObserver:self];
     [self.KVOController observe:self.photoLibrary keyPath:NSStringFromSelector(@selector(assetCollections)) options:0 action:@selector(reloadData)];
     [self.KVOController observe:self.photoLibrary keyPath:NSStringFromSelector(@selector(selectedAssets)) options:0 action:@selector(selectedAssetsChanged)];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
 - (void)reloadData
@@ -94,6 +95,16 @@
     NSUInteger count = self.photoLibrary.selectedAssets.count;
     self.bottomBarItem.title = count ? [NSString stringWithFormat:TITLE_SELECTED_PHOTO_COUNT, count] : nil;
     self.bottomBarItem.rightBarButtonItem.enabled = count > 0;
+}
+
+- (void)orientationDidChange:(NSNotification *)notification
+{
+    [self updateViewConstraints];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Subviews and controllers
@@ -145,10 +156,10 @@
         _bottomBar;
     })];
     
-    UIView *pageView = self.pageViewController.view; id<UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
-    NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, _segmentControl, _bottomBar, pageView);
+    UIView *pageView = self.pageViewController.view;
+    NSDictionary *views = NSDictionaryOfVariableBindings(_segmentControl, _bottomBar, pageView);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][_segmentControl]-2-[pageView]-2-[_bottomBar]|"
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_segmentControl]-2-[pageView]-2-[_bottomBar]|"
                                                                                     options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
     
     self.scHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_segmentControl constant:0];
@@ -168,7 +179,7 @@
 
 - (CGFloat)bottomBarHeight
 {
-    return UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? 34 : 44;
+    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 44 : 34;
 }
 
 - (void)showAlert
