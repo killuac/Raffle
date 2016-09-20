@@ -41,7 +41,7 @@
 {
     if (self = [super init]) {
         _photoLibrary = photoLibrary;
-        _scaleTransition = [KLScaleTransition transitionWithGestureEnabled:NO];
+        _transition = [KLCircleTransition transitionWithGestureEnabled:NO];
     }
     return self;
 }
@@ -140,7 +140,6 @@
         _bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
         _bottomBar.items = @[_bottomBarItem];
         _bottomBar.tintColor = [UIColor whiteColor];
-        _bottomBar.barTintColor = [UIColor darkBackgroundColor];
         _bottomBar.titleTextAttributes = @{ NSForegroundColorAttributeName : _bottomBar.tintColor };
         
         _bottomBar;
@@ -169,7 +168,7 @@
 
 - (CGFloat)bottomBarHeight
 {
-    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 44 : 34;
+    return UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? 34 : 44;
 }
 
 - (void)showAlert

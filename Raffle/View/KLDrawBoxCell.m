@@ -1,14 +1,14 @@
 //
-//  KLDrawPoolCell.m
+//  KLDrawBoxCell.m
 //  Raffle
 //
 //  Created by Killua Liu on 7/31/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import "KLDrawPoolCell.h"
+#import "KLDrawBoxCell.h"
 
-@implementation KLDrawPoolCell
+@implementation KLDrawBoxCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -43,7 +43,9 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [self.imageView setCornerRadius:self.width / 2 borderWidth:2 borderColor:[UIColor whiteColor]];
+    self.imageView.layer.cornerRadius = self.width / 2;
+    self.imageView.layer.borderWidth = 2.0;
+    self.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
 }
 
 @end

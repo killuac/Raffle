@@ -10,7 +10,7 @@
 #import "KLAlbumCell.h"
 #import "KLImagePickerController.h"
 
-const CGFloat KLLineSpacing = 3.0;
+const CGFloat KLAlbumViewControllerLineSpacing = 3.0;
 
 @interface KLAlbumViewController ()
 
@@ -26,7 +26,7 @@ static CGSize cellItemSize;
 + (void)load
 {
     CGFloat width, height;
-    width = height = (SCREEN_WIDTH - KLLineSpacing * 3) / 4;
+    width = height = (SCREEN_WIDTH - KLAlbumViewControllerLineSpacing * 3) / 4;
     cellItemSize = CGSizeMake(width, height);
 }
 
@@ -58,8 +58,8 @@ static CGSize cellItemSize;
 {
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
-    flowLayout.minimumLineSpacing = KLLineSpacing;
-    flowLayout.minimumInteritemSpacing = KLLineSpacing;
+    flowLayout.minimumLineSpacing = KLAlbumViewControllerLineSpacing;
+    flowLayout.minimumInteritemSpacing = KLAlbumViewControllerLineSpacing;
     
     self.collectionView.backgroundColor = [UIColor blackColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;

@@ -8,33 +8,27 @@
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MainVC_AddPhotosToDrawPool</string>
+				<string>MainVC_AddPhotosToDrawBox</string>
 				<key>KLLogEventSelectorName</key>
-				<string>addPhotosToDrawPool:</string>
+				<string>addPhotosToDrawBox:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MainVC_ReloadDrawPool</string>
+				<string>MainVC_SwitchDrawMode</string>
 				<key>KLLogEventSelectorName</key>
-				<string>reloadDrawPool:</string>
+				<string>switchDrawMode:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MainVC_MoreDrawPools</string>
+				<string>MainVC_ReloadDrawBox</string>
 				<key>KLLogEventSelectorName</key>
-				<string>showMoreDrawPools:</string>
+				<string>reloadDrawBox:</string>
 			</dict>
-		</array>
-	</dict>
-	<key>KLDrawPoolViewController</key>
-	<dict>
-		<key>KLLogTrackedEvents</key>
-		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MainVC_ShakeToStart</string>
+				<string>MainVC_MoreDrawBoxes</string>
 				<key>KLLogEventSelectorName</key>
-				<string>shakeToStart:</string>
+				<string>showMoreDrawBoxes:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
@@ -48,11 +42,23 @@
 				<key>KLLogEventSelectorName</key>
 				<string>stopDraw:</string>
 			</dict>
+		</array>
+	</dict>
+	<key>KLWinnerViewController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MainVC_SwitchDrawMode</string>
+				<string>WinnerVC_ClickTopAD</string>
 				<key>KLLogEventSelectorName</key>
-				<string>switchDrawMode:</string>
+				<string>clickTopAD:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>WinnerVC_ClickBottomAD</string>
+				<key>KLLogEventSelectorName</key>
+				<string>clickBottomAD:</string>
 			</dict>
 		</array>
 	</dict>
@@ -80,9 +86,9 @@
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MoreVC_CloseMoreDrawPools</string>
+				<string>MoreVC_CloseMoreDrawBoxes</string>
 				<key>KLLogEventSelectorName</key>
-				<string>closeMoreDrawPools:</string>
+				<string>closeMoreDrawBoxes:</string>
 			</dict>
 		</array>
 	</dict>

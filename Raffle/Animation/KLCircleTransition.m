@@ -10,16 +10,11 @@
 
 @implementation KLCircleTransition
 
-- (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext
-{
-    return [CATransaction animationDuration];
-}
-
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
     UIView *containerView = self.transitionContext.containerView;
     CGFloat radius = KLPointDistance(CGPointZero, containerView.center);
-    CGPathRef startPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:0.1 startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
+    CGPathRef startPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:0.01 startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
     CGPathRef endPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:radius startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
     
     CAShapeLayer *maskLayer = [CAShapeLayer layerWithPath:endPath];

@@ -1,5 +1,5 @@
 //
-//  KLDrawPoolViewController.h
+//  KLDrawBoxViewController.h
 //  Raffle
 //
 //  Created by Killua Liu on 7/30/16.
@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KLDrawPoolDataController.h"
+#import "KLDrawBoxDataController.h"
 
 @class KLMainDataController;
 
-@interface KLDrawPoolViewController : UICollectionViewController
+@interface KLDrawBoxViewController : UICollectionViewController
 
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex;
 

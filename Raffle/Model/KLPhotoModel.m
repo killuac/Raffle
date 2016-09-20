@@ -7,12 +7,12 @@
 //
 
 #import "KLPhotoModel.h"
-#import "KLDrawPoolModel.h"
+#import "KLDrawBoxModel.h"
 
 @implementation KLPhotoModel
 
 @dynamic assetLocalIdentifier;
-@dynamic drawPool;
+@dynamic drawBox;
 
 + (NSString *)entityName
 {

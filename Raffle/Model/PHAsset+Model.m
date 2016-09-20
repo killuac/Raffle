@@ -10,6 +10,16 @@
 
 @implementation PHAsset (Model)
 
+- (void)setTimestamp:(NSTimeInterval)timestamp
+{
+    objc_setAssociatedObject(self, @selector(timestamp), @(timestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSTimeInterval)timestamp
+{
+    return [objc_getAssociatedObject(self, @selector(timestamp)) doubleValue];
+}
+
 - (void)setSelected:(BOOL)selected
 {
     objc_setAssociatedObject(self, @selector(isSelected), @(selected), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -18,6 +28,11 @@
 - (BOOL)isSelected
 {
     return [objc_getAssociatedObject(self, @selector(isSelected)) boolValue];
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@ - %f", super.description, self.timestamp];
 }
 
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler

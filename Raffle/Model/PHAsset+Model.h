@@ -13,6 +13,7 @@ typedef void (^KLAssetBlockType)(UIImage *image, NSDictionary *info);
 
 @interface PHAsset (Model)
 
+@property (nonatomic, assign) NSTimeInterval timestamp; // For sorting
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler;

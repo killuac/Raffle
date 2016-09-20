@@ -41,7 +41,9 @@ typedef NS_ENUM(NSUInteger, KLButtonLayout) {
 + (instancetype)primaryButtonWithTitle:(NSString *)title;
 + (instancetype)destructiveButtonWithTitle:(NSString *)title;
 
-- (void)setLayout:(KLButtonLayout)layout;
+@property (nonatomic, assign) KLButonStyle style;
+@property (nonatomic, assign) KLButtonLayout layout;
+
 - (void)setNormalTitle:(NSString *)title;
 - (void)addTarget:(id)target action:(SEL)action;
 

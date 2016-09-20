@@ -7,11 +7,11 @@
 //
 
 #import "KLMainDataController.h"
-#import "KLDrawPoolModel.h"
+#import "KLDrawBoxModel.h"
 
 @interface KLMainDataController ()
 
-@property (nonatomic, strong) NSArray <KLDrawPoolModel *> *drawPools;
+@property (nonatomic, strong) NSArray <KLDrawBoxModel *> *drawBoxes;
 
 @end
 
@@ -20,9 +20,9 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _drawPools = [KLDrawPoolModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]];
+        _drawBoxes = [KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]];
         if (self.pageCount == 0) {
-            _drawPools = @[[KLDrawPoolModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]]];
+            _drawBoxes = @[[KLDrawBoxModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]]];
         }
     }
     return self;
@@ -30,12 +30,12 @@
 
 - (NSUInteger)pageCount
 {
-    return self.drawPools.count;
+    return self.drawBoxes.count;
 }
 
-- (KLDrawPoolDataController *)drawPoolDataControllerAtIndex:(NSUInteger)index
+- (KLDrawBoxDataController *)drawBoxDataControllerAtIndex:(NSUInteger)index
 {
-    KLDrawPoolDataController *dataController = [KLDrawPoolDataController dataControllerWithModel:self.drawPools[index]];
+    KLDrawBoxDataController *dataController = [KLDrawBoxDataController dataControllerWithModel:self.drawBoxes[index]];
     dataController.pageIndex = index;
     return dataController;
 }

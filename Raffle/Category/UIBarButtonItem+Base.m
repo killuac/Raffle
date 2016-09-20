@@ -12,6 +12,7 @@
 
 + (instancetype)barButtonItemWithButton:(UIButton *)button
 {
+    button.translatesAutoresizingMaskIntoConstraints = YES;
     return [[self alloc] initWithCustomView:button];
 }
 

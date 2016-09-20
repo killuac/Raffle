@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface KLMoreViewController : UITableViewController
+@interface KLMoreViewController : UICollectionViewController
 
 @end

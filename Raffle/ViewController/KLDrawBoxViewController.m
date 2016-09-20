@@ -1,25 +1,25 @@
 //
-//  KLDrawPoolViewController.m
+//  KLDrawBoxViewController.m
 //  Raffle
 //
 //  Created by Killua Liu on 7/30/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import "KLDrawPoolViewController.h"
+#import "KLDrawBoxViewController.h"
 #import "KLMainViewController.h"
 #import "KLImagePickerController.h"
 #import "KLCircleLayout.h"
-#import "KLDrawPoolCell.h"
+#import "KLDrawBoxCell.h"
 
-@interface KLDrawPoolViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
+@interface KLDrawBoxViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *mainDC;
-@property (nonatomic, strong) KLDrawPoolDataController *drawPoolDC;
+@property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
 
 @end
 
-@implementation KLDrawPoolViewController
+@implementation KLDrawBoxViewController
 
 #pragma mark - Life cycle
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex
@@ -31,15 +31,15 @@
 {
     if (self = [super initWithCollectionViewLayout:[KLCircleLayout new]]) {
         _mainDC = dataController;
-        _drawPoolDC = [dataController drawPoolDataControllerAtIndex:pageIndex];
-        _drawPoolDC.delegate = self;
+        _drawBoxDC = [dataController drawBoxDataControllerAtIndex:pageIndex];
+        _drawBoxDC.delegate = self;
     }
     return self;
 }
 
 - (NSUInteger)pageIndex
 {
-    return self.drawPoolDC.pageIndex;
+    return self.drawBoxDC.pageIndex;
 }
 
 - (void)viewDidLoad
@@ -51,58 +51,44 @@
 - (void)prepareForUI
 {
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [self.collectionView registerClass:[KLDrawPoolCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLDrawBoxCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
 #pragma mark - Collection view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.drawPoolDC.itemCount;
+    return self.drawBoxDC.itemCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    KLDrawPoolCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithAsset:[self.drawPoolDC objectAtIndexPath:indexPath]];
+    KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+    [cell configWithAsset:[self.drawBoxDC objectAtIndexPath:indexPath]];
     
     return cell;
 }
 
 #pragma mark - Data controller delegate
-- (void)controllerDidChangeContent:(KLDrawPoolDataController *)controller
+- (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
-    NSMutableArray *indexPaths = [NSMutableArray array];
-    for (NSUInteger i = 0; i < self.drawPoolDC.itemCount; i++) {
-        [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+    switch (type) {
+        case KLDataChangeTypeInsert:
+            [self.collectionView insertItemsAtIndexPaths:indexPaths];
+            break;
+            
+        case KLDataChangeTypeDelete:
+            [self.collectionView deleteItemsAtIndexPaths:indexPaths];
+            break;
+            
+        default:
+            break;
     }
-    [self.collectionView insertItemsAtIndexPaths:indexPaths];
 }
 
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
-    [self.drawPoolDC addPhotos:assets];
-}
-
-#pragma mark - Event handling
-- (void)startDraw:(id)sender
-{
-    
-}
-
-- (void)stopDraw:(id)sender
-{
-    
-}
-
-- (void)shakeToStart:(id)sender
-{
-    
-}
-
-- (void)switchDrawMode:(id)sender
-{
-//    TODO: Show or Hide reload button
+    [self.drawBoxDC addPhotos:assets];
 }
 
 @end

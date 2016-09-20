@@ -26,6 +26,7 @@ NS_INLINE UIColor *KLColorWithHexString(NSString *hexString) {
 + (instancetype)darkBackgroundColor;
 
 + (instancetype)titleColor;
++ (instancetype)buttonTitleColor;
 + (instancetype)subtitleColor;
 + (instancetype)separatorColor;
 

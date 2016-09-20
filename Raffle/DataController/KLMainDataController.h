@@ -7,10 +7,10 @@
 //
 
 #import "KLDataController.h"
-#import "KLDrawPoolDataController.h"
+#import "KLDrawBoxDataController.h"
 
 @interface KLMainDataController : KLDataController
 
-- (KLDrawPoolDataController *)drawPoolDataControllerAtIndex:(NSUInteger)index;
+- (KLDrawBoxDataController *)drawBoxDataControllerAtIndex:(NSUInteger)index;
 
 @end

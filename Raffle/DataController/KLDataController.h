@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, KLDataChangeType) {
 - (void)controllerWillChangeContent:(KLDataController *)controller;
 - (void)controllerDidChangeContent:(KLDataController *)controller;
 
+- (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type;
 - (void)controller:(KLDataController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(KLDataChangeType)type;
 - (void)controller:(KLDataController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(KLDataChangeType)type newIndexPath:(NSIndexPath *)newIndexPath;
 
@@ -46,11 +47,18 @@ typedef NS_ENUM(NSUInteger, KLDataChangeType) {
 
 @property (nonatomic, assign) NSUInteger currentPageIndex;
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
+@property (nonatomic, assign, getter=isLoadingData) BOOL loadingData;
 
 @property (nonatomic, assign, readonly) NSUInteger pageCount;
 @property (nonatomic, assign, readonly) NSUInteger sectionCount;
 @property (nonatomic, assign, readonly) NSUInteger itemCount;
 @property (nonatomic, assign, readonly) BOOL isPageScrollEnabled;
 @property (nonatomic, strong, readonly) NSArray<NSString *> *segmentTitles;
+
+- (void)willChangeContent;
+- (void)didChangeContent;
+- (void)didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type;
+- (void)didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(KLDataChangeType)type;
+- (void)didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(KLDataChangeType)type newIndexPath:(NSIndexPath *)newIndexPath;
 
 @end

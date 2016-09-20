@@ -36,25 +36,15 @@
     return [[self alloc] initWithDataController:(id)dataController];
 }
 
-#pragma mark - Properties
-- (void)setLoadingData:(BOOL)loadingData
+#pragma mark - Block
+- (void)setDismissBlock:(KLVoidBlockType)dismissBlock
 {
-    objc_setAssociatedObject(self, @selector(isLoadingData), @(loadingData), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(dismissBlock), dismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BOOL)isLoadingData
+- (KLVoidBlockType)dismissBlock
 {
-    return [objc_getAssociatedObject(self, @selector(isLoadingData)) boolValue];
-}
-
-- (void)setSelectedIndexPath:(NSIndexPath *)selectedIndexPath
-{
-    objc_setAssociatedObject(self, @selector(selectedIndexPath), selectedIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSIndexPath *)selectedIndexPath
-{
-    return objc_getAssociatedObject(self, @selector(selectedIndexPath));
+    return objc_getAssociatedObject(self, @selector(dismissBlock));
 }
 
 #pragma mark - Readonly properties

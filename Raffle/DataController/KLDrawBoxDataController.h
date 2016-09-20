@@ -1,5 +1,5 @@
 //
-//  KLDrawPoolDataController.h
+//  KLDrawBoxDataController.h
 //  Raffle
 //
 //  Created by Killua Liu on 7/31/16.
@@ -7,9 +7,9 @@
 //
 
 #import "KLDataController.h"
-#import "KLDrawPoolModel.h"
+#import "KLDrawBoxModel.h"
 
-@interface KLDrawPoolDataController : KLDataController
+@interface KLDrawBoxDataController : KLDataController
 
 @property (nonatomic, assign) NSUInteger pageIndex;
 

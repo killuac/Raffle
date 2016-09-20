@@ -29,34 +29,40 @@
 #pragma mark - Tint color
 + (instancetype)tintColor
 {
-    return KLColorWithRGB(49, 49, 49);
+    return [UIColor whiteColor];
 }
 
 + (instancetype)barTintColor
 {
-    return [UIColor whiteColor];
+    return [UIColor darkBackgroundColor];
 }
 
 #pragma mark - Background color
 + (instancetype)backgroundColor
 {
-    return KLColorWithRGB(240, 240, 244);  // 冷白
+//    return KLColorWithRGB(240, 240, 240);
+    return KLColorWithRGB(49, 49, 49);
 }
 
 + (instancetype)darkBackgroundColor
 {
-    return KLColorWithRGB(40, 40, 40);
+    return KLColorWithRGB(44, 48, 54);
 }
 
 #pragma mark - Text color
 + (instancetype)titleColor
 {
-    return KLColorWithRGB(55, 60, 56);
+    return KLColorWithRGB(49, 49, 49);
+}
+
++ (instancetype)buttonTitleColor
+{
+    return [UIColor whiteColor];
 }
 
 + (instancetype)subtitleColor
 {
-    return KLColorWithRGB(145, 152, 159);  // 银鼠
+    return KLColorWithRGB(145, 152, 159);
 }
 
 + (instancetype)separatorColor
@@ -72,7 +78,7 @@
 
 + (instancetype)primaryButtonColor
 {
-    return [UIColor tintColor];
+    return KLColorWithHexString(@"3399FF");
 }
 
 + (instancetype)destructiveButtonColor

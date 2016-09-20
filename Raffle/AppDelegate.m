@@ -39,7 +39,9 @@
     [UICollectionView appearance].backgroundColor = [UIColor backgroundColor];
     
     [UIToolbar appearance].tintColor = [UIColor tintColor];
+    [UIToolbar appearance].barTintColor = [UIColor barTintColor];
     [UINavigationBar appearance].tintColor = [UIColor tintColor];
+    [UINavigationBar appearance].barTintColor = [UIColor barTintColor];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

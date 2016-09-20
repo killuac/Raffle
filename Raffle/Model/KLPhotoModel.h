@@ -11,12 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class KLDrawPoolModel;
+@class KLDrawBoxModel;
 
 @interface KLPhotoModel : NSManagedObject
 
 @property (nonatomic, strong) NSString *assetLocalIdentifier;
-@property (nonatomic, strong) KLDrawPoolModel *drawPool;
+@property (nonatomic, strong) KLDrawBoxModel *drawBox;
 
 @end
 

@@ -20,7 +20,6 @@
 #import "KLSoundPlayer.h"
 #import "KLLocalizableConstant.h"
 #import "KLStatusBar.h"
-#import "KLScaleTransition.h"
 
 #import "NSData+Base.h"
 #import "NSString+Base.h"

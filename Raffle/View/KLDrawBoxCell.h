@@ -1,5 +1,5 @@
 //
-//  KLDrawPoolCell.h
+//  KLDrawBoxCell.h
 //  Raffle
 //
 //  Created by Killua Liu on 7/31/16.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PHAsset+Model.h"
 
-@interface KLDrawPoolCell : UICollectionViewCell
+@interface KLDrawBoxCell : UICollectionViewCell
 
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 

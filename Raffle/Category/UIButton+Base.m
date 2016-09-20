@@ -8,13 +8,6 @@
 
 #import "UIButton+Base.h"
 
-@interface UIButton ()
-
-@property (nonatomic, assign) KLButonStyle style;
-
-@end
-
-
 @implementation UIButton (Base)
 
 + (void)load
@@ -22,17 +15,39 @@
     KLClassSwizzleMethod([self class], @selector(intrinsicContentSize), @selector(swizzle_intrinsicContentSize), NO);
 }
 
-- (void)setStyle:(KLButonStyle)style
+#pragma mark - Factory method
++ (instancetype)buttonWithType:(UIButtonType)buttonType
+                         title:(NSString *)title
+                     imageName:(NSString *)imageName
+             selectedImageName:(NSString *)selImageName
+             disabledImageName:(NSString *)disabledImageName
+                        layout:(KLButtonLayout)layout
 {
-    objc_setAssociatedObject(self, @selector(style), @(style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIButton *button = [UIButton buttonWithType:buttonType];
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    [button setTintColor:[UIColor tintColor]];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor buttonTitleColor] forState:UIControlStateNormal];
     
-    self.layer.cornerRadius = KLViewDefaultCornerRadius;
-    [self setBackgroundColorForState:UIControlStateNormal];
-}
-
-- (KLButonStyle)style
-{
-    return [objc_getAssociatedObject(self, @selector(style)) unsignedIntegerValue];
+    if (imageName.length) {
+        [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    }
+    if (selImageName.length) {
+        [button setImage:[UIImage imageNamed:selImageName] forState:UIControlStateSelected];
+    }
+    if (disabledImageName.length) {
+        [button setImage:[UIImage imageNamed:disabledImageName] forState:UIControlStateDisabled];
+    }
+    
+    [button sizeToFit];
+    [button setLayout:layout];
+    
+    button.KVOController = [FBKVOController controllerWithObserver:button];
+    [button.KVOController observe:button keyPaths:@[@"highlighted", @"enabled"] options:0 block:^(id observer, id object, NSDictionary *change) {
+        [button setBackgroundColorForState:button.state];
+    }];
+    
+    return button;
 }
 
 - (void)setIsAnimationEnabled:(BOOL)isAnimationEnabled
@@ -55,20 +70,19 @@
     return [objc_getAssociatedObject(self, @selector(contentSize)) CGSizeValue];
 }
 
+#pragma mark - Layout
 - (void)setLayout:(KLButtonLayout)layout
 {
+    objc_setAssociatedObject(self, @selector(layout), @(layout), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (KLButtonLayoutHorizontalNone == layout || !self.imageView || !self.titleLabel) return;
     
     CGFloat hInset = 5.0, vInset = 8.0, spacing;
-    if (KLButtonLayoutVerticalImageUp == layout || KLButtonLayoutVerticalImageDown == layout) {
-        self.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
-        self.titleLabel.font = [UIFont defaultFont];
+    if (self.isVerticalLayout) {
         [self contentSizeToFit];
         self.size = self.contentSize;
         spacing = self.height / 2 - vInset;
     } else {
         spacing = hInset * 2;
-        self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         self.size = self.contentSize = CGSizeMake(self.width+spacing, self.height);
     }
     
@@ -88,19 +102,29 @@
             
         case KLButtonLayoutVerticalImageUp:
             self.imageEdgeInsets = UIEdgeInsetsMake(0, titleWidth/2, spacing, -titleWidth/2);
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageWidth, 0, 0);
-            self.contentEdgeInsets = UIEdgeInsetsMake(0, -hInset, 0, -hInset);  // For solve iphone5/5s issue
+            self.titleEdgeInsets = UIEdgeInsetsMake(spacing, -imageWidth, -spacing, 0);
+            self.contentEdgeInsets = UIEdgeInsetsMake(0, -self.width, 0, -self.width);  // For solve iphone5/5s issue
             break;
             
         case KLButtonLayoutVerticalImageDown:
-            self.imageEdgeInsets = UIEdgeInsetsMake(-spacing, titleWidth/2, 0, -titleWidth/2);
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageWidth, spacing*2, 0);
-            self.contentEdgeInsets = UIEdgeInsetsMake(0, -hInset, 0, -hInset);
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, titleWidth/2, -spacing, -titleWidth/2);
+            self.titleEdgeInsets = UIEdgeInsetsMake(-spacing, -imageWidth, spacing, 0);
+            self.contentEdgeInsets = UIEdgeInsetsMake(0, -self.width, 0, -self.width);
             break;
             
         default:
             break;
     }
+}
+
+- (KLButtonLayout)layout
+{
+    return [objc_getAssociatedObject(self, @selector(layout)) unsignedIntegerValue];
+}
+
+- (BOOL)isVerticalLayout
+{
+    return (KLButtonLayoutVerticalImageUp == self.layout || KLButtonLayoutVerticalImageDown == self.layout);
 }
 
 - (CGSize)titleLabelSize
@@ -135,39 +159,18 @@
     [self addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
 }
 
-#pragma mark - Factory method
-+ (instancetype)buttonWithType:(UIButtonType)buttonType
-                         title:(NSString *)title
-                     imageName:(NSString *)imageName
-             selectedImageName:(NSString *)selImageName
-             disabledImageName:(NSString *)disabledImageName
-                        layout:(KLButtonLayout)layout
+#pragma mark - Style
+- (void)setStyle:(KLButonStyle)style
 {
-    UIButton *button = [UIButton buttonWithType:buttonType];
-    button.translatesAutoresizingMaskIntoConstraints = NO;
-    [button setTintColor:[UIColor tintColor]];
-    [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor titleColor] forState:UIControlStateNormal];
+    objc_setAssociatedObject(self, @selector(style), @(style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (imageName.length) {
-        [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-    }
-    if (selImageName.length) {
-        [button setImage:[UIImage imageNamed:selImageName] forState:UIControlStateSelected];
-    }
-    if (disabledImageName.length) {
-        [button setImage:[UIImage imageNamed:disabledImageName] forState:UIControlStateDisabled];
-    }
-    
-    [button sizeToFit];
-    [button setLayout:layout];
-    
-    button.KVOController = [FBKVOController controllerWithObserver:button];
-    [button.KVOController observe:button keyPaths:@[@"highlighted", @"enabled"] options:0 block:^(id observer, id object, NSDictionary *change) {
-        [button setBackgroundColorForState:button.state];
-    }];
-    
-    return button;
+    self.layer.cornerRadius = KLViewDefaultCornerRadius;
+    [self setBackgroundColorForState:UIControlStateNormal];
+}
+
+- (KLButonStyle)style
+{
+    return [objc_getAssociatedObject(self, @selector(style)) unsignedIntegerValue];
 }
 
 - (void)setBackgroundColorForState:(UIControlState)state
@@ -216,7 +219,8 @@
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName
 {
-    return [UIButton buttonWithTitle:title imageName:imageName layout:KLButtonLayoutHorizontalImageLeft];
+    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
+    return [UIButton buttonWithTitle:title imageName:imageName layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName layout:(KLButtonLayout)layout
@@ -226,22 +230,24 @@
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selImageName
 {
-    return [UIButton buttonWithType:UIButtonTypeCustom title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:KLButtonLayoutHorizontalImageLeft];
+    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
+    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selImageName layout:(KLButtonLayout)layout
 {
-    return [UIButton buttonWithType:UIButtonTypeCustom title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
+    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName disabledImageName:(NSString *)disabledImageName
 {
-    return [UIButton buttonWithType:UIButtonTypeCustom title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:KLButtonLayoutHorizontalImageLeft];
+    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
+    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName disabledImageName:(NSString *)disabledImageName layout:(KLButtonLayout)layout
 {
-    return [UIButton buttonWithType:UIButtonTypeCustom title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
+    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
 }
 
 + (instancetype)buttonWithImageName:(NSString *)imageName

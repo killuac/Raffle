@@ -8,11 +8,27 @@
 
 #import "KLMoreViewController.h"
 
+const CGFloat KLMoreViewControllerLineSpacing = 20.0;
+
 @interface KLMoreViewController ()
 
 @end
 
 @implementation KLMoreViewController
+
+static CGSize cellItemSize;
+
++ (void)load
+{
+    CGFloat width, height;
+    width = height = (SCREEN_WIDTH - KLMoreViewControllerLineSpacing * 3) / 2;
+    cellItemSize = CGSizeMake(width, height);
+}
+
++ (instancetype)viewController
+{
+    return [[self alloc] initWithCollectionViewLayout:[UICollectionViewFlowLayout new]];
+}
 
 #pragma mark - Lifecycle
 - (void)viewDidLoad
@@ -23,31 +39,33 @@
 
 - (void)prepareForUI
 {
-    self.title = TITLE_DRAW_POOL;
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeMoreDrawPools:)];
+    self.title = TITLE_DRAW_BOX;
+    self.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeMoreDrawBoxes:)];
     
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
+    flowLayout.itemSize = cellItemSize;
+    flowLayout.minimumLineSpacing = KLMoreViewControllerLineSpacing;
+    flowLayout.minimumInteritemSpacing = KLMoreViewControllerLineSpacing;
+    
+    self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
+    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
 }
 
 #pragma mark - Table view data source
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return 0;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
     return cell;
 }
 
 #pragma mark - Event handling
-- (void)closeMoreDrawPools:(id)sender
+- (void)closeMoreDrawBoxes:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }

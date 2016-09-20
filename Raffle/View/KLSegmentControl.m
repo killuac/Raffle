@@ -9,6 +9,7 @@
 #import "KLSegmentControl.h"
 
 #define TITLE_LABEL_FONT        [UIFont subtitleFont]
+#define TITLE_LABEL_COLOR       KLColorWithRGB(127, 132, 137)
 #define SELECTION_MARK_MARGIN   (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? 8.0 : 5.0)
 
 #pragma mark - Class: KLSegmentCollectionViewCell
@@ -33,7 +34,7 @@
     [self.contentView addSubview:({
         _titleLabel = [UILabel newAutoLayoutView];
         _titleLabel.font = TITLE_LABEL_FONT;
-        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.textColor = TITLE_LABEL_COLOR;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel;
     })];
@@ -44,14 +45,14 @@
 - (void)setHighlighted:(BOOL)highlighted
 {
     [super setHighlighted:highlighted];
-    self.titleLabel.textColor = highlighted ? [self.titleLabel.textColor darkerColor] : [UIColor whiteColor];
+    self.titleLabel.textColor = highlighted ? [self.titleLabel.textColor darkerColor] : TITLE_LABEL_COLOR;
 }
 
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
     self.userInteractionEnabled = !self.isSelected;
-    self.titleLabel.textColor = selected ? [UIColor orangeColor] : [UIColor whiteColor];
+    self.titleLabel.textColor = selected ? [UIColor whiteColor] : TITLE_LABEL_COLOR;
 }
 
 @end

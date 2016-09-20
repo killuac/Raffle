@@ -7,7 +7,7 @@
 //
 
 #import "KLMainViewController.h"
-#import "KLDrawPoolViewController.h"
+#import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
 #import "KLMoreViewController.h"
 
@@ -17,7 +17,11 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
-@property (nonatomic, strong) UIToolbar *toolbar;
+
+@property (nonatomic, strong) UIButton *addPhotoButton;
+@property (nonatomic, strong) UIButton *switchModeButton;
+@property (nonatomic, strong) UIButton *reloadButton;
+@property (nonatomic, strong) UIButton *menuButton;
 
 @end
 
@@ -47,6 +51,8 @@
 
 - (void)reloadData
 {
+    self.pageControl.hidden = (self.dataController.pageCount == 1);
+    self.pageControl.numberOfPages = self.dataController.pageCount;
     self.pageScrollView.scrollEnabled = self.dataController.isPageScrollEnabled;
     
     UIViewController *viewController = [self viewControllerAtPageIndex:self.dataController.currentPageIndex];
@@ -56,14 +62,7 @@
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(willMoveToParentViewController:) withObject:nil];
         [self.pageViewController.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
-        [self addDefaultView];
     }
-}
-
-// Add default view when there is no any draw pool
-- (void)addDefaultView
-{
-    
 }
 
 - (void)addPageViewController
@@ -100,28 +99,53 @@
         _pageControl;
     })];
     
-//  Toolbar
+//  Add photo button
     [self.view addSubview:({
-        UIBarButtonItem *reloadItem = [UIBarButtonItem barButtonItemWithImageName:@"button_reload" target:self action:@selector(reloadDrawPool:)];
-        UIBarButtonItem *addItem = [UIBarButtonItem barButtonItemWithImageName:@"button_add" target:self action:@selector(addPhotosToDrawPool:)];
-        UIBarButtonItem *menuItem = [UIBarButtonItem barButtonItemWithImageName:@"button_menu" target:self action:@selector(showMoreDrawPools:)];
-        
-        _toolbar = [UIToolbar toolbarWithItems:@[reloadItem, addItem, menuItem]];
-        [self.toolbar setSeparatorColor:[UIColor separatorColor]];
+        _addPhotoButton = [UIButton buttonWithTitle:@"2" imageName:@"button_add"];
+        _addPhotoButton.titleLabel.font = [UIFont titleFont];
+        _addPhotoButton.style = KLButonStylePrimary;
+        _addPhotoButton.layout = KLButtonLayoutVerticalImageUp;
+        _addPhotoButton.layer.cornerRadius = KLViewDefaultHeight;
+        [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
-        [self.toolbar addGestureRecognizer:longPress];
-        
-        _toolbar;
+        [self.addPhotoButton addGestureRecognizer:longPress];
+        _addPhotoButton;
     })];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _toolbar);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl(10)]-10-[_toolbar]|" options:NSLayoutFormatAlignAllCenterX views:views]];
+//  Bottom buttons
+    [self.view addSubview:({
+        _switchModeButton = [UIButton buttonWithImageName:@"button_menu"];
+        [_switchModeButton addTarget:self action:@selector(switchDrawMode:)];
+        _switchModeButton;
+    })];
+    
+    [self.view addSubview:({
+        _reloadButton = [UIButton buttonWithImageName:@"button_reload"];
+        [_reloadButton addTarget:self action:@selector(reloadDrawBox:)];
+        _reloadButton;
+    })];
+    
+    [self.view addSubview:({
+        _menuButton = [UIButton buttonWithImageName:@"button_menu"];
+        [_menuButton addTarget:self action:@selector(showMoreDrawBoxes:)];
+        _menuButton;
+    })];
+    
+//  Add constraints
+    [NSLayoutConstraint constraintWidthWithItem:self.addPhotoButton constant:KLViewDefaultHeight*2].active = YES;
+    [self.addPhotoButton constraintsEqualWidthAndHeight];
+    [self.addPhotoButton constraintsCenterInSuperview];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _switchModeButton, _reloadButton, _menuButton);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[_switchModeButton]->=0-[_reloadButton]->=0-[_menuButton]-15-|" options:NSLayoutFormatAlignAllCenterY views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl][_reloadButton]-15-|" views:views]];
+    [self.pageControl constraintsCenterXWithView:self.view];
+    [self.reloadButton constraintsCenterXWithView:self.view];
 }
 
 #pragma mark - Page view controller datasource
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(KLDrawPoolViewController *)viewController
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(KLDrawBoxViewController *)viewController
 {
     NSUInteger index = viewController.pageIndex;
     if (index == 0 || index == NSNotFound) return nil;
@@ -129,7 +153,7 @@
     return [self viewControllerAtPageIndex:index-1];
 }
 
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(KLDrawPoolViewController *)viewController
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(KLDrawBoxViewController *)viewController
 {
     NSUInteger index = viewController.pageIndex;
     if (index == NSNotFound) return nil;
@@ -137,11 +161,11 @@
     return [self viewControllerAtPageIndex:index+1];
 }
 
-- (KLDrawPoolViewController *)viewControllerAtPageIndex:(NSUInteger)index
+- (KLDrawBoxViewController *)viewControllerAtPageIndex:(NSUInteger)index
 {
     if (self.dataController.pageCount == 0 || index >= self.dataController.pageCount) return nil;
     
-    KLDrawPoolViewController *VC = [KLDrawPoolViewController viewControllerWithDataController:self.dataController atPageIndex:index];
+    KLDrawBoxViewController *VC = [KLDrawBoxViewController viewControllerWithDataController:self.dataController atPageIndex:index];
     
     return VC;
 }
@@ -154,20 +178,64 @@
     }
 }
 
+#pragma mark - Animation
+- (void)setAddPhotoButtonHidden:(BOOL)hidden
+{
+    
+}
+
+- (void)setBottomButtonsHidden:(BOOL)hidden
+{
+    
+}
+
+- (void)setReloadButtonHidden:(BOOL)hidden
+{
+    
+}
+
 #pragma mark - Event handling
-- (void)addPhotosToDrawPool:(id)sender
+- (void)startDraw:(id)sender
+{
+    [self setAddPhotoButtonHidden:YES];
+    [self setBottomButtonsHidden:YES];
+}
+
+- (void)stopDraw:(id)sender
+{
+    [self setAddPhotoButtonHidden:NO];
+    [self setBottomButtonsHidden:NO];
+}
+
+- (void)addPhotosToDrawBox:(id)sender
+{
+    [self showImagePickerController];
+}
+
+- (void)switchDrawMode:(id)sender
+{
+    [self setReloadButtonHidden:YES];
+    
+    [UIView animateWithDefaultDuration:^{
+        self.switchModeButton.transform = CGAffineTransformMakeScale(0.001, 0.001);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDefaultDuration:^{
+            self.switchModeButton.transform = CGAffineTransformIdentity;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
+}
+
+- (void)reloadDrawBox:(id)sender
 {
     
 }
 
-- (void)reloadDrawPool:(id)sender
-{
-    
-}
-
-- (void)showMoreDrawPools:(id)sender
+- (void)showMoreDrawBoxes:(id)sender
 {
     KLMoreViewController *moreVC = [KLMoreViewController viewController];
+    moreVC.dismissBlock = ^{ [self reloadData]; };
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moreVC];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
@@ -179,11 +247,16 @@
     
     UIView *view = recognizer.view;
     CGRect frame = CGRectMake(view.width/3, 0, view.width/3, view.height);
-    if (!CGRectContainsPoint(frame, [recognizer locationInView:view])) return;
-    
+    if (CGRectContainsPoint(frame, [recognizer locationInView:view])) {
+        [self showImagePickerController];
+    }
+}
+
+- (void)showImagePickerController
+{
     KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
     imagePicker.delegate = self.pageViewController.viewControllers.firstObject;
-    imagePicker.transitioningDelegate = imagePicker.scaleTransition;
+    imagePicker.transitioningDelegate = imagePicker.transition;
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 

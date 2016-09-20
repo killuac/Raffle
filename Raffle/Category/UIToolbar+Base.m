@@ -120,8 +120,6 @@
 
 - (void)setSeparatorColor:(UIColor *)color
 {
-    self.translucent = YES;
-    
     UIView *separator = [[UIView alloc] init];
     separator.width = 1;
     separator.height = 0.5;
