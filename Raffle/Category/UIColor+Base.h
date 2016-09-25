@@ -39,4 +39,6 @@ NS_INLINE UIColor *KLColorWithHexString(NSString *hexString) {
 - (UIColor *)lighterColor;
 - (UIColor *)darkerColor;
 
+- (UIColor *)blendedColorWithFraction:(CGFloat)fraction endColor:(UIColor *)endColor;
+
 @end

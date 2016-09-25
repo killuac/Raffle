@@ -7,9 +7,11 @@
 //
 
 #import "KLMainViewController.h"
+#import "KLBubbleButton.h"
 #import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
 #import "KLMoreViewController.h"
+#import "KLWinnerViewController.h"
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
@@ -20,10 +22,12 @@
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
 
-@property (nonatomic, strong) UIButton *addPhotoButton;
+@property (nonatomic, strong) KLBubbleButton *addPhotoButton;
 @property (nonatomic, strong) UIButton *switchModeButton;
 @property (nonatomic, strong) UIButton *reloadButton;
 @property (nonatomic, strong) UIButton *menuButton;
+
+@property (nonatomic, assign) BOOL isDrawing;
 
 @end
 
@@ -43,6 +47,23 @@
     [super viewDidLoad];
     [self prepareForUI];
     [self reloadData];
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self resignFirstResponder];
 }
 
 - (void)prepareForUI
@@ -104,45 +125,47 @@
     
 //  Add photo button
     [self.view addSubview:({
-        _addPhotoButton = [UIButton buttonWithTitle:@"2" imageName:@"button_add"];
+        _addPhotoButton = [KLBubbleButton buttonWithTitle:@"2" imageName:@"button_add"];
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
-        _addPhotoButton.style = KLButonStylePrimary;
+        _addPhotoButton.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
         _addPhotoButton.layout = KLButtonLayoutVerticalImageUp;
-        _addPhotoButton.layer.cornerRadius = KLViewDefaultHeight;
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
-        [self.addPhotoButton addGestureRecognizer:longPress];
+//        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
+//        [self.addPhotoButton addGestureRecognizer:longPress];
         _addPhotoButton;
     })];
     
 //  Bottom buttons
     [self.view addSubview:({
-        _switchModeButton = [UIButton buttonWithImageName:@"button_menu"];
+        _switchModeButton = [KLBubbleButton buttonWithImageName:@"button_menu"];
+        _switchModeButton.backgroundColor = [[UIColor cyanColor] colorWithAlphaComponent:0.5];
         [_switchModeButton addTarget:self action:@selector(switchDrawMode:)];
         _switchModeButton;
     })];
     
     [self.view addSubview:({
-        _reloadButton = [UIButton buttonWithImageName:@"button_reload"];
+        _reloadButton = [KLBubbleButton buttonWithImageName:@"button_reload"];
+        _reloadButton.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.5];
         [_reloadButton addTarget:self action:@selector(reloadDrawBox:)];
         _reloadButton;
     })];
     
     [self.view addSubview:({
-        _menuButton = [UIButton buttonWithImageName:@"button_menu"];
+        _menuButton = [KLBubbleButton buttonWithImageName:@"button_menu"];
+        _menuButton.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
         [_menuButton addTarget:self action:@selector(showMoreDrawBoxes:)];
         _menuButton;
     })];
     
 //  Add constraints
-    [NSLayoutConstraint constraintWidthWithItem:self.addPhotoButton constant:KLViewDefaultHeight*2].active = YES;
+    [NSLayoutConstraint constraintWidthWithItem:self.addPhotoButton constant:KLViewDefaultButtonHeight*2].active = YES;
     [self.addPhotoButton constraintsEqualWidthAndHeight];
     [self.addPhotoButton constraintsCenterInSuperview];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _switchModeButton, _reloadButton, _menuButton);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[_switchModeButton(44)]->=0-[_reloadButton(44)]->=0-[_menuButton(44)]-10-|" options:NSLayoutFormatAlignAllCenterY views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl][_reloadButton]-5-|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[_switchModeButton(40)]->=0-[_reloadButton(40)]->=0-[_menuButton(40)]-8-|" options:NSLayoutFormatAlignAllCenterY views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl][_reloadButton]-8-|" views:views]];
     
     [self.pageControl constraintsCenterXWithView:self.view];
     [self.reloadButton constraintsCenterXWithView:self.view];
@@ -193,7 +216,8 @@
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
-    if (motion == UIEventSubtypeMotionShake) {
+    if (self.isFirstResponder && motion == UIEventSubtypeMotionShake) {
+        [self resignFirstResponder];
         [self startDraw:event];
     }
 }
@@ -238,19 +262,28 @@
 #pragma mark - Event handling
 - (void)startDraw:(id)sender
 {
+    self.isDrawing = YES;
     [self setAddPhotoButtonHidden:YES];
     [self setBottomButtonsHidden:YES];
 }
 
 - (void)singleTap:(UITapGestureRecognizer *)recognizer
 {
-    [self stopDraw:recognizer];
+    if (self.isDrawing) {
+        self.isDrawing = NO;
+        [self becomeFirstResponder];
+        [self stopDraw:recognizer];
+    }
 }
 
 - (void)stopDraw:(id)sender
 {
     [self setAddPhotoButtonHidden:NO];
     [self setBottomButtonsHidden:NO];
+    
+    KLWinnerViewController *winnerVC = [KLWinnerViewController viewController];
+    winnerVC.transitioningDelegate = winnerVC.transition;
+    [self presentViewController:winnerVC animated:YES completion:nil];
 }
 
 - (void)addPhotosToDrawBox:(id)sender
@@ -287,16 +320,16 @@
     [self presentViewController:navController animated:YES completion:nil];
 }
 
-- (void)longPressTakePhoto:(UILongPressGestureRecognizer *)recognizer
-{
-    if (recognizer.state != UIGestureRecognizerStateBegan) return;
-    
-    UIView *view = recognizer.view;
-    CGRect frame = CGRectMake(view.width/3, 0, view.width/3, view.height);
-    if (CGRectContainsPoint(frame, [recognizer locationInView:view])) {
-        [self showImagePickerController];
-    }
-}
+//- (void)longPressTakePhoto:(UILongPressGestureRecognizer *)recognizer
+//{
+//    if (recognizer.state != UIGestureRecognizerStateBegan) return;
+//    
+//    UIView *view = recognizer.view;
+//    CGRect frame = CGRectMake(view.width/3, 0, view.width/3, view.height);
+//    if (CGRectContainsPoint(frame, [recognizer locationInView:view])) {
+//        [self showImagePickerController];
+//    }
+//}
 
 - (void)showImagePickerController
 {

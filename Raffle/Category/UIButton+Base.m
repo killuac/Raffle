@@ -23,7 +23,7 @@
              disabledImageName:(NSString *)disabledImageName
                         layout:(KLButtonLayout)layout
 {
-    UIButton *button = [UIButton buttonWithType:buttonType];
+    UIButton *button = [self buttonWithType:buttonType];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     [button setTintColor:[UIColor tintColor]];
     [button setTitle:title forState:UIControlStateNormal];
@@ -214,62 +214,62 @@
 #pragma mark - Custom button
 + (instancetype)buttonWithTitle:(NSString *)title
 {
-    return [UIButton buttonWithTitle:title imageName:nil];
+    return [self buttonWithTitle:title imageName:nil];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName
 {
     KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
-    return [UIButton buttonWithTitle:title imageName:imageName layout:layout];
+    return [self buttonWithTitle:title imageName:imageName layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName layout:(KLButtonLayout)layout
 {
-    return [UIButton buttonWithTitle:title imageName:imageName selectedImageName:nil layout:layout];
+    return [self buttonWithTitle:title imageName:imageName selectedImageName:nil layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selImageName
 {
     KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
-    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
+    return [self buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selImageName layout:(KLButtonLayout)layout
 {
-    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
+    return [self buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName disabledImageName:(NSString *)disabledImageName
 {
     KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
-    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
+    return [self buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
 }
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName disabledImageName:(NSString *)disabledImageName layout:(KLButtonLayout)layout
 {
-    return [UIButton buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
+    return [self buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
 }
 
 + (instancetype)buttonWithImageName:(NSString *)imageName
 {
-    return [UIButton buttonWithTitle:nil imageName:imageName];
+    return [self buttonWithTitle:nil imageName:imageName];
 }
 
 + (instancetype)buttonWithImageName:(NSString *)imageName selectedImageName:(NSString *)selImageName
 {
-    return [UIButton buttonWithTitle:nil imageName:imageName selectedImageName:selImageName];
+    return [self buttonWithTitle:nil imageName:imageName selectedImageName:selImageName];
 }
 
 + (instancetype)buttonWithImageName:(NSString *)imageName disabledImageName:(NSString *)disabledImageName
 {
-    return [UIButton buttonWithTitle:nil imageName:imageName disabledImageName:disabledImageName];
+    return [self buttonWithTitle:nil imageName:imageName disabledImageName:disabledImageName];
 }
 
 #pragma mark - System button
 
 + (instancetype)systemButtonWithTitle:(NSString *)title
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    UIButton *button = [self buttonWithType:UIButtonTypeSystem];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     [button setTitle:title forState:UIControlStateNormal];
     [button sizeToFit];
@@ -289,12 +289,12 @@
 #pragma mark - Default, primary, destructive buttons
 + (instancetype)customButtonWithTitle:(NSString *)title
 {
-    return [UIButton buttonWithType:UIButtonTypeCustom title:title imageName:nil selectedImageName:nil disabledImageName:nil layout:KLButtonLayoutHorizontalNone];
+    return [self buttonWithType:UIButtonTypeCustom title:title imageName:nil selectedImageName:nil disabledImageName:nil layout:KLButtonLayoutHorizontalNone];
 }
 
 + (instancetype)defaultButtonWithTitle:(NSString *)title
 {
-    UIButton *button = [UIButton customButtonWithTitle:title];
+    UIButton *button = [self customButtonWithTitle:title];
     [button setStyle:KLButonStyleDefault];
     [button setTitleColor:[UIColor titleColor] forState:UIControlStateNormal];
     return button;
@@ -302,7 +302,7 @@
 
 + (instancetype)primaryButtonWithTitle:(NSString *)title
 {
-    UIButton *button = [UIButton customButtonWithTitle:title];
+    UIButton *button = [self customButtonWithTitle:title];
     [button setStyle:KLButonStylePrimary];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor titleColor] forState:UIControlStateDisabled];
@@ -311,7 +311,7 @@
 
 + (instancetype)destructiveButtonWithTitle:(NSString *)title
 {
-    UIButton *button = [UIButton customButtonWithTitle:title];
+    UIButton *button = [self customButtonWithTitle:title];
     [button setStyle:KLButonStyleDestructive];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor titleColor] forState:UIControlStateDisabled];

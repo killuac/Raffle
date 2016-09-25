@@ -53,6 +53,9 @@
 		41FE17A11D5B160700CABFCA /* Analytics.plist in Resources */ = {isa = PBXBuildFile; fileRef = 41FE179D1D5B160700CABFCA /* Analytics.plist */; };
 		41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE179F1D5B160700CABFCA /* AppDelegate+Analytics.m */; };
 		CFF1CC9C5F50DB9B5B1B1C89 /* Pods_Raffle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */; };
+		E30DF8A01D92E70300161EAE /* KLBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF89F1D92E70300161EAE /* KLBubbleButton.m */; };
+		E30DF8A31D9827A300161EAE /* KLSwapTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A21D9827A300161EAE /* KLSwapTransition.m */; };
+		E30DF8A61D982EF200161EAE /* KLMatrixTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */; };
 		E3539C7A1D9041BD00CBE9F2 /* KLWinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */; };
 		E3539C7D1D90421000CBE9F2 /* KLPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */; };
 		E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */; };
@@ -190,6 +193,12 @@
 		41FE179F1D5B160700CABFCA /* AppDelegate+Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Analytics.m"; sourceTree = "<group>"; };
 		41FE17A01D5B160700CABFCA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Raffle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E30DF89E1D92E70300161EAE /* KLBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLBubbleButton.h; sourceTree = "<group>"; };
+		E30DF89F1D92E70300161EAE /* KLBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLBubbleButton.m; sourceTree = "<group>"; };
+		E30DF8A11D9827A300161EAE /* KLSwapTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLSwapTransition.h; sourceTree = "<group>"; };
+		E30DF8A21D9827A300161EAE /* KLSwapTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLSwapTransition.m; sourceTree = "<group>"; };
+		E30DF8A41D982EF200161EAE /* KLMatrixTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLMatrixTransition.h; sourceTree = "<group>"; };
+		E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLMatrixTransition.m; sourceTree = "<group>"; };
 		E3539C781D9041BD00CBE9F2 /* KLWinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLWinnerViewController.h; sourceTree = "<group>"; };
 		E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLWinnerViewController.m; sourceTree = "<group>"; };
 		E3539C7B1D90421000CBE9F2 /* KLPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPreviewViewController.h; sourceTree = "<group>"; };
@@ -277,8 +286,12 @@
 				4105A7961D70120500215D76 /* KLBaseTransition.m */,
 				4105A7921D6FDFA900215D76 /* KLCircleTransition.h */,
 				4105A7931D6FDFA900215D76 /* KLCircleTransition.m */,
+				E30DF8A41D982EF200161EAE /* KLMatrixTransition.h */,
+				E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */,
 				4105A78F1D6FDF8D00215D76 /* KLScaleTransition.h */,
 				4105A7901D6FDF8D00215D76 /* KLScaleTransition.m */,
+				E30DF8A11D9827A300161EAE /* KLSwapTransition.h */,
+				E30DF8A21D9827A300161EAE /* KLSwapTransition.m */,
 			);
 			path = Animation;
 			sourceTree = "<group>";
@@ -288,6 +301,8 @@
 			children = (
 				415BFE861D5B20FC002053D6 /* KLAlbumCell.h */,
 				415BFE871D5B20FC002053D6 /* KLAlbumCell.m */,
+				E30DF89E1D92E70300161EAE /* KLBubbleButton.h */,
+				E30DF89F1D92E70300161EAE /* KLBubbleButton.m */,
 				415BFE881D5B20FC002053D6 /* KLCircleLayout.h */,
 				415BFE891D5B20FC002053D6 /* KLCircleLayout.m */,
 				415BFE8A1D5B20FC002053D6 /* KLDrawBoxCell.h */,
@@ -569,6 +584,11 @@
 					41FE17111D5B10A200CABFCA = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 4AGG3RNQPH;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 					41FE172D1D5B10A300CABFCA = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -689,6 +709,7 @@
 			files = (
 				4105A7971D70120500215D76 /* KLBaseTransition.m in Sources */,
 				41FE17991D5B15AB00CABFCA /* UITableViewCell+Base.m in Sources */,
+				E30DF8A31D9827A300161EAE /* KLSwapTransition.m in Sources */,
 				E3684C4F1D86DC20004E4636 /* KLDataController.m in Sources */,
 				41FE17901D5B15AB00CABFCA /* UIAlertController+Base.m in Sources */,
 				41FE179C1D5B15AB00CABFCA /* UIViewController+Base.m in Sources */,
@@ -699,6 +720,7 @@
 				415BFE921D5B20FC002053D6 /* KLDrawBoxCell.m in Sources */,
 				41FE178B1D5B15AB00CABFCA /* NSData+Base.m in Sources */,
 				41FE17921D5B15AB00CABFCA /* UIButton+Base.m in Sources */,
+				E30DF8A61D982EF200161EAE /* KLMatrixTransition.m in Sources */,
 				41FE178E1D5B15AB00CABFCA /* NSString+Base.m in Sources */,
 				E3684C4C1D86DBFD004E4636 /* KLMoreViewController.m in Sources */,
 				41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */,
@@ -722,6 +744,7 @@
 				41FE178C1D5B15AB00CABFCA /* NSDate+Base.m in Sources */,
 				41FE17911D5B15AB00CABFCA /* UIBarButtonItem+Base.m in Sources */,
 				E3684C481D86DBFD004E4636 /* KLCameraViewController.m in Sources */,
+				E30DF8A01D92E70300161EAE /* KLBubbleButton.m in Sources */,
 				E3DDDF351D8858CE008F3421 /* KLMoreDataController.m in Sources */,
 				41FE17171D5B10A200CABFCA /* main.m in Sources */,
 				415BFE9B1D5B2106002053D6 /* PHAsset+Model.m in Sources */,

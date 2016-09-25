@@ -26,6 +26,38 @@
     return self;
 }
 
+- (UIColor *)blendedColorWithFraction:(CGFloat)fraction endColor:(UIColor *)endColor
+{
+    if (fraction <= 0.0f) return self;
+    if (fraction >= 1.0f) return endColor;
+    
+    CGFloat a1, b1, c1, d1 = 0.0f;
+    CGFloat a2, b2, c2, d2 = 0.0f;
+    
+    #define INTERPOLATE(x) KLColorInterpolate(x ## 1, x ## 2, fraction)
+    
+    // White
+    if ([self getWhite:&a1 alpha:&b1] && [endColor getWhite:&a2 alpha:&b2]){
+        return [UIColor colorWithWhite:INTERPOLATE(a) alpha:INTERPOLATE(b)];
+    }
+    
+    // RGB
+    if ([self getRed:&a1 green:&b1 blue:&c1 alpha:&d1] && [endColor getRed:&a2 green:&b2 blue:&c2 alpha:&d2]){
+        return [UIColor colorWithRed:INTERPOLATE(a) green:INTERPOLATE(b) blue:INTERPOLATE(c) alpha:INTERPOLATE(d)];
+    }
+    
+    // HSB
+    if ([self getHue:&a1 saturation:&b1 brightness:&c1 alpha:&d1] && [endColor getHue:&a2 saturation:&b2 brightness:&c2 alpha:&d2]){
+        return [UIColor colorWithHue:INTERPOLATE(a) saturation:INTERPOLATE(b) brightness:INTERPOLATE(c) alpha:INTERPOLATE(d)];
+    }
+    
+    return [UIColor tintColor];
+}
+
+NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
+    return (a + ((b - a) * fraction));
+}
+
 #pragma mark - Tint color
 + (instancetype)tintColor
 {
@@ -40,8 +72,7 @@
 #pragma mark - Background color
 + (instancetype)backgroundColor
 {
-//    return KLColorWithRGB(240, 240, 240);
-    return KLColorWithRGB(49, 49, 49);
+    return KLColorWithRGB(240, 240, 240);
 }
 
 + (instancetype)darkBackgroundColor

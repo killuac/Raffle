@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KLSwapTransition.h"
 
 @interface KLWinnerViewController : UIViewController
+
+@property (nonatomic, strong) UIImage *winnerPhoto;
+@property (nonatomic, strong, readonly) KLSwapTransition *transition;
 
 @end
