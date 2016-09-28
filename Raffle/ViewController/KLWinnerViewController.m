@@ -14,6 +14,15 @@
 
 @implementation KLWinnerViewController
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _transition = [KLSwapTransition transitionWithGestureEnabled:NO];
+        _transition.transitionOrientation = KLTransitionOrientationHorizontal;
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -22,13 +31,19 @@
 
 - (void)prepareForUI
 {
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor redColor];
     [self addSubviews];
+    [self addTapGesture];
 }
 
 - (void)addSubviews
 {
     
+}
+
+- (void)singleTap:(UITapGestureRecognizer *)recognizer
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Event handling

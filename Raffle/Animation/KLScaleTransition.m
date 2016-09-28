@@ -8,10 +8,6 @@
 
 #import "KLScaleTransition.h"
 
-@interface KLScaleTransition ()
-
-@end
-
 @implementation KLScaleTransition
 
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView

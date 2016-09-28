@@ -278,12 +278,12 @@
 
 - (void)stopDraw:(id)sender
 {
-    [self setAddPhotoButtonHidden:NO];
-    [self setBottomButtonsHidden:NO];
-    
     KLWinnerViewController *winnerVC = [KLWinnerViewController viewController];
     winnerVC.transitioningDelegate = winnerVC.transition;
-    [self presentViewController:winnerVC animated:YES completion:nil];
+    [self presentViewController:winnerVC animated:YES completion:^{
+        [self setAddPhotoButtonHidden:NO];
+        [self setBottomButtonsHidden:NO];
+    }];
 }
 
 - (void)addPhotosToDrawBox:(id)sender
@@ -295,15 +295,15 @@
 {
     [self setReloadButtonHidden:YES];
     
-    [UIView animateWithDefaultDuration:^{
-        self.switchModeButton.transform = MINIMUM_SCALE;
-    } completion:^(BOOL finished) {
-        [UIView animateWithDefaultDuration:^{
-            self.switchModeButton.transform = CGAffineTransformIdentity;
-        } completion:^(BOOL finished) {
-            
-        }];
-    }];
+//    [UIView animateWithDefaultDuration:^{
+//        self.switchModeButton.transform = MINIMUM_SCALE;
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDefaultDuration:^{
+//            self.switchModeButton.transform = CGAffineTransformIdentity;
+//        } completion:^(BOOL finished) {
+//            
+//        }];
+//    }];
 }
 
 - (void)reloadDrawBox:(id)sender
