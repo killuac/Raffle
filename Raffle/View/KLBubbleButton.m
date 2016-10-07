@@ -101,4 +101,55 @@
     [super touchesCancelled:touches withEvent:event];
 }
 
+#pragma mark - Animation
+
+NS_INLINE NSTimeInterval KLRandomNumber(NSTimeInterval min, NSTimeInterval max) {
+    return ((NSTimeInterval) arc4random()) / 0xFFFFFFFF * (max - min) + min;
+}
+
+- (void)setAnimated:(BOOL)animated
+{
+    CAKeyframeAnimation *pathAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    pathAnimation.calculationMode = kCAAnimationPaced;
+    pathAnimation.fillMode = kCAFillModeForwards;
+    pathAnimation.removedOnCompletion = false;
+    pathAnimation.repeatCount = INFINITY;
+    pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    pathAnimation.duration = KLRandomNumber(5, 8);
+    
+//  The circle to follow will be inside the circleContainer frame.
+//  It should be a frame around the center of your view to animate.
+//  Do not make it to large, a width/height of 3-4 will be enough.
+    CGMutablePathRef curvedPath = CGPathCreateMutable();
+    CGRect circleContainer = CGRectInset(self.frame, 23/50 * self.width, 23/50 * self.height);
+    CGPathAddEllipseInRect(curvedPath, nil, circleContainer);
+    
+    pathAnimation.path = curvedPath;
+    [self.layer addAnimation:pathAnimation forKey:@"circleAnimation"];
+    
+    NSTimeInterval timeInterval = KLRandomNumber(1, 3);
+    CAKeyframeAnimation *scaleXAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale.x"];
+    scaleXAnimation.duration = 2;
+    scaleXAnimation.values = @[@1, @1.05, @1];  // Start from scale factor 1, scales to 1.05 and back to 1
+    scaleXAnimation.keyTimes = @[@0.0, @(timeInterval/2), @(timeInterval)];
+    scaleXAnimation.repeatCount = INFINITY;
+    scaleXAnimation.autoreverses = YES;
+    scaleXAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    [self.layer addAnimation:scaleXAnimation forKey:@"scaleXAnimation"];
+    
+//  Create the height-scale animation just like the width one above
+//  but slightly increased duration so they will not animate synchronously
+    timeInterval = KLRandomNumber(1, 3);
+    CAKeyframeAnimation *scaleYAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale.y"];
+    scaleYAnimation.duration = 2.5;
+    scaleYAnimation.values = @[@1.0, @1.05, @1.0];
+    scaleYAnimation.keyTimes = @[@0.0, @(timeInterval/2), @(timeInterval)];
+    scaleYAnimation.repeatCount = INFINITY;
+    scaleYAnimation.autoreverses = YES;
+    scaleYAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    [self.layer addAnimation:scaleYAnimation forKey:@"scaleYAnimation"];
+    
+    CGPathRelease(curvedPath);
+}
+
 @end

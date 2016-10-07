@@ -23,9 +23,9 @@
 @property (nonatomic, strong) UIPageControl *pageControl;
 
 @property (nonatomic, strong) KLBubbleButton *addPhotoButton;
-@property (nonatomic, strong) UIButton *switchModeButton;
-@property (nonatomic, strong) UIButton *reloadButton;
-@property (nonatomic, strong) UIButton *menuButton;
+@property (nonatomic, strong) KLBubbleButton *switchModeButton;
+@property (nonatomic, strong) KLBubbleButton *reloadButton;
+@property (nonatomic, strong) KLBubbleButton *menuButton;
 
 @property (nonatomic, assign) BOOL isDrawing;
 

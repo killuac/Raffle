@@ -20,14 +20,13 @@
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
     UIView *containerView = self.transitionContext.containerView;
-    [containerView addSubview:toView];
-    
     NSArray<UIView *> *snapshotViews = [self createSnapshotViewsBaseView:self.isPresenting ? fromView : toView];
     UIView *firstView = snapshotViews.firstObject;
     UIView *secondView = snapshotViews.lastObject;
     
     if (self.isPresenting) {
         [fromView removeFromSuperview];
+        [containerView insertSubview:toView belowSubview:firstView];
         toView.transform = CGAffineTransformMakeScale(0.8, 0.8);
         [UIView animateWithDuration:self.duration animations:^{
             toView.transform = CGAffineTransformIdentity;
@@ -39,6 +38,7 @@
         }];
     }
     else {
+        [containerView insertSubview:toView belowSubview:fromView];
         toView.hidden = YES;
         firstView.transform = self.isVertical ? CGAffineTransformMakeScale(1, MINIMUM_SCALE) : CGAffineTransformMakeScale(MINIMUM_SCALE, 1);
         secondView.transform = self.isVertical ? CGAffineTransformMakeScale(1, MINIMUM_SCALE) : CGAffineTransformMakeScale(MINIMUM_SCALE, 1);

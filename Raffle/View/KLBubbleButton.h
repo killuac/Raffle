@@ -10,4 +10,6 @@
 
 @interface KLBubbleButton : UIButton
 
+@property (nonatomic, assign, getter=isAnimated) BOOL animated;
+
 @end

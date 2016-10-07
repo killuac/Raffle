@@ -14,6 +14,12 @@
 
 @implementation KLWinnerViewController
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+#pragma mark - Lifecycle
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -31,7 +37,7 @@
 
 - (void)prepareForUI
 {
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor blackColor];
     [self addSubviews];
     [self addTapGesture];
 }
