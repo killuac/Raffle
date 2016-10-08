@@ -9,7 +9,11 @@ pod 'Aspects'
 pod 'KVOController'
 pod 'MagicalRecord'
 pod 'RegExCategories'
-pod 'Google-Mobile-Ads-SDK'
+pod 'InMobiSDK'
+pod 'Firebase/Core'
+pod 'Firebase/AdMob'
+pod 'Firebase/Crash'
+#pod 'Google-Mobile-Ads-SDK'
 pod 'UMengAnalytics-NO-IDFA'
 
 end
