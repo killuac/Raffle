@@ -9,6 +9,7 @@ pod 'Aspects'
 pod 'KVOController'
 pod 'MagicalRecord'
 pod 'RegExCategories'
+pod 'Google-Mobile-Ads-SDK'
 pod 'UMengAnalytics-NO-IDFA'
 
 end

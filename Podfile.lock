@@ -1,5 +1,6 @@
 PODS:
   - Aspects (1.4.1)
+  - Google-Mobile-Ads-SDK (7.10.1)
   - KVOController (1.1.0)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
@@ -9,6 +10,7 @@ PODS:
 
 DEPENDENCIES:
   - Aspects
+  - Google-Mobile-Ads-SDK
   - KVOController
   - MagicalRecord
   - RegExCategories
@@ -16,11 +18,12 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
+  Google-Mobile-Ads-SDK: c8da9e592fe43d9b47ef86b018cadb71af53f6b3
   KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   RegExCategories: e68befacacd5bda853c88f70ec745cb2d0cfb89c
   UMengAnalytics-NO-IDFA: 1064992c1b7aaa22823179c0b33a664813fd7a85
 
-PODFILE CHECKSUM: 43f7a79d09b244502a2609cf9ad7984e60a7ed5a
+PODFILE CHECKSUM: dc4dc275fb57069c842670222703790bdf635724
 
 COCOAPODS: 1.0.1

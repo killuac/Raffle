@@ -7,8 +7,16 @@
 //
 
 #import "KLWinnerViewController.h"
+@import GoogleMobileAds;
 
-@interface KLWinnerViewController ()
+@interface KLWinnerViewController () <GADBannerViewDelegate>
+
+@property (nonatomic, strong) GADBannerView *topADBannerView;
+@property (nonatomic, strong) GADBannerView *bottomADBannerView;
+@property (nonatomic, strong) UIImageView *winnerImageView;
+
+@property (nonatomic, strong) NSLayoutConstraint *topBannerHeightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *bottomBannerHeightConstraint;
 
 @end
 
@@ -39,17 +47,65 @@
 {
     self.view.backgroundColor = [UIColor blackColor];
     [self addSubviews];
-    [self addTapGesture];
 }
 
 - (void)addSubviews
 {
+    [self.view addSubview:({
+        _winnerImageView = [UIImageView newAutoLayoutView];
+        _winnerImageView.image = self.winnerPhoto;
+        _winnerImageView.contentMode = UIViewContentModeScaleAspectFill;
+        [_winnerImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapWinnerPhoto:)]];
+        _winnerImageView;
+    })];
     
+    [self.view addSubview:({
+        _topADBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+        _topADBannerView.translatesAutoresizingMaskIntoConstraints = NO;
+        _topADBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
+        _topADBannerView.delegate = self;
+        _topADBannerView.rootViewController = self;
+        [_topADBannerView loadRequest:[GADRequest request]];
+        _topADBannerView;
+    })];
+    
+    [self.view addSubview:({
+        _bottomADBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+        _bottomADBannerView.translatesAutoresizingMaskIntoConstraints = NO;
+        _bottomADBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
+        _bottomADBannerView.autoloadEnabled = YES;
+        _bottomADBannerView.delegate = self;
+        _bottomADBannerView.rootViewController = self;
+        _bottomADBannerView;
+    })];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(_winnerImageView, _topADBannerView, _bottomADBannerView);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_winnerImageView]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topADBannerView]-16-[_winnerImageView]-16-[_bottomADBannerView]|" options:NSLayoutFormatAlignAllLeft|NSLayoutFormatAlignAllRight views:views]];
+    
+    _topBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_topADBannerView constant:0];
+    _bottomBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomADBannerView constant:0];
+    _topBannerHeightConstraint.active = _bottomBannerHeightConstraint.active = YES;
 }
 
-- (void)singleTap:(UITapGestureRecognizer *)recognizer
+#pragma mark - GADBannerViewDelegate
+- (void)adViewDidReceiveAd:(GADBannerView *)bannerView
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self setBottomADBannerViewHidden:NO];
+}
+
+- (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error
+{
+    [self setBottomADBannerViewHidden:YES];
+}
+
+- (void)setBottomADBannerViewHidden:(BOOL)hidden
+{
+    self.bottomADBannerView.hidden = hidden;
+    self.bottomBannerHeightConstraint.constant = hidden ? 0 : self.bottomADBannerView.height;
+    [UIView animateWithDefaultDuration:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark - Event handling
@@ -61,6 +117,11 @@
 - (void)clickBottomAD:(id)sender
 {
     
+}
+
+- (void)tapWinnerPhoto:(UITapGestureRecognizer *)recognizer
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
