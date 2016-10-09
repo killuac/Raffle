@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #define UUID_STRING             [UIDevice currentDevice].identifierForVendor.UUIDString
-#define IS_IOS_VERSION_9        (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0)
-
 #define APP_VERSION             [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleShortVersionString"]
 #define APP_BUNDLE_NAME         [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleName"]
 #define APP_DISPLAY_NAME        [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleDisplayName"]
@@ -38,6 +36,9 @@
 typedef void (^KLVoidBlockType)(void);
 typedef void (^KLBOOLBlockType)(BOOL finished);
 
+NS_INLINE BOOL KLSystemVersionGreaterThanOrEqualTo(NSInteger version) {
+    return [NSProcessInfo processInfo].operatingSystemVersion.majorVersion > version;
+}
 NS_INLINE CGFloat KLPointDistance(CGPoint p1, CGPoint p2) { return sqrtf(powf(p2.x-p1.x, 2) + powf(p2.y-p1.y, 2)); }
 NS_INLINE CGFloat KLRadianFromDegree(CGFloat degree) { return (degree * M_PI / 180.0); }
 

@@ -31,6 +31,7 @@
     [self setupAppearance];
     [self setupAppAnalytics];
     [MagicalRecord setupCoreDataStack];
+//    [MagicalRecord setLoggingLevel:MagicalRecordLoggingLevelOff];
 }
 
 - (void)setupAppearance
