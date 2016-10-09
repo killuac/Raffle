@@ -47,8 +47,6 @@
 			</dict>
 		</array>
 	</dict>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

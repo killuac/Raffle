@@ -11,7 +11,6 @@
 @import Aspects;
 @import Fabric;
 @import Crashlytics;
-@import Firebase;
 
 NSString *const KLLogPageViewName = @"KLLogPageViewName";
 NSString *const KLLogTrackedEvents = @"KLLogTrackedEvents";
@@ -33,7 +32,6 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
 - (void)setupAppAnalytics
 {
     [self setupUMeng];
-//    [FIRApp configure];
     [Fabric with:@[[Crashlytics class]]];
     
     [self prepareForAnalytics];
@@ -96,12 +94,10 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
             
             [clazz aspect_hookSelector:selector withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> aspectInfo) {
                 CLS_LOG(@"%@", eventName);          // Fabric Crashlytics
-                FIRCrashLog(@"%@", eventName);      // Firebase Crash Log
                 
                 KLDispatchGlobalAsync(^{
                     if (block) block(aspectInfo);
                     [MobClick event:eventName];     // UMeng Analytics
-                    [FIRAnalytics logEventWithName:eventName parameters:nil];
                 });
             } error:NULL];
         }];

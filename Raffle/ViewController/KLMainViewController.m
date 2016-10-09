@@ -294,7 +294,7 @@
 - (void)switchDrawMode:(id)sender
 {
     [self setReloadButtonHidden:YES];
-    
+    assert(NO);
 //    [UIView animateWithDefaultDuration:^{
 //        self.switchModeButton.transform = MINIMUM_SCALE;
 //    } completion:^(BOOL finished) {

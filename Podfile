@@ -12,10 +12,8 @@ pod 'RegExCategories'
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'InMobiSDK'
-pod 'Firebase/Core'
-pod 'Firebase/AdMob'
-pod 'Firebase/Crash'
-#pod 'Google-Mobile-Ads-SDK'
+pod 'mopub-ios-sdk'
+pod 'Google-Mobile-Ads-SDK'
 pod 'UMengAnalytics-NO-IDFA'
 
 end

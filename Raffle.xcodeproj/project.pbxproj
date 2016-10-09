@@ -57,7 +57,6 @@
 		E30DF8A31D9827A300161EAE /* KLSwapTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A21D9827A300161EAE /* KLSwapTransition.m */; };
 		E30DF8A61D982EF200161EAE /* KLMatrixTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */; };
 		E30DF8AB1DA9618B00161EAE /* libAdapterInMobi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E30DF8AA1DA9618B00161EAE /* libAdapterInMobi.a */; };
-		E30DF8AD1DA963FA00161EAE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E30DF8AC1DA963FA00161EAE /* GoogleService-Info.plist */; };
 		E3539C7A1D9041BD00CBE9F2 /* KLWinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */; };
 		E3539C7D1D90421000CBE9F2 /* KLPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */; };
 		E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */; };
@@ -74,6 +73,8 @@
 		E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */; };
 		E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */; };
 		E37880951D74930D000FFCA4 /* CAShapeLayer+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */; };
+		E3D72C151DAABD1000EE2620 /* libAdapterSDKMoPub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */; };
+		E3D72C161DAABD1000EE2620 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E3D72C141DAABD1000EE2620 /* Readme.txt */; };
 		E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF311D88553E008F3421 /* KLPhotoModel.m */; };
 		E3DDDF351D8858CE008F3421 /* KLMoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */; };
 /* End PBXBuildFile section */
@@ -204,7 +205,6 @@
 		E30DF8A81DA9618B00161EAE /* GADInMobiExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInMobiExtras.h; sourceTree = "<group>"; };
 		E30DF8A91DA9618B00161EAE /* GADMAdapterInMobi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADMAdapterInMobi.h; sourceTree = "<group>"; };
 		E30DF8AA1DA9618B00161EAE /* libAdapterInMobi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdapterInMobi.a; sourceTree = "<group>"; };
-		E30DF8AC1DA963FA00161EAE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E3539C781D9041BD00CBE9F2 /* KLWinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLWinnerViewController.h; sourceTree = "<group>"; };
 		E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLWinnerViewController.m; sourceTree = "<group>"; };
 		E3539C7B1D90421000CBE9F2 /* KLPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPreviewViewController.h; sourceTree = "<group>"; };
@@ -237,6 +237,8 @@
 		E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CABasicAnimation+Base.m"; sourceTree = "<group>"; };
 		E37880931D74930D000FFCA4 /* CAShapeLayer+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Base.h"; sourceTree = "<group>"; };
 		E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+Base.m"; sourceTree = "<group>"; };
+		E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdapterSDKMoPub.a; sourceTree = "<group>"; };
+		E3D72C141DAABD1000EE2620 /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		E3DDDF301D88553E008F3421 /* KLPhotoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoModel.h; sourceTree = "<group>"; };
 		E3DDDF311D88553E008F3421 /* KLPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPhotoModel.m; sourceTree = "<group>"; };
 		E3DDDF331D8858CE008F3421 /* KLMoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLMoreDataController.h; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3D72C151DAABD1000EE2620 /* libAdapterSDKMoPub.a in Frameworks */,
 				CFF1CC9C5F50DB9B5B1B1C89 /* Pods_Raffle.framework in Frameworks */,
 				E30DF8AB1DA9618B00161EAE /* libAdapterInMobi.a in Frameworks */,
 			);
@@ -274,6 +277,7 @@
 			isa = PBXGroup;
 			children = (
 				E30DF8A71DA9618B00161EAE /* AdMobMediation_Adapter_InMobi */,
+				E3D72C121DAABD1000EE2620 /* AdMobMediation_Adapter_MoPub */,
 				E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */,
 			);
 			name = Frameworks;
@@ -374,7 +378,6 @@
 			isa = PBXGroup;
 			children = (
 				41FE179D1D5B160700CABFCA /* Analytics.plist */,
-				E30DF8AC1DA963FA00161EAE /* GoogleService-Info.plist */,
 				41FE17291D5B10A300CABFCA /* Info.plist */,
 				415BFE731D5B1D01002053D6 /* InfoPlist.strings */,
 				415BFE751D5B1D01002053D6 /* Localizable.strings */,
@@ -532,6 +535,15 @@
 			path = ViewController;
 			sourceTree = "<group>";
 		};
+		E3D72C121DAABD1000EE2620 /* AdMobMediation_Adapter_MoPub */ = {
+			isa = PBXGroup;
+			children = (
+				E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */,
+				E3D72C141DAABD1000EE2620 /* Readme.txt */,
+			);
+			path = AdMobMediation_Adapter_MoPub;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -546,7 +558,6 @@
 				600CD59564B2053090DB6AE9 /* [CP] Embed Pods Frameworks */,
 				05EB302CAD6D11BD800FDAE8 /* [CP] Copy Pods Resources */,
 				4194DD401DAA43E000F7C3FE /* Run Script: Fabric Crashlytics */,
-				4194DD3F1DAA2EA500F7C3FE /* Run Script: Firebase Crash Reporting */,
 			);
 			buildRules = (
 			);
@@ -650,12 +661,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				41FE17281D5B10A300CABFCA /* LaunchScreen.storyboard in Resources */,
-				E30DF8AD1DA963FA00161EAE /* GoogleService-Info.plist in Resources */,
 				415BFE7A1D5B1D01002053D6 /* Localizable.strings in Resources */,
 				41FE17A11D5B160700CABFCA /* Analytics.plist in Resources */,
 				41FE17251D5B10A300CABFCA /* Assets.xcassets in Resources */,
 				41FE17201D5B10A200CABFCA /* Main.storyboard in Resources */,
 				415BFE791D5B1D01002053D6 /* InfoPlist.strings in Resources */,
+				E3D72C161DAABD1000EE2620 /* Readme.txt in Resources */,
 				415BFE7B1D5B1D01002053D6 /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -707,20 +718,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Raffle/Pods-Raffle-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4194DD3F1DAA2EA500F7C3FE /* Run Script: Firebase Crash Reporting */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script: Firebase Crash Reporting";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "GOOGLE_APP_ID=1:59877043705:ios:a621e81fbe34f46b\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym \"${SRCROOT}/Scripts/Raffle-ff7b9bb2848b.json\"";
-		};
 		4194DD401DAA43E000F7C3FE /* Run Script: Fabric Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -733,7 +730,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 1a20564bb72864fd4e1754404503801f9ed6cd0c 75bf655ca68be9e3192af9e56c205bdb30e9c8c3d528c8a47ad42190b57ab64f";
+			shellScript = "releaseConfig=\"Release\"\n\nif [ \"$releaseConfig\" = \"${CONFIGURATION}\" ]; then\necho \"Running Crashlytics\"\n\"${PODS_ROOT}/Fabric/run\" 1a20564bb72864fd4e1754404503801f9ed6cd0c 75bf655ca68be9e3192af9e56c205bdb30e9c8c3d528c8a47ad42190b57ab64f\nfi";
 		};
 		600CD59564B2053090DB6AE9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -998,6 +995,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4AGG3RNQPH;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Raffle/Prefix.pch;
@@ -1007,6 +1005,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AdMobMediation_Adapter_InMobi",
+					"$(PROJECT_DIR)/AdMobMediation_Adapter_MoPub",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -1023,21 +1022,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseAnalytics\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseCrash\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseInstanceID\"",
-					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/Google-Mobile-Ads-SDK\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleInterchangeUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/UMengAnalytics-NO-IDFA\"",
 				);
@@ -1074,21 +1059,9 @@
 					"-framework",
 					"\"EventKitUI\"",
 					"-framework",
-					"\"FirebaseAnalytics\"",
-					"-framework",
-					"\"FirebaseCrash\"",
-					"-framework",
-					"\"FirebaseInstanceID\"",
-					"-framework",
 					"\"GLKit\"",
 					"-framework",
-					"\"GoogleInterchangeUtilities\"",
-					"-framework",
 					"\"GoogleMobileAds\"",
-					"-framework",
-					"\"GoogleSymbolUtilities\"",
-					"-framework",
-					"\"GoogleUtilities\"",
 					"-framework",
 					"\"InMobiSDK\"",
 					"-framework",
@@ -1120,6 +1093,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Syzygy.Raffle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1131,6 +1105,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4AGG3RNQPH;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Raffle/Prefix.pch;
@@ -1140,6 +1115,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AdMobMediation_Adapter_InMobi",
+					"$(PROJECT_DIR)/AdMobMediation_Adapter_MoPub",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -1156,21 +1132,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseAnalytics\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseCrash\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseInstanceID\"",
-					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/Google-Mobile-Ads-SDK\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleInterchangeUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/UMengAnalytics-NO-IDFA\"",
 				);
@@ -1207,21 +1169,9 @@
 					"-framework",
 					"\"EventKitUI\"",
 					"-framework",
-					"\"FirebaseAnalytics\"",
-					"-framework",
-					"\"FirebaseCrash\"",
-					"-framework",
-					"\"FirebaseInstanceID\"",
-					"-framework",
 					"\"GLKit\"",
 					"-framework",
-					"\"GoogleInterchangeUtilities\"",
-					"-framework",
 					"\"GoogleMobileAds\"",
-					"-framework",
-					"\"GoogleSymbolUtilities\"",
-					"-framework",
-					"\"GoogleUtilities\"",
 					"-framework",
 					"\"InMobiSDK\"",
 					"-framework",
@@ -1253,6 +1203,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Syzygy.Raffle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

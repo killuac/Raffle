@@ -50,15 +50,15 @@
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>WinnerVC_ClickTopAD</string>
+				<string>WinnerVC_ClickTopAd</string>
 				<key>KLLogEventSelectorName</key>
-				<string>clickTopAD:</string>
+				<string>clickTopAd:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>WinnerVC_ClickBottomAD</string>
+				<string>WinnerVC_ClickBottomAd</string>
 				<key>KLLogEventSelectorName</key>
-				<string>clickBottomAD:</string>
+				<string>clickBottomAd:</string>
 			</dict>
 		</array>
 	</dict>
