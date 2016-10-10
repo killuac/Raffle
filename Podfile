@@ -14,6 +14,5 @@ pod 'Crashlytics'
 pod 'InMobiSDK'
 pod 'mopub-ios-sdk'
 pod 'Google-Mobile-Ads-SDK'
-pod 'UMengAnalytics-NO-IDFA'
 
 end

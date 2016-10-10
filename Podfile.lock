@@ -13,7 +13,6 @@ PODS:
     - mopub-ios-sdk/MoPubSDK (= 4.9.1)
   - mopub-ios-sdk/MoPubSDK (4.9.1)
   - RegExCategories (1.0)
-  - UMengAnalytics-NO-IDFA (4.1.1)
 
 DEPENDENCIES:
   - Aspects
@@ -25,7 +24,6 @@ DEPENDENCIES:
   - MagicalRecord
   - mopub-ios-sdk
   - RegExCategories
-  - UMengAnalytics-NO-IDFA
 
 SPEC CHECKSUMS:
   Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
@@ -37,8 +35,7 @@ SPEC CHECKSUMS:
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   mopub-ios-sdk: a2fc16e924c1c17f8cff26b3d50f9e88a34d1f06
   RegExCategories: e68befacacd5bda853c88f70ec745cb2d0cfb89c
-  UMengAnalytics-NO-IDFA: 1064992c1b7aaa22823179c0b33a664813fd7a85
 
-PODFILE CHECKSUM: 33208206e971093094f3029ed37fbb6901b3f8f2
+PODFILE CHECKSUM: 9d6ffb617643fa3581a4e872bd38d3a31bdfc0f9
 
 COCOAPODS: 1.0.1

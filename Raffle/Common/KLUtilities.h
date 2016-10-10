@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define IS_PHONE                (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define IS_PAD                  (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+
 #define UUID_STRING             [UIDevice currentDevice].identifierForVendor.UUIDString
 #define APP_VERSION             [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleShortVersionString"]
 #define APP_BUNDLE_NAME         [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleName"]

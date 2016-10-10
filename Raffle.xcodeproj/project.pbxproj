@@ -997,6 +997,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4AGG3RNQPH;
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Raffle/Prefix.pch;
 				INFOPLIST_FILE = Raffle/Info.plist;
@@ -1084,8 +1085,6 @@
 					"\"StoreKit\"",
 					"-framework",
 					"\"SystemConfiguration\"",
-					"-framework",
-					"\"UMMobClick\"",
 					"-weak_framework",
 					"\"AdSupport\"",
 					"-weak_framework",
@@ -1107,6 +1106,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4AGG3RNQPH;
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Raffle/Prefix.pch;
 				INFOPLIST_FILE = Raffle/Info.plist;
@@ -1194,8 +1194,6 @@
 					"\"StoreKit\"",
 					"-framework",
 					"\"SystemConfiguration\"",
-					"-framework",
-					"\"UMMobClick\"",
 					"-weak_framework",
 					"\"AdSupport\"",
 					"-weak_framework",

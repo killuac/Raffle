@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate+Analytics.h"
-#import <UMMobClick/MobClick.h>
 @import Aspects;
 @import Fabric;
 @import Crashlytics;
@@ -31,22 +30,8 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
 
 - (void)setupAppAnalytics
 {
-    [self setupUMeng];
     [Fabric with:@[[Crashlytics class]]];
-    
     [self prepareForAnalytics];
-}
-
-- (void)setupUMeng
-{
-    UMConfigInstance.appKey = @"";
-#if DEBUG
-    UMConfigInstance.channelId = @"Development";
-#else
-    UMConfigInstance.channelId = @"App Store";
-#endif
-    [MobClick startWithConfigure:UMConfigInstance];
-    [MobClick setAppVersion:XcodeAppVersion];
 }
 
 - (void)setConfigs:(NSDictionary *)configs
@@ -64,23 +49,21 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
     self.configs = [NSMutableDictionary dictionaryWithContentsOfURL:KLURLPlistFile(@"Analytics")];
     
 //  Hook view controllers
-    [UIViewController aspect_hookSelector:@selector(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
-        if ([self isNeedLoggingForAspectInfo:aspectInfo]) {
-            NSString *pageViewName = [self pageViewNameForAspectInfo:aspectInfo];
-            KLDispatchGlobalAsync(^{
-                [MobClick beginLogPageView:pageViewName];
-            });
-        }
-    } error:NULL];
-    
-    [UIViewController aspect_hookSelector:@selector(viewWillDisappear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
-        if ([self isNeedLoggingForAspectInfo:aspectInfo]) {
-            NSString *pageViewName = [self pageViewNameForAspectInfo:aspectInfo];
-            KLDispatchGlobalAsync(^{
-                [MobClick endLogPageView:pageViewName];
-            });
-        }
-    } error:NULL];
+//    [UIViewController aspect_hookSelector:@selector(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
+//        if ([self isNeedLoggingForAspectInfo:aspectInfo]) {
+//            KLDispatchGlobalAsync(^{
+//                [MobClick beginLogPageView:[self pageViewNameForAspectInfo:aspectInfo]];
+//            });
+//        }
+//    } error:NULL];
+//    
+//    [UIViewController aspect_hookSelector:@selector(viewWillDisappear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
+//        if ([self isNeedLoggingForAspectInfo:aspectInfo]) {
+//            KLDispatchGlobalAsync(^{
+//                [MobClick endLogPageView:[self pageViewNameForAspectInfo:aspectInfo]];
+//            });
+//        }
+//    } error:NULL];
     
 //  Hook events
     [self.configs.allKeys enumerateObjectsUsingBlock:^(NSString *className, NSUInteger idx, BOOL *stop) {
@@ -97,7 +80,7 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
                 
                 KLDispatchGlobalAsync(^{
                     if (block) block(aspectInfo);
-                    [MobClick event:eventName];     // UMeng Analytics
+                    [Answers logCustomEventWithName:eventName customAttributes:nil];
                 });
             } error:NULL];
         }];

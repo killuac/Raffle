@@ -54,24 +54,23 @@
     [self.view addSubview:({
         _winnerImageView = [UIImageView newAutoLayoutView];
         _winnerImageView.image = self.winnerPhoto;
+        _winnerImageView.userInteractionEnabled = YES;
         _winnerImageView.contentMode = UIViewContentModeScaleAspectFill;
         [_winnerImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapWinnerPhoto:)]];
         _winnerImageView;
     })];
     
     [self.view addSubview:({
-        _topAdBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-        _topAdBannerView.translatesAutoresizingMaskIntoConstraints = NO;
+        _topAdBannerView = [GADBannerView newAutoLayoutView];
         _topAdBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
+        _topAdBannerView.autoloadEnabled = YES;
         _topAdBannerView.delegate = self;
         _topAdBannerView.rootViewController = self;
-        [_topAdBannerView loadRequest:[GADRequest request]];
         _topAdBannerView;
     })];
     
     [self.view addSubview:({
-        _bottomAdBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-        _bottomAdBannerView.translatesAutoresizingMaskIntoConstraints = NO;
+        _bottomAdBannerView = [GADBannerView newAutoLayoutView];
         _bottomAdBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
         _bottomAdBannerView.autoloadEnabled = YES;
         _bottomAdBannerView.delegate = self;
@@ -81,42 +80,54 @@
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_winnerImageView, _topAdBannerView, _bottomAdBannerView);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_winnerImageView]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topADBannerView]-16-[_winnerImageView]-16-[_bottomADBannerView]|" options:NSLayoutFormatAlignAllLeft|NSLayoutFormatAlignAllRight views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topAdBannerView]-16-[_winnerImageView]-16-[_bottomAdBannerView]|" options:NSLayoutFormatAlignAllLeft|NSLayoutFormatAlignAllRight views:views]];
     
-    _topBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_topAdBannerView constant:0];
-    _bottomBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomAdBannerView constant:0];
+    _topBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_topAdBannerView constant:1]; // GADBannerViewDelegate isn't called if set 0
+    _bottomBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomAdBannerView constant:1];
     _topBannerHeightConstraint.active = _bottomBannerHeightConstraint.active = YES;
 }
 
 #pragma mark - GADBannerViewDelegate
 - (void)adViewDidReceiveAd:(GADBannerView *)bannerView
 {
-    [self setBottomADBannerViewHidden:NO];
+    [self setAdBannerView:bannerView hidden:NO];
 }
 
 - (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error
 {
-    [self setBottomADBannerViewHidden:YES];
+    [self setAdBannerView:bannerView hidden:YES];
 }
 
-- (void)setBottomADBannerViewHidden:(BOOL)hidden
+- (void)adViewWillLeaveApplication:(GADBannerView *)bannerView
 {
-    self.bottomAdBannerView.hidden = hidden;
-    self.bottomBannerHeightConstraint.constant = hidden ? 0 : self.bottomAdBannerView.height;
+    if (bannerView == self.topAdBannerView) {
+        [self clickTopAdBanner];
+    } else {
+        [self clickBottomAdBanner];
+    }
+}
+
+- (void)setAdBannerView:(GADBannerView *)bannerView hidden:(BOOL)hidden
+{
+    bannerView.hidden = hidden;
+    NSLayoutConstraint *constraint = (bannerView == self.topAdBannerView) ? self.topBannerHeightConstraint : self.bottomBannerHeightConstraint;
+    BOOL isPortrait = UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
+    constraint.constant = hidden ? 0 : (IS_PHONE ? (isPortrait ? 50 : 32) : 90);
+    
     [UIView animateWithDefaultDuration:^{
         [self.view layoutIfNeeded];
     }];
 }
 
 #pragma mark - Event handling
-- (void)clickTopAd:(id)sender
+- (void)clickTopAdBanner
 {
-    
+//  For Analytics
 }
 
-- (void)clickBottomAd:(id)sender
+- (void)clickBottomAdBanner
 {
-    
+//  For Analytics
 }
 
 - (void)tapWinnerPhoto:(UITapGestureRecognizer *)recognizer
