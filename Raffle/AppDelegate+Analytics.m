@@ -16,6 +16,7 @@ NSString *const KLLogTrackedEvents = @"KLLogTrackedEvents";
 NSString *const KLLogEventName = @"KLLogEventName";
 NSString *const KLLogEventSelectorName = @"KLLogEventSelectorName";
 NSString *const KLLogEventHandlerBlock = @"KLLogEventHandlerBlock";
+NSString *const KLIsNeedPlaySound = @"KLIsNeedPlaySound";
 
 typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
 
@@ -74,9 +75,13 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
             SEL selector = NSSelectorFromString(event[KLLogEventSelectorName]);
             KLAspectHandlerBlock block = event[KLLogEventHandlerBlock];
             NSString *eventName = event[KLLogEventName];
+            BOOL isNeedPlaySound = [event[KLIsNeedPlaySound] boolValue];
             
             [clazz aspect_hookSelector:selector withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> aspectInfo) {
                 CLS_LOG(@"%@", eventName);          // Fabric Crashlytics
+                if (isNeedPlaySound) {
+                    [KLSoundPlayer playBubbleButtonSound];
+                }
                 
                 KLDispatchGlobalAsync(^{
                     if (block) block(aspectInfo);

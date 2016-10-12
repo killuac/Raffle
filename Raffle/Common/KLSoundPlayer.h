@@ -10,6 +10,10 @@
 
 @interface KLSoundPlayer : NSObject
 
++ (void)playBubbleButtonSound;
++ (void)playStartDrawSound;
++ (void)playStopDrawSound;
+
 + (void)playMessageSentSound;
 + (void)playMessageSentAlert;
 + (void)playMessageReceivedSound;

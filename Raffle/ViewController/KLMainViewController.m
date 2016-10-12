@@ -11,13 +11,14 @@
 #import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
 #import "KLMoreViewController.h"
-#import "KLWinnerViewController.h"
+#import "KLResultViewController.h"
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
 @interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
+@property (nonatomic, strong) KLDrawBoxViewController *drawBoxViewController;
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
@@ -51,7 +52,7 @@
 
 - (BOOL)canBecomeFirstResponder
 {
-    return YES;
+    return self.dataController.currentDrawBoxDC.isShakeEnabled;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -66,6 +67,12 @@
     [self resignFirstResponder];
 }
 
+- (KLDrawBoxViewController *)drawBoxViewController
+{
+    return self.pageViewController.viewControllers.firstObject;
+}
+
+#pragma mark - Prepare UI
 - (void)prepareForUI
 {
     [self addPageViewController];
@@ -100,6 +107,10 @@
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
+    
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeUp:)];
+    swipe.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.parentViewController.view addGestureRecognizer:swipe];
 }
 
 - (UIScrollView *)pageScrollView
@@ -138,7 +149,7 @@
     
 //  Bottom buttons
     [self.view addSubview:({
-        _switchModeButton = [KLBubbleButton buttonWithImageName:@"button_menu"];
+        _switchModeButton = [KLBubbleButton buttonWithImageName:@"button_attendee"];
         _switchModeButton.backgroundColor = [[UIColor cyanColor] colorWithAlphaComponent:0.5];
         [_switchModeButton addTarget:self action:@selector(switchDrawMode:)];
         _switchModeButton;
@@ -146,6 +157,7 @@
     
     [self.view addSubview:({
         _reloadButton = [KLBubbleButton buttonWithImageName:@"button_reload"];
+        _reloadButton.hidden = YES;
         _reloadButton.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.5];
         [_reloadButton addTarget:self action:@selector(reloadDrawBox:)];
         _reloadButton;
@@ -203,7 +215,7 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed
 {
     if (completed) {
-        self.dataController.currentPageIndex = [pageViewController.viewControllers.firstObject pageIndex];
+        self.dataController.currentPageIndex = self.drawBoxViewController.pageIndex;
         self.pageControl.currentPage = self.dataController.currentPageIndex;
     }
 }
@@ -211,13 +223,7 @@
 #pragma mark - Motion
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
-    
-}
-
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
     if (self.isFirstResponder && motion == UIEventSubtypeMotionShake) {
-        [self resignFirstResponder];
         [self startDraw:event];
     }
 }
@@ -263,13 +269,15 @@
 - (void)startDraw:(id)sender
 {
     self.isDrawing = YES;
+    [self resignFirstResponder];
     [self setAddPhotoButtonHidden:YES];
     [self setBottomButtonsHidden:YES];
+    [KLSoundPlayer playStartDrawSound];
 }
 
 - (void)singleTap:(UITapGestureRecognizer *)recognizer
 {
-    if (self.isDrawing) {
+    if (self.isDrawing) {   // 摇奖中...
         self.isDrawing = NO;
         [self becomeFirstResponder];
         [self stopDraw:recognizer];
@@ -278,12 +286,14 @@
 
 - (void)stopDraw:(id)sender
 {
-    KLWinnerViewController *winnerVC = [KLWinnerViewController viewController];
-    winnerVC.transitioningDelegate = winnerVC.transition;
-    [self presentViewController:winnerVC animated:YES completion:^{
+    KLResultViewController *resultVC = [KLResultViewController viewController];
+    resultVC.resultImage = [self.drawBoxViewController randomAnImage];
+    resultVC.transitioningDelegate = resultVC.transition;
+    [self presentViewController:resultVC animated:YES completion:^{
         [self setAddPhotoButtonHidden:NO];
         [self setBottomButtonsHidden:NO];
     }];
+    [KLSoundPlayer playStopDrawSound];
 }
 
 - (void)addPhotosToDrawBox:(id)sender
@@ -293,21 +303,25 @@
 
 - (void)switchDrawMode:(id)sender
 {
-    [self setReloadButtonHidden:YES];
-//    [UIView animateWithDefaultDuration:^{
-//        self.switchModeButton.transform = MINIMUM_SCALE;
-//    } completion:^(BOOL finished) {
-//        [UIView animateWithDefaultDuration:^{
-//            self.switchModeButton.transform = CGAffineTransformIdentity;
-//        } completion:^(BOOL finished) {
-//            
-//        }];
-//    }];
+    [self.dataController switchDrawMode];
+    [self setReloadButtonHidden:self.dataController.isReloadButtonHidden];
+    
+    [UIView animateWithDefaultDuration:^{
+        self.switchModeButton.alpha = 0;
+    } completion:^(BOOL finished) {
+        NSString *imageName = self.dataController.isAttendeeMode ? @"button_attendee" : @"button_prize";
+        [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+        [UIView animateWithDefaultDuration:^{
+            self.switchModeButton.alpha = 1;
+        } completion:^(BOOL finished) {
+//          TODO: Swich animation
+        }];
+    }];
 }
 
 - (void)reloadDrawBox:(id)sender
 {
-    
+    [self.drawBoxViewController reloadData];
 }
 
 - (void)showMoreDrawBoxes:(id)sender
@@ -333,9 +347,15 @@
 - (void)showImagePickerController
 {
     KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-    imagePicker.delegate = self.pageViewController.viewControllers.firstObject;
+    imagePicker.delegate = self.drawBoxViewController;
     imagePicker.transitioningDelegate = imagePicker.transition;
     [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+- (void)swipeUp:(UISwipeGestureRecognizer *)recognizer
+{
+    if (!self.dataController.currentDrawBoxDC.isShakeEnabled) return;
+    // TODO: Show all images in draw box
 }
 
 @end

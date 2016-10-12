@@ -102,11 +102,6 @@
 }
 
 #pragma mark - Animation
-
-NS_INLINE NSTimeInterval KLRandomNumber(NSTimeInterval min, NSTimeInterval max) {
-    return ((NSTimeInterval) arc4random()) / 0xFFFFFFFF * (max - min) + min;
-}
-
 - (void)setAnimated:(BOOL)animated
 {
     CAKeyframeAnimation *pathAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];

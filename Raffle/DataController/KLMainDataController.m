@@ -28,9 +28,29 @@
     return self;
 }
 
+- (KLDrawBoxDataController *)currentDrawBoxDC
+{
+    return [self drawBoxDataControllerAtIndex:self.currentPageIndex];
+}
+
 - (NSUInteger)pageCount
 {
     return self.drawBoxes.count;
+}
+
+- (BOOL)isAttendeeMode
+{
+    return self.currentDrawBoxDC.isAttendeeMode;
+}
+
+- (BOOL)isReloadButtonHidden
+{
+    return self.currentDrawBoxDC.isReloadButtonHidden;
+}
+
+- (void)switchDrawMode
+{
+    [self.currentDrawBoxDC switchDrawMode];
 }
 
 - (KLDrawBoxDataController *)drawBoxDataControllerAtIndex:(NSUInteger)index

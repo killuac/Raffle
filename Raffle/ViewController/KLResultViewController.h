@@ -1,5 +1,5 @@
 //
-//  KLWinnerViewController.h
+//  KLResultViewController.h
 //  Raffle
 //
 //  Created by Killua Liu on 9/19/16.
@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "KLSwapTransition.h"
 
-@interface KLWinnerViewController : UIViewController
+@interface KLResultViewController : UIViewController
 
-@property (nonatomic, strong) UIImage *winnerPhoto;
+@property (nonatomic, strong) UIImage *resultImage;
 @property (nonatomic, strong, readonly) KLSwapTransition *transition;
 
 @end

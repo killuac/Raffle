@@ -18,7 +18,7 @@
 "ChoosePhoto" = "Choose Photo";
 
 "PrizeMode" = "Prize Mode: The prize photo won't be removed";
-"ParticipantMode" = "Participant Mode: The winner's photo will be removed";
+"ParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";
 "ShakeToStart" = "Shake phone to start";
 
 "ReloadAllPhotos" = "Reload all photos to restart";

@@ -11,24 +11,32 @@
 				<string>MainVC_AddPhotosToDrawBox</string>
 				<key>KLLogEventSelectorName</key>
 				<string>addPhotosToDrawBox:</string>
+				<key>KLIsNeedPlaySound</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_SwitchDrawMode</string>
 				<key>KLLogEventSelectorName</key>
 				<string>switchDrawMode:</string>
+				<key>KLIsNeedPlaySound</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_ReloadDrawBox</string>
 				<key>KLLogEventSelectorName</key>
 				<string>reloadDrawBox:</string>
+				<key>KLIsNeedPlaySound</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_MoreDrawBoxes</string>
 				<key>KLLogEventSelectorName</key>
 				<string>showMoreDrawBoxes:</string>
+				<key>KLIsNeedPlaySound</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
@@ -44,19 +52,19 @@
 			</dict>
 		</array>
 	</dict>
-	<key>KLWinnerViewController</key>
+	<key>KLResultViewController</key>
 	<dict>
 		<key>KLLogTrackedEvents</key>
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>WinnerVC_ClickTopAdBanner</string>
+				<string>ResultVC_ClickTopAdBanner</string>
 				<key>KLLogEventSelectorName</key>
 				<string>clickTopAdBanner</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>WinnerVC_ClickBottomAdBanner</string>
+				<string>ResultVC_ClickBottomAdBanner</string>
 				<key>KLLogEventSelectorName</key>
 				<string>clickBottomAdBanner</string>
 			</dict>

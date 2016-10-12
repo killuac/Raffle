@@ -57,7 +57,7 @@
 		E30DF8A31D9827A300161EAE /* KLSwapTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A21D9827A300161EAE /* KLSwapTransition.m */; };
 		E30DF8A61D982EF200161EAE /* KLMatrixTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */; };
 		E30DF8AB1DA9618B00161EAE /* libAdapterInMobi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E30DF8AA1DA9618B00161EAE /* libAdapterInMobi.a */; };
-		E3539C7A1D9041BD00CBE9F2 /* KLWinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */; };
+		E3539C7A1D9041BD00CBE9F2 /* KLResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */; };
 		E3539C7D1D90421000CBE9F2 /* KLPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */; };
 		E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */; };
 		E3684C451D86DBFD004E4636 /* KLMainDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C341D86DBFD004E4636 /* KLMainDataController.m */; };
@@ -205,8 +205,8 @@
 		E30DF8A81DA9618B00161EAE /* GADInMobiExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInMobiExtras.h; sourceTree = "<group>"; };
 		E30DF8A91DA9618B00161EAE /* GADMAdapterInMobi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADMAdapterInMobi.h; sourceTree = "<group>"; };
 		E30DF8AA1DA9618B00161EAE /* libAdapterInMobi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdapterInMobi.a; sourceTree = "<group>"; };
-		E3539C781D9041BD00CBE9F2 /* KLWinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLWinnerViewController.h; sourceTree = "<group>"; };
-		E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLWinnerViewController.m; sourceTree = "<group>"; };
+		E3539C781D9041BD00CBE9F2 /* KLResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLResultViewController.h; sourceTree = "<group>"; };
+		E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLResultViewController.m; sourceTree = "<group>"; };
 		E3539C7B1D90421000CBE9F2 /* KLPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPreviewViewController.h; sourceTree = "<group>"; };
 		E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPreviewViewController.m; sourceTree = "<group>"; };
 		E3684C311D86DBFD004E4636 /* KLDrawBoxDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLDrawBoxDataController.h; sourceTree = "<group>"; };
@@ -529,8 +529,8 @@
 				E3684C431D86DBFD004E4636 /* KLMoreViewController.m */,
 				E3539C7B1D90421000CBE9F2 /* KLPreviewViewController.h */,
 				E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */,
-				E3539C781D9041BD00CBE9F2 /* KLWinnerViewController.h */,
-				E3539C791D9041BD00CBE9F2 /* KLWinnerViewController.m */,
+				E3539C781D9041BD00CBE9F2 /* KLResultViewController.h */,
+				E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -781,7 +781,7 @@
 				E3684C491D86DBFD004E4636 /* KLDrawBoxViewController.m in Sources */,
 				41FE17941D5B15AB00CABFCA /* UIFont+Base.m in Sources */,
 				41FE17951D5B15AB00CABFCA /* UIImage+Base.m in Sources */,
-				E3539C7A1D9041BD00CBE9F2 /* KLWinnerViewController.m in Sources */,
+				E3539C7A1D9041BD00CBE9F2 /* KLResultViewController.m in Sources */,
 				E3684C4B1D86DBFD004E4636 /* KLMainViewController.m in Sources */,
 				41FE179A1D5B15AB00CABFCA /* UIToolbar+Base.m in Sources */,
 				415BFE901D5B20FC002053D6 /* KLAlbumCell.m in Sources */,

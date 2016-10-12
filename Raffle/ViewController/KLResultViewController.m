@@ -1,26 +1,26 @@
 //
-//  KLWinnerViewController.m
+//  KLResultViewController.m
 //  Raffle
 //
 //  Created by Killua Liu on 9/19/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import "KLWinnerViewController.h"
+#import "KLResultViewController.h"
 @import GoogleMobileAds;
 
-@interface KLWinnerViewController () <GADBannerViewDelegate>
+@interface KLResultViewController () <GADBannerViewDelegate>
 
 @property (nonatomic, strong) GADBannerView *topAdBannerView;
 @property (nonatomic, strong) GADBannerView *bottomAdBannerView;
-@property (nonatomic, strong) UIImageView *winnerImageView;
+@property (nonatomic, strong) UIImageView *resultImageView;
 
 @property (nonatomic, strong) NSLayoutConstraint *topBannerHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *bottomBannerHeightConstraint;
 
 @end
 
-@implementation KLWinnerViewController
+@implementation KLResultViewController
 
 - (BOOL)prefersStatusBarHidden
 {
@@ -52,12 +52,12 @@
 - (void)addSubviews
 {
     [self.view addSubview:({
-        _winnerImageView = [UIImageView newAutoLayoutView];
-        _winnerImageView.image = self.winnerPhoto;
-        _winnerImageView.userInteractionEnabled = YES;
-        _winnerImageView.contentMode = UIViewContentModeScaleAspectFill;
-        [_winnerImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapWinnerPhoto:)]];
-        _winnerImageView;
+        _resultImageView = [UIImageView newAutoLayoutView];
+        _resultImageView.image = self.resultImage;
+        _resultImageView.userInteractionEnabled = YES;
+        _resultImageView.contentMode = UIViewContentModeScaleAspectFill;
+        [_resultImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapResultImage:)]];
+        _resultImageView;
     })];
     
     [self.view addSubview:({
@@ -78,9 +78,9 @@
         _bottomAdBannerView;
     })];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_winnerImageView, _topAdBannerView, _bottomAdBannerView);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_winnerImageView]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topAdBannerView]-16-[_winnerImageView]-16-[_bottomAdBannerView]|" options:NSLayoutFormatAlignAllLeft|NSLayoutFormatAlignAllRight views:views]];
+    NSDictionary *views = NSDictionaryOfVariableBindings(_resultImageView, _topAdBannerView, _bottomAdBannerView);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_resultImageView]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topAdBannerView]-16-[_resultImageView]-16-[_bottomAdBannerView]|" options:NSLayoutFormatAlignAllLeft|NSLayoutFormatAlignAllRight views:views]];
     
     _topBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_topAdBannerView constant:1]; // GADBannerViewDelegate isn't called if set 0
     _bottomBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomAdBannerView constant:1];
@@ -130,7 +130,7 @@
 //  For Analytics
 }
 
-- (void)tapWinnerPhoto:(UITapGestureRecognizer *)recognizer
+- (void)tapResultImage:(UITapGestureRecognizer *)recognizer
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }

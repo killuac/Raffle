@@ -39,9 +39,8 @@
 typedef void (^KLVoidBlockType)(void);
 typedef void (^KLBOOLBlockType)(BOOL finished);
 
-NS_INLINE BOOL KLSystemVersionGreaterThanOrEqualTo(NSInteger version) {
-    return [NSProcessInfo processInfo].operatingSystemVersion.majorVersion > version;
-}
+NS_INLINE BOOL KLSystemVersionGreaterThanOrEqualTo(NSInteger version) { return [NSProcessInfo processInfo].operatingSystemVersion.majorVersion > version; }
+NS_INLINE NSUInteger KLRandomNumber(NSUInteger min, NSUInteger max) { return arc4random() / (max - min) + min; }    // Exclude max
 NS_INLINE CGFloat KLPointDistance(CGPoint p1, CGPoint p2) { return sqrtf(powf(p2.x-p1.x, 2) + powf(p2.y-p1.y, 2)); }
 NS_INLINE CGFloat KLRadianFromDegree(CGFloat degree) { return (degree * M_PI / 180.0); }
 

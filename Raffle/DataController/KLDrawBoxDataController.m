@@ -11,6 +11,7 @@
 @interface KLDrawBoxDataController ()
 
 @property (nonatomic, strong) KLDrawBoxModel *drawBox;
+@property (nonatomic, strong) NSMutableArray *allAssets;
 
 @end
 
@@ -20,18 +21,47 @@
 {
     if (self = [self init]) {
         _drawBox = model;
+        _allAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
     }
     return self;
 }
 
 - (NSUInteger)itemCount
 {
-    return self.drawBox.photoCount;
+    return self.allAssets.count;
+}
+
+- (BOOL)isAttendeeMode
+{
+    return (self.drawBox.drawMode == KLDrawModeAttendee);
+}
+
+- (BOOL)isReloadButtonHidden
+{
+    return (!self.isAttendeeMode || self.itemCount == self.drawBox.assets.count);
+}
+
+- (BOOL)isShakeEnabled
+{
+    return self.itemCount > 0;
 }
 
 - (PHAsset *)objectAtIndexPath:(NSIndexPath *)indexPath
 {
-    return self.drawBox.assets[indexPath.item];
+    return self.allAssets[indexPath.item];
+}
+
+- (void)reloadAssets
+{
+    [self.allAssets removeAllObjects];
+    [self.allAssets addObjectsFromArray:self.drawBox.assets];
+}
+
+- (void)switchDrawMode
+{
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        self.drawBox.drawMode = !self.drawBox.drawMode;
+    }];
 }
 
 // New insert entry at front of the old entry
@@ -44,6 +74,8 @@
                 KLPhotoModel *photoModel = [KLPhotoModel MR_createEntityInContext:localContext];
                 photoModel.assetLocalIdentifier = asset.localIdentifier;
                 photoModel.drawBox = [self.drawBox MR_inContext:localContext];
+                
+                [self.allAssets addObject:asset];
                 assetCount++;
             }
         }];
@@ -54,6 +86,11 @@
         }
         [self didChangeAtIndexPaths:indexPaths forChangeType:KLDataChangeTypeInsert];
     }];
+}
+
+- (NSUInteger)randomAnAssetIndex
+{
+    return KLRandomNumber(0, self.itemCount);
 }
 
 @end

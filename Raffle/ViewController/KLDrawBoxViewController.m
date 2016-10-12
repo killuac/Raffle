@@ -8,11 +8,12 @@
 
 #import "KLDrawBoxViewController.h"
 #import "KLMainViewController.h"
-#import "KLImagePickerController.h"
 #import "KLCircleLayout.h"
 #import "KLDrawBoxCell.h"
 
-@interface KLDrawBoxViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
+@interface KLDrawBoxViewController () <KLDataControllerDelegate>
+
+@property (nonatomic, strong) KLMainViewController *mainVC;
 
 @property (nonatomic, strong) KLMainDataController *mainDC;
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
@@ -42,6 +43,11 @@
     return self.drawBoxDC.pageIndex;
 }
 
+- (KLMainViewController *)mainVC
+{
+    return self.parentViewController.parentViewController;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -52,6 +58,17 @@
 {
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.collectionView registerClass:[KLDrawBoxCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+}
+
+- (void)reloadData
+{
+    
+}
+
+#pragma mark - Random draw
+- (UIImage *)randomAnImage
+{
+    return nil;
 }
 
 #pragma mark - Collection view data source
@@ -83,6 +100,8 @@
         default:
             break;
     }
+    
+    [self.mainVC becomeFirstResponder];
 }
 
 #pragma mark - KLImagePickerController delegate

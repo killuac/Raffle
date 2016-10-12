@@ -11,6 +11,21 @@
 
 @implementation KLSoundPlayer
 
++ (void)playBubbleButtonSound
+{
+    // TODO: Play
+}
+
++ (void)playStartDrawSound
+{
+    // TODO: Play
+}
+
++ (void)playStopDrawSound
+{
+    // TODO: Play
+}
+
 + (void)playMessageSentSound
 {
     AudioServicesPlaySystemSoundWithCompletion(1004, NULL);
