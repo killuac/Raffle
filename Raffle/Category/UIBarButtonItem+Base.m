@@ -18,18 +18,17 @@
 
 + (instancetype)barButtonItemWithTitle:(NSString *)title target:(id)target action:(SEL)action
 {
-    return [[self alloc] initWithTitle:title
-                                 style:UIBarButtonItemStylePlain
-                                target:target
-                                action:action];
+    return [[self alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:target action:action];
 }
 
 + (instancetype)barButtonItemWithImageName:(NSString *)imageName target:(id)target action:(SEL)action
 {
-    return [[self alloc] initWithImage:[UIImage imageNamed:imageName]
-                                 style:UIBarButtonItemStylePlain
-                                target:target
-                                action:action];
+    return [[self alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:target action:action];
+}
+
++ (instancetype)barButtonItemWithSystemItem:(UIBarButtonSystemItem)systemItem target:(id)target action:(SEL)action
+{
+    return [[self alloc] initWithBarButtonSystemItem:systemItem target:target action:action];
 }
 
 + (instancetype)backBarButtonItem

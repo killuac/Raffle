@@ -12,6 +12,7 @@
 #import "KLImagePickerController.h"
 #import "KLMoreViewController.h"
 #import "KLResultViewController.h"
+#import "KLPhotoViewController.h"
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
@@ -47,6 +48,7 @@
 {
     [super viewDidLoad];
     [self prepareForUI];
+    [self addObservers];
     [self reloadData];
 }
 
@@ -107,10 +109,6 @@
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
-    
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeUp:)];
-    swipe.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.parentViewController.view addGestureRecognizer:swipe];
 }
 
 - (UIScrollView *)pageScrollView
@@ -136,27 +134,27 @@
     
 //  Add photo button
     [self.view addSubview:({
-        _addPhotoButton = [KLBubbleButton buttonWithTitle:@"2" imageName:@"button_add"];
+        _addPhotoButton = [KLBubbleButton buttonWithTitle:@"2" imageName:@"icon_add"];
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
         _addPhotoButton.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
         _addPhotoButton.layout = KLButtonLayoutVerticalImageUp;
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         
-//        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
-//        [self.addPhotoButton addGestureRecognizer:longPress];
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
+        [self.addPhotoButton addGestureRecognizer:longPress];
         _addPhotoButton;
     })];
     
 //  Bottom buttons
     [self.view addSubview:({
-        _switchModeButton = [KLBubbleButton buttonWithImageName:@"button_attendee"];
+        _switchModeButton = [KLBubbleButton buttonWithImageName:@"icon_attendee_mode"];
         _switchModeButton.backgroundColor = [[UIColor cyanColor] colorWithAlphaComponent:0.5];
         [_switchModeButton addTarget:self action:@selector(switchDrawMode:)];
         _switchModeButton;
     })];
     
     [self.view addSubview:({
-        _reloadButton = [KLBubbleButton buttonWithImageName:@"button_reload"];
+        _reloadButton = [KLBubbleButton buttonWithImageName:@"icon_reload"];
         _reloadButton.hidden = YES;
         _reloadButton.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.5];
         [_reloadButton addTarget:self action:@selector(reloadDrawBox:)];
@@ -164,7 +162,7 @@
     })];
     
     [self.view addSubview:({
-        _menuButton = [KLBubbleButton buttonWithImageName:@"button_menu"];
+        _menuButton = [KLBubbleButton buttonWithImageName:@"icon_menu"];
         _menuButton.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
         [_menuButton addTarget:self action:@selector(showMoreDrawBoxes:)];
         _menuButton;
@@ -184,6 +182,13 @@
     [self.reloadButton constraintsEqualWidthAndHeight];
     [self.switchModeButton constraintsEqualWidthAndHeight];
     [self.menuButton constraintsEqualWidthAndHeight];
+}
+
+#pragma mark - Observer
+- (void)addObservers
+{
+    self.KVOController = [FBKVOController controllerWithObserver:self];
+    [self.KVOController observe:self.dataController keyPath:@"drawBoxes" options:0 action:@selector(reloadData)];
 }
 
 #pragma mark - Page view controller datasource
@@ -287,11 +292,13 @@
 - (void)stopDraw:(id)sender
 {
     KLResultViewController *resultVC = [KLResultViewController viewController];
-    resultVC.resultImage = [self.drawBoxViewController randomAnImage];
-    resultVC.transitioningDelegate = resultVC.transition;
-    [self presentViewController:resultVC animated:YES completion:^{
-        [self setAddPhotoButtonHidden:NO];
-        [self setBottomButtonsHidden:NO];
+    [self.drawBoxViewController randomAnPhoto:^(UIImage *image, NSDictionary *info) {
+        resultVC.resultImage = image;
+        resultVC.transitioningDelegate = resultVC.transition;
+        [self presentViewController:resultVC animated:YES completion:^{
+            [self setAddPhotoButtonHidden:NO];
+            [self setBottomButtonsHidden:NO];
+        }];
     }];
     [KLSoundPlayer playStopDrawSound];
 }
@@ -309,7 +316,7 @@
     [UIView animateWithDefaultDuration:^{
         self.switchModeButton.alpha = 0;
     } completion:^(BOOL finished) {
-        NSString *imageName = self.dataController.isAttendeeMode ? @"button_attendee" : @"button_prize";
+        NSString *imageName = self.dataController.isAttendeeMode ? @"icon_attendee_mode" : @"icon_prize_mode";
         [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
         [UIView animateWithDefaultDuration:^{
             self.switchModeButton.alpha = 1;
@@ -326,23 +333,23 @@
 
 - (void)showMoreDrawBoxes:(id)sender
 {
-    KLMoreViewController *moreVC = [KLMoreViewController viewController];
+    KLMoreViewController *moreVC = [KLMoreViewController viewControllerWithDataController:self.dataController];
     moreVC.dismissBlock = ^{ [self reloadData]; };
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moreVC];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
 }
 
-//- (void)longPressTakePhoto:(UILongPressGestureRecognizer *)recognizer
-//{
-//    if (recognizer.state != UIGestureRecognizerStateBegan) return;
-//    
-//    UIView *view = recognizer.view;
-//    CGRect frame = CGRectMake(view.width/3, 0, view.width/3, view.height);
-//    if (CGRectContainsPoint(frame, [recognizer locationInView:view])) {
-//        [self showImagePickerController];
-//    }
-//}
+- (void)longPressTakePhoto:(UILongPressGestureRecognizer *)recognizer
+{
+    if (recognizer.state != UIGestureRecognizerStateBegan) return;
+    
+    UIView *view = recognizer.view;
+    CGRect frame = CGRectMake(view.width/3, 0, view.width/3, view.height);
+    if (CGRectContainsPoint(frame, [recognizer locationInView:view])) {
+        [self showImagePickerController];
+    }
+}
 
 - (void)showImagePickerController
 {
@@ -350,12 +357,6 @@
     imagePicker.delegate = self.drawBoxViewController;
     imagePicker.transitioningDelegate = imagePicker.transition;
     [self presentViewController:imagePicker animated:YES completion:nil];
-}
-
-- (void)swipeUp:(UISwipeGestureRecognizer *)recognizer
-{
-    if (!self.dataController.currentDrawBoxDC.isShakeEnabled) return;
-    // TODO: Show all images in draw box
 }
 
 @end

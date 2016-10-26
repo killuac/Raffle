@@ -16,6 +16,7 @@ typedef NS_ENUM(NSUInteger, KLTransitionOrientation) {
 @interface KLBaseTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
 + (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled;  // Must retain the instance with property
+- (instancetype)initWithGestureEnabled:(BOOL)gestureEnabled;
 
 @property (nonatomic, assign) KLTransitionOrientation transitionOrientation;    // KLTransitionOrientationVertical by default
 @property (nonatomic, assign, readonly) BOOL isVertical;

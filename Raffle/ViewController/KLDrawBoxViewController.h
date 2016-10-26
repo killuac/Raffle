@@ -12,13 +12,14 @@
 
 @class KLMainDataController;
 
-@interface KLDrawBoxViewController : UICollectionViewController <KLImagePickerControllerDelegate>
+@interface KLDrawBoxViewController : UIViewController <KLImagePickerControllerDelegate>
 
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex;
 
 @property (nonatomic, assign, readonly) NSUInteger pageIndex;
+@property (nonatomic, strong, readonly) KLDrawBoxDataController *drawBoxDC;
 
 - (void)reloadData;
-- (UIImage *)randomAnImage;
+- (void)randomAnPhoto:(KLAssetBlockType)resultHandler;
 
 @end

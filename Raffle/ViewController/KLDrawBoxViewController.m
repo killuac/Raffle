@@ -8,15 +8,11 @@
 
 #import "KLDrawBoxViewController.h"
 #import "KLMainViewController.h"
-#import "KLCircleLayout.h"
-#import "KLDrawBoxCell.h"
 
 @interface KLDrawBoxViewController () <KLDataControllerDelegate>
 
 @property (nonatomic, strong) KLMainViewController *mainVC;
-
 @property (nonatomic, strong) KLMainDataController *mainDC;
-@property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
 
 @end
 
@@ -30,7 +26,7 @@
 
 - (instancetype)initWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex
 {
-    if (self = [super initWithCollectionViewLayout:[KLCircleLayout new]]) {
+    if (self = [super init]) {
         _mainDC = dataController;
         _drawBoxDC = [dataController drawBoxDataControllerAtIndex:pageIndex];
         _drawBoxDC.delegate = self;
@@ -45,44 +41,50 @@
 
 - (KLMainViewController *)mainVC
 {
-    return self.parentViewController.parentViewController;
+    return (id)self.parentViewController.parentViewController;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self prepareForUI];
+    [self layoutPhotos];
+    [self addObservers];
 }
 
-- (void)prepareForUI
+#pragma mark - Observers
+- (void)addObservers
 {
-    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [self.collectionView registerClass:[KLDrawBoxCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    self.KVOController = [FBKVOController controllerWithObserver:self];
+    [self.KVOController observe:self.drawBoxDC keyPath:@"allAssets" options:0 action:@selector(reloadData)];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)orientationDidChange:(NSNotification *)notification
+{
+    [self reloadData];
 }
 
 - (void)reloadData
 {
-    
+    [self layoutPhotos];
 }
 
-#pragma mark - Random draw
-- (UIImage *)randomAnImage
+#pragma mark - Random photos
+- (void)layoutPhotos
 {
-    return nil;
+    // TODO: layoutPhotos
 }
 
-#pragma mark - Collection view data source
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (void)randomAnPhoto:(KLAssetBlockType)resultHandler
 {
-    return self.drawBoxDC.itemCount;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithAsset:[self.drawBoxDC objectAtIndexPath:indexPath]];
-    
-    return cell;
+    [[self.drawBoxDC randomAnAsset] originalImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        // TODO: Progress
+    } resultHandler:resultHandler];
 }
 
 #pragma mark - Data controller delegate
@@ -90,11 +92,11 @@
 {
     switch (type) {
         case KLDataChangeTypeInsert:
-            [self.collectionView insertItemsAtIndexPaths:indexPaths];
+            
             break;
             
         case KLDataChangeTypeDelete:
-            [self.collectionView deleteItemsAtIndexPaths:indexPaths];
+            
             break;
             
         default:

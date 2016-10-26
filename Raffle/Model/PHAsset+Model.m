@@ -35,6 +35,17 @@
     return [NSString stringWithFormat:@"%@ - %f", super.description, self.timestamp];
 }
 
+- (void)thumbnailImageResultHandler:(KLAssetBlockType)resultHandler
+{
+    [self requestImageWithSize:CGSizeMake(180, 180) progressHandler:nil resultHandler:resultHandler];
+}
+
+- (void)originalImageResultHandler:(KLAssetBlockType)resultHandler
+{
+    NSParameterAssert(resultHandler);
+    [self requestImageWithSize:PHImageManagerMaximumSize progressHandler:nil resultHandler:resultHandler];
+}
+
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);

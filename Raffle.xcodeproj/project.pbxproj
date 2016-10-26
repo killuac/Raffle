@@ -11,6 +11,7 @@
 		4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7931D6FDFA900215D76 /* KLCircleTransition.m */; };
 		4105A7971D70120500215D76 /* KLBaseTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4105A7961D70120500215D76 /* KLBaseTransition.m */; };
 		4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4110BAC91D62E841001BCD38 /* KLStatusBar.m */; };
+		412DCD0E1DC04770007A3F7D /* KLPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 412DCD0D1DC04770007A3F7D /* KLPhotoView.m */; };
 		415BFE791D5B1D01002053D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE731D5B1D01002053D6 /* InfoPlist.strings */; };
 		415BFE7A1D5B1D01002053D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE751D5B1D01002053D6 /* Localizable.strings */; };
 		415BFE7B1D5B1D01002053D6 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 415BFE771D5B1D01002053D6 /* Localizable.stringsdict */; };
@@ -18,10 +19,10 @@
 		415BFE911D5B20FC002053D6 /* KLCircleLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE891D5B20FC002053D6 /* KLCircleLayout.m */; };
 		415BFE921D5B20FC002053D6 /* KLDrawBoxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE8B1D5B20FC002053D6 /* KLDrawBoxCell.m */; };
 		415BFE931D5B20FC002053D6 /* KLSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE8D1D5B20FC002053D6 /* KLSegmentControl.m */; };
-		415BFE941D5B20FC002053D6 /* KLTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE8F1D5B20FC002053D6 /* KLTableViewCell.m */; };
 		415BFE9B1D5B2106002053D6 /* PHAsset+Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE961D5B2106002053D6 /* PHAsset+Model.m */; };
 		415BFE9C1D5B2106002053D6 /* KLDrawBoxModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE971D5B2106002053D6 /* KLDrawBoxModel.m */; };
 		415BFE9D1D5B2106002053D6 /* PHAssetCollection+Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 415BFE9A1D5B2106002053D6 /* PHAssetCollection+Model.m */; };
+		4176C4121DC08E4B0054FF13 /* KLDrawBoxTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C4111DC08E4B0054FF13 /* KLDrawBoxTransition.m */; };
 		41FE17171D5B10A200CABFCA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE17161D5B10A200CABFCA /* main.m */; };
 		41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE17191D5B10A200CABFCA /* AppDelegate.m */; };
 		41FE17201D5B10A200CABFCA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41FE171E1D5B10A200CABFCA /* Main.storyboard */; };
@@ -58,7 +59,7 @@
 		E30DF8A61D982EF200161EAE /* KLMatrixTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */; };
 		E30DF8AB1DA9618B00161EAE /* libAdapterInMobi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E30DF8AA1DA9618B00161EAE /* libAdapterInMobi.a */; };
 		E3539C7A1D9041BD00CBE9F2 /* KLResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */; };
-		E3539C7D1D90421000CBE9F2 /* KLPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */; };
+		E3539C7D1D90421000CBE9F2 /* KLPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C7C1D90421000CBE9F2 /* KLPhotoViewController.m */; };
 		E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */; };
 		E3684C451D86DBFD004E4636 /* KLMainDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C341D86DBFD004E4636 /* KLMainDataController.m */; };
 		E3684C461D86DBFD004E4636 /* KLPhotoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C361D86DBFD004E4636 /* KLPhotoLibrary.m */; };
@@ -76,7 +77,6 @@
 		E3D72C151DAABD1000EE2620 /* libAdapterSDKMoPub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */; };
 		E3D72C161DAABD1000EE2620 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E3D72C141DAABD1000EE2620 /* Readme.txt */; };
 		E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF311D88553E008F3421 /* KLPhotoModel.m */; };
-		E3DDDF351D8858CE008F3421 /* KLMoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,9 +107,11 @@
 		4105A7961D70120500215D76 /* KLBaseTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLBaseTransition.m; sourceTree = "<group>"; };
 		4110BAC81D62E841001BCD38 /* KLStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLStatusBar.h; sourceTree = "<group>"; };
 		4110BAC91D62E841001BCD38 /* KLStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLStatusBar.m; sourceTree = "<group>"; };
+		412DCD0C1DC04770007A3F7D /* KLPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoView.h; sourceTree = "<group>"; };
+		412DCD0D1DC04770007A3F7D /* KLPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPhotoView.m; sourceTree = "<group>"; };
 		415BFE741D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		415BFE761D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		415BFE781D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = Base; path = Base.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		415BFE781D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = Base; path = Base.lproj/Localizable.stringsdict; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		415BFE7C1D5B1D18002053D6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		415BFE7D1D5B1D18002053D6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		415BFE7E1D5B1D18002053D6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
@@ -127,14 +129,14 @@
 		415BFE8B1D5B20FC002053D6 /* KLDrawBoxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLDrawBoxCell.m; sourceTree = "<group>"; };
 		415BFE8C1D5B20FC002053D6 /* KLSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLSegmentControl.h; sourceTree = "<group>"; };
 		415BFE8D1D5B20FC002053D6 /* KLSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLSegmentControl.m; sourceTree = "<group>"; };
-		415BFE8E1D5B20FC002053D6 /* KLTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLTableViewCell.h; sourceTree = "<group>"; };
-		415BFE8F1D5B20FC002053D6 /* KLTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLTableViewCell.m; sourceTree = "<group>"; };
 		415BFE951D5B2106002053D6 /* KLDrawBoxModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLDrawBoxModel.h; sourceTree = "<group>"; };
 		415BFE961D5B2106002053D6 /* PHAsset+Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PHAsset+Model.m"; sourceTree = "<group>"; };
 		415BFE971D5B2106002053D6 /* KLDrawBoxModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLDrawBoxModel.m; sourceTree = "<group>"; };
 		415BFE981D5B2106002053D6 /* PHAsset+Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PHAsset+Model.h"; sourceTree = "<group>"; };
 		415BFE991D5B2106002053D6 /* PHAssetCollection+Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PHAssetCollection+Model.h"; sourceTree = "<group>"; };
 		415BFE9A1D5B2106002053D6 /* PHAssetCollection+Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PHAssetCollection+Model.m"; sourceTree = "<group>"; };
+		4176C4101DC08E4B0054FF13 /* KLDrawBoxTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLDrawBoxTransition.h; sourceTree = "<group>"; };
+		4176C4111DC08E4B0054FF13 /* KLDrawBoxTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLDrawBoxTransition.m; sourceTree = "<group>"; };
 		41FE17121D5B10A200CABFCA /* Raffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Raffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41FE17161D5B10A200CABFCA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		41FE17181D5B10A200CABFCA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -207,8 +209,8 @@
 		E30DF8AA1DA9618B00161EAE /* libAdapterInMobi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdapterInMobi.a; sourceTree = "<group>"; };
 		E3539C781D9041BD00CBE9F2 /* KLResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLResultViewController.h; sourceTree = "<group>"; };
 		E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLResultViewController.m; sourceTree = "<group>"; };
-		E3539C7B1D90421000CBE9F2 /* KLPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPreviewViewController.h; sourceTree = "<group>"; };
-		E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPreviewViewController.m; sourceTree = "<group>"; };
+		E3539C7B1D90421000CBE9F2 /* KLPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoViewController.h; sourceTree = "<group>"; };
+		E3539C7C1D90421000CBE9F2 /* KLPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPhotoViewController.m; sourceTree = "<group>"; };
 		E3684C311D86DBFD004E4636 /* KLDrawBoxDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLDrawBoxDataController.h; sourceTree = "<group>"; };
 		E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLDrawBoxDataController.m; sourceTree = "<group>"; };
 		E3684C331D86DBFD004E4636 /* KLMainDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLMainDataController.h; sourceTree = "<group>"; };
@@ -241,8 +243,6 @@
 		E3D72C141DAABD1000EE2620 /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		E3DDDF301D88553E008F3421 /* KLPhotoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoModel.h; sourceTree = "<group>"; };
 		E3DDDF311D88553E008F3421 /* KLPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPhotoModel.m; sourceTree = "<group>"; };
-		E3DDDF331D8858CE008F3421 /* KLMoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLMoreDataController.h; sourceTree = "<group>"; };
-		E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLMoreDataController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -298,6 +298,8 @@
 				4105A7961D70120500215D76 /* KLBaseTransition.m */,
 				4105A7921D6FDFA900215D76 /* KLCircleTransition.h */,
 				4105A7931D6FDFA900215D76 /* KLCircleTransition.m */,
+				4176C4101DC08E4B0054FF13 /* KLDrawBoxTransition.h */,
+				4176C4111DC08E4B0054FF13 /* KLDrawBoxTransition.m */,
 				E30DF8A41D982EF200161EAE /* KLMatrixTransition.h */,
 				E30DF8A51D982EF200161EAE /* KLMatrixTransition.m */,
 				4105A78F1D6FDF8D00215D76 /* KLScaleTransition.h */,
@@ -319,12 +321,12 @@
 				415BFE891D5B20FC002053D6 /* KLCircleLayout.m */,
 				415BFE8A1D5B20FC002053D6 /* KLDrawBoxCell.h */,
 				415BFE8B1D5B20FC002053D6 /* KLDrawBoxCell.m */,
+				412DCD0C1DC04770007A3F7D /* KLPhotoView.h */,
+				412DCD0D1DC04770007A3F7D /* KLPhotoView.m */,
 				415BFE8C1D5B20FC002053D6 /* KLSegmentControl.h */,
 				415BFE8D1D5B20FC002053D6 /* KLSegmentControl.m */,
 				4110BAC81D62E841001BCD38 /* KLStatusBar.h */,
 				4110BAC91D62E841001BCD38 /* KLStatusBar.m */,
-				415BFE8E1D5B20FC002053D6 /* KLTableViewCell.h */,
-				415BFE8F1D5B20FC002053D6 /* KLTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -504,8 +506,6 @@
 				E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */,
 				E3684C331D86DBFD004E4636 /* KLMainDataController.h */,
 				E3684C341D86DBFD004E4636 /* KLMainDataController.m */,
-				E3DDDF331D8858CE008F3421 /* KLMoreDataController.h */,
-				E3DDDF341D8858CE008F3421 /* KLMoreDataController.m */,
 				E3684C351D86DBFD004E4636 /* KLPhotoLibrary.h */,
 				E3684C361D86DBFD004E4636 /* KLPhotoLibrary.m */,
 			);
@@ -527,8 +527,8 @@
 				E3684C411D86DBFD004E4636 /* KLMainViewController.m */,
 				E3684C421D86DBFD004E4636 /* KLMoreViewController.h */,
 				E3684C431D86DBFD004E4636 /* KLMoreViewController.m */,
-				E3539C7B1D90421000CBE9F2 /* KLPreviewViewController.h */,
-				E3539C7C1D90421000CBE9F2 /* KLPreviewViewController.m */,
+				E3539C7B1D90421000CBE9F2 /* KLPhotoViewController.h */,
+				E3539C7C1D90421000CBE9F2 /* KLPhotoViewController.m */,
 				E3539C781D9041BD00CBE9F2 /* KLResultViewController.h */,
 				E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */,
 			);
@@ -762,6 +762,7 @@
 				41FE179C1D5B15AB00CABFCA /* UIViewController+Base.m in Sources */,
 				E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */,
 				41FE178D1D5B15AB00CABFCA /* NSLayoutConstraint+Base.m in Sources */,
+				412DCD0E1DC04770007A3F7D /* KLPhotoView.m in Sources */,
 				415BFE9D1D5B2106002053D6 /* PHAssetCollection+Model.m in Sources */,
 				415BFE911D5B20FC002053D6 /* KLCircleLayout.m in Sources */,
 				415BFE921D5B20FC002053D6 /* KLDrawBoxCell.m in Sources */,
@@ -776,7 +777,7 @@
 				41FE17961D5B15AB00CABFCA /* UIImageView+Base.m in Sources */,
 				E3684C451D86DBFD004E4636 /* KLMainDataController.m in Sources */,
 				E3684C461D86DBFD004E4636 /* KLPhotoLibrary.m in Sources */,
-				E3539C7D1D90421000CBE9F2 /* KLPreviewViewController.m in Sources */,
+				E3539C7D1D90421000CBE9F2 /* KLPhotoViewController.m in Sources */,
 				41FE17981D5B15AB00CABFCA /* UISwitch+Base.m in Sources */,
 				E3684C491D86DBFD004E4636 /* KLDrawBoxViewController.m in Sources */,
 				41FE17941D5B15AB00CABFCA /* UIFont+Base.m in Sources */,
@@ -790,9 +791,9 @@
 				4105A7911D6FDF8D00215D76 /* KLScaleTransition.m in Sources */,
 				41FE178C1D5B15AB00CABFCA /* NSDate+Base.m in Sources */,
 				41FE17911D5B15AB00CABFCA /* UIBarButtonItem+Base.m in Sources */,
+				4176C4121DC08E4B0054FF13 /* KLDrawBoxTransition.m in Sources */,
 				E3684C481D86DBFD004E4636 /* KLCameraViewController.m in Sources */,
 				E30DF8A01D92E70300161EAE /* KLBubbleButton.m in Sources */,
-				E3DDDF351D8858CE008F3421 /* KLMoreDataController.m in Sources */,
 				41FE17171D5B10A200CABFCA /* main.m in Sources */,
 				415BFE9B1D5B2106002053D6 /* PHAsset+Model.m in Sources */,
 				415BFE931D5B20FC002053D6 /* KLSegmentControl.m in Sources */,
@@ -808,7 +809,6 @@
 				41FE17971D5B15AB00CABFCA /* UILabel+Base.m in Sources */,
 				E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */,
 				41FE17661D5B15A300CABFCA /* KLUtilities.m in Sources */,
-				415BFE941D5B20FC002053D6 /* KLTableViewCell.m in Sources */,
 				41FE17231D5B10A300CABFCA /* Raffle.xcdatamodeld in Sources */,
 				E3684C471D86DBFD004E4636 /* KLAlbumViewController.m in Sources */,
 			);

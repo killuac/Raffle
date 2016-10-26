@@ -16,6 +16,14 @@
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
+				<string>MainVC_LongPressTakePhoto</string>
+				<key>KLLogEventSelectorName</key>
+				<string>longPressTakePhoto:</string>
+				<key>KLIsNeedPlaySound</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
 				<string>MainVC_SwitchDrawMode</string>
 				<key>KLLogEventSelectorName</key>
 				<string>switchDrawMode:</string>
@@ -97,6 +105,48 @@
 				<string>MoreVC_CloseMoreDrawBoxes</string>
 				<key>KLLogEventSelectorName</key>
 				<string>closeMoreDrawBoxes:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>MoreVC_EditMoreDrawBoxes</string>
+				<key>KLLogEventSelectorName</key>
+				<string>editMoreDrawBoxes</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>MoreVC_DeleteDrawBox</string>
+				<key>KLLogEventSelectorName</key>
+				<string>deleteDrawBox:</string>
+			</dict>
+		</array>
+	</dict>
+	<key>KLPhotoViewController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>PhotoVC_LongPressToMultiSelectPhotos</string>
+				<key>KLLogEventSelectorName</key>
+				<string>longPressToMultiSelectPhotos:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>PhotoVC_StartDraw</string>
+				<key>KLLogEventSelectorName</key>
+				<string>startDrawFromPhotoVC</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>PhotoVC_DeleteSelectedDrawBoxPhotos</string>
+				<key>KLLogEventSelectorName</key>
+				<string>deleteSelectedDrawBoxPhotos</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>PhotoVC_CancelMultiPhotoSelection</string>
+				<key>KLLogEventSelectorName</key>
+				<string>cancelMultiPhotoSelection:</string>
 			</dict>
 		</array>
 	</dict>

@@ -11,11 +11,11 @@
 "Settings" = "Settings";
 "Start" = "Start";
 "Stop" = "Stop";
-"Done" = "Done";
 "Unselect" = "Unselect";
 "SelectAll" = "SelectAll";
 "TakePhoto" = "Take Photo";
 "ChoosePhoto" = "Choose Photo";
+"DeleteDrawBox" = "Delete Draw Box";
 
 "PrizeMode" = "Prize Mode: The prize photo won't be removed";
 "ParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";
@@ -23,7 +23,8 @@
 
 "ReloadAllPhotos" = "Reload all photos to restart";
 
-"DrawBox" = "Draw Boxes";
+"DrawBox" = "Draw Box";
+"DrawBoxes" = "All Draw Boxes";
 "Photos" = "Photos";
 "Camera" = "Camera";
 

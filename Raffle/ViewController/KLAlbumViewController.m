@@ -61,9 +61,9 @@ static CGSize cellItemSize;
     flowLayout.minimumLineSpacing = KLAlbumViewControllerLineSpacing;
     flowLayout.minimumInteritemSpacing = KLAlbumViewControllerLineSpacing;
     
+    self.collectionView.allowsMultipleSelection = YES;
     self.collectionView.backgroundColor = [UIColor blackColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.collectionView.allowsMultipleSelection = YES;
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 

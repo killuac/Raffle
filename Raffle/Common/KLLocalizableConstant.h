@@ -14,11 +14,12 @@
 #define BUTTON_TITLE_SETTING            NSLocalizedString(@"Settings", "")
 #define BUTTON_TITLE_START              NSLocalizedString(@"Start", "")
 #define BUTTON_TITLE_STOP               NSLocalizedString(@"Stop", "")
-#define BUTTON_TITLE_DONE               NSLocalizedString(@"Done", "")
 #define BUTTON_TITLE_UNSELECT           NSLocalizedString(@"Unselect", "")
 #define BUTTON_TITLE_SELECT_ALL         NSLocalizedString(@"SelectAll", "")
 #define BUTTON_TITLE_TAKE_PHOTO         NSLocalizedString(@"TakePhoto", "")
 #define BUTTON_TITLE_CHOOSE_PHOTO       NSLocalizedString(@"ChoosePhoto", "")
+#define BUTTON_TITLE_DELETE_DRAW_BOX    NSLocalizedString(@"DeleteDrawBox", "")
+#define BUTTON_TITLE_DELETE_PHOTO_COUNT NSLocalizedString(@"DeletePhotoCount", "")
 
 #define HUD_PRIZE_MODE                  NSLocalizedString(@"PrizeMode", "")
 #define HUD_PARTICIPANT_MODE            NSLocalizedString(@"ParticipantMode", "")
@@ -27,6 +28,7 @@
 #define TIP_RELOAD_ALL_PHOTOS           NSLocalizedString(@"ReloadAllPhotos", "")
 
 #define TITLE_DRAW_BOX                  NSLocalizedString(@"DrawBox", "")
+#define TITLE_DRAW_BOXES                NSLocalizedString(@"DrawBoxes", "")
 #define TITLE_PHOTOS                    NSLocalizedString(@"Photos", "")
 #define TITLE_CAMERA                    NSLocalizedString(@"Camera", "")
 #define TITLE_SELECTED_PHOTO_COUNT      NSLocalizedString(@"SelectedPhotoCount", "")

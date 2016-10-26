@@ -93,7 +93,7 @@
 - (void)selectedAssetsChanged
 {
     NSUInteger count = self.photoLibrary.selectedAssets.count;
-    self.bottomBarItem.title = count ? [NSString stringWithFormat:TITLE_SELECTED_PHOTO_COUNT, count] : nil;
+    self.bottomBarItem.title = count ? [NSString localizedStringWithFormat:TITLE_SELECTED_PHOTO_COUNT, count] : nil;
     self.bottomBarItem.rightBarButtonItem.enabled = count > 0;
 }
 
@@ -142,10 +142,9 @@
     
     [self.view addSubview:({
         _bottomBarItem = [[UINavigationItem alloc] init];
-        _bottomBarItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeAlbum:)];
-        _bottomBarItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_DONE target:self action:@selector(donePhotoSelection:)];
+        _bottomBarItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_close" target:self action:@selector(closeAlbum:)];
+        _bottomBarItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemDone target:self action:@selector(donePhotoSelection:)];
         _bottomBarItem.rightBarButtonItem.enabled = NO;
-        [self.bottomBarItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldTitleFont]} forState:UIControlStateNormal];
         
         _bottomBar = [[UINavigationBar alloc] init];
         _bottomBar.translatesAutoresizingMaskIntoConstraints = NO;

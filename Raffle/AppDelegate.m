@@ -43,6 +43,9 @@
     [UIToolbar appearance].barTintColor = [UIColor barTintColor];
     [UINavigationBar appearance].tintColor = [UIColor tintColor];
     [UINavigationBar appearance].barTintColor = [UIColor barTintColor];
+    UIImage *image = [UIImage imageNamed:@"icon_back"];
+    [UINavigationBar appearance].backIndicatorImage = image;
+    [UINavigationBar appearance].backIndicatorTransitionMaskImage = image;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

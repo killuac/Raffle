@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PHAsset+Model.h"
+#import "KLDrawBoxModel.h"
 
 @interface KLDrawBoxCell : UICollectionViewCell
 
-@property (nonatomic, strong, readonly) UIImageView *imageView;
+@property (nonatomic, strong, readonly) UIButton *deleteButton;
 
-- (void)configWithAsset:(PHAsset *)asset;
+- (void)configWithDrawBox:(KLDrawBoxModel *)drawBox editMode:(BOOL)editMode;
 
 @end

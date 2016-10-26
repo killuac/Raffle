@@ -16,6 +16,7 @@
 @property (nonatomic, assign, readonly) BOOL isReloadButtonHidden;
 
 - (void)switchDrawMode;
+- (void)deleteDrawBoxAtIndexPath:(NSIndexPath *)indexPath;
 - (KLDrawBoxDataController *)drawBoxDataControllerAtIndex:(NSUInteger)index;
 
 @end

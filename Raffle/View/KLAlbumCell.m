@@ -85,4 +85,16 @@
     }];
 }
 
+#pragma mark - Animation
+- (void)animateSpringScale
+{
+    [UIView animateWithDefaultDuration:^{
+        self.transform = CGAffineTransformMakeScale(1.05, 1.05);
+    } completion:^(BOOL finished) {
+        [UIView animateSpringWithDefaultDuration:^{
+            self.transform = CGAffineTransformIdentity;
+        }];
+    }];
+}
+
 @end

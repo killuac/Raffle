@@ -9,7 +9,7 @@
 #import "KLMainDataController.h"
 #import "KLDrawBoxModel.h"
 
-@interface KLMainDataController ()
+@interface KLMainDataController () <PHPhotoLibraryChangeObserver>
 
 @property (nonatomic, strong) NSArray <KLDrawBoxModel *> *drawBoxes;
 
@@ -38,6 +38,16 @@
     return self.drawBoxes.count;
 }
 
+- (NSUInteger)itemCount
+{
+    return self.pageCount;
+}
+
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.drawBoxes[indexPath.item];
+}
+
 - (BOOL)isAttendeeMode
 {
     return self.currentDrawBoxDC.isAttendeeMode;
@@ -53,11 +63,40 @@
     [self.currentDrawBoxDC switchDrawMode];
 }
 
+- (void)deleteDrawBoxAtIndexPath:(NSIndexPath *)indexPath
+{
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        KLDrawBoxModel *drawBox = [self objectAtIndexPath:indexPath];
+        [drawBox MR_deleteEntity];
+    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+        [self didChangeAtIndexPaths:@[indexPath] forChangeType:KLDataChangeTypeDelete];
+    }];
+}
+
 - (KLDrawBoxDataController *)drawBoxDataControllerAtIndex:(NSUInteger)index
 {
     KLDrawBoxDataController *dataController = [KLDrawBoxDataController dataControllerWithModel:self.drawBoxes[index]];
     dataController.pageIndex = index;
     return dataController;
+}
+
+#pragma mark - PHPhotoLibraryChangeObserver
+- (void)addObservers
+{
+    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+}
+
+- (void)dealloc
+{
+    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
+}
+
+- (void)photoLibraryDidChange:(PHChange *)changeInstance
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(drawBoxes))];
+    // TODO: Remove draw box that don't exist in photo library
+    self.drawBoxes = [KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(drawBoxes))];
 }
 
 @end

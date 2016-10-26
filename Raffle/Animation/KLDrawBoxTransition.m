@@ -1,30 +1,31 @@
 //
-//  KLScaleTransition.m
+//  KLDrawBoxTransition.m
 //  Raffle
 //
-//  Created by Killua Liu on 8/26/16.
+//  Created by Killua Liu on 10/26/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import "KLScaleTransition.h"
+#import "KLDrawBoxTransition.h"
 
-@implementation KLScaleTransition
+@implementation KLDrawBoxTransition
 
-- (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView
+- (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext
+{
+    return KLViewDefaultAnimationDuration;
+}
+
+- (void)animateNavigationTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
     UIView *containerView = self.transitionContext.containerView;
     
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+//    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
     if (self.isPresenting) {
         [containerView addSubview:toView];
-        CATransform3D scaleTransform = CATransform3DMakeScale(0.93, 0.93, 1);
-        scaleTransform.m34 = 1.0/-500.0;
-        toView.layer.transform = self.isVertical ? CATransform3DMakeTranslation(0, toView.height, 0) : CATransform3DMakeTranslation(toView.width, 0, 0);
-        [UIView animateWithDuration:self.duration animations:^{
-            toView.layer.transform = CATransform3DIdentity;
-            fromView.alpha = 0.7;
-            fromView.layer.transform = scaleTransform;
+        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0 initialSpringVelocity:0 options:0 animations:^{
+            toView.transform = CGAffineTransformMakeScale(1.01, 1.01);
         } completion:^(BOOL finished) {
+            toView.transform = CGAffineTransformIdentity;
             [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
         }];
     }
