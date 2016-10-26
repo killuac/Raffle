@@ -63,4 +63,15 @@
     return resultImage;
 }
 
+- (UIImage *)antialiasingImage
+{
+    CGRect rect = CGRectMake(0, 0, self.width, self.height);
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
+    [self drawInRect:CGRectInset(rect, 1, 1)];
+    UIImage *antiImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return antiImage;
+}
+
 @end

@@ -158,7 +158,7 @@
     UIView *pageView = self.pageViewController.view;
     NSDictionary *views = NSDictionaryOfVariableBindings(_segmentControl, _bottomBar, pageView);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_segmentControl]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_segmentControl]-2-[pageView]-2-[_bottomBar]|"
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_segmentControl][pageView][_bottomBar]|"
                                                                                     options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
     
     self.scHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_segmentControl constant:0];

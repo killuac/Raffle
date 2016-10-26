@@ -10,8 +10,6 @@
 #import "KLAlbumCell.h"
 #import "KLImagePickerController.h"
 
-const CGFloat KLAlbumViewControllerLineSpacing = 3.0;
-
 @interface KLAlbumViewController ()
 
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
@@ -22,11 +20,15 @@ const CGFloat KLAlbumViewControllerLineSpacing = 3.0;
 @implementation KLAlbumViewController
 
 static CGSize cellItemSize;
+static CGFloat lineSpacing;
 
 + (void)load
 {
     CGFloat width, height;
-    width = height = (SCREEN_WIDTH - KLAlbumViewControllerLineSpacing * 3) / 4;
+    lineSpacing = IS_PAD ? 12 : 3;
+    NSUInteger columnCount = IS_PAD ? 5 : 4;
+    NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
+    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
     cellItemSize = CGSizeMake(width, height);
 }
 
@@ -58,12 +60,13 @@ static CGSize cellItemSize;
 {
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
-    flowLayout.minimumLineSpacing = KLAlbumViewControllerLineSpacing;
-    flowLayout.minimumInteritemSpacing = KLAlbumViewControllerLineSpacing;
+    flowLayout.minimumLineSpacing = lineSpacing;
+    flowLayout.minimumInteritemSpacing = lineSpacing;
     
     self.collectionView.allowsMultipleSelection = YES;
     self.collectionView.backgroundColor = [UIColor blackColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
@@ -78,7 +81,10 @@ static CGSize cellItemSize;
 {
     [self.collectionView reloadData];
     [self.collectionView layoutIfNeeded];   // Must call it for set content offset working
-    [self.collectionView setContentOffset:self.assetCollection.contentOffset];
+    
+    if (!CGPointEqualToPoint(self.assetCollection.contentOffset, CGPointZero)) {
+        [self.collectionView setContentOffset:self.assetCollection.contentOffset];
+    }
 }
 
 #pragma mark - UICollectionViewDataSource

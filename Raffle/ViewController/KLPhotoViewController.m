@@ -10,23 +10,25 @@
 #import "KLAlbumCell.h"
 #import "KLDrawBoxDataController.h"
 
-const CGFloat KLPhotoViewControllerLineSpacing = 3.0;
-
 @interface KLPhotoViewController ()
 
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
-@property (nonatomic, assign) BOOL collectionViewAllowsSelection;
+@property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
 
 @end
 
 @implementation KLPhotoViewController
 
 static CGSize cellItemSize;
+static CGFloat lineSpacing;
 
 + (void)load
 {
     CGFloat width, height;
-    width = height = (SCREEN_WIDTH - KLPhotoViewControllerLineSpacing * 3) / 4;
+    lineSpacing = IS_PAD ? 12 : 3;
+    NSUInteger columnCount = IS_PAD ? 5 : 4;
+    NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
+    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
     cellItemSize = CGSizeMake(width, height);
 }
 
@@ -40,7 +42,7 @@ static CGSize cellItemSize;
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _drawBoxDC = dataController;
-        _transition = [KLDrawBoxTransition transitionWithGestureEnabled:YES];
+        _transition = [KLDrawBoxTransition transitionWithGestureEnabled:NO];
     }
     return self;
 }
@@ -59,14 +61,14 @@ static CGSize cellItemSize;
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
-    flowLayout.minimumLineSpacing = KLPhotoViewControllerLineSpacing;
-    flowLayout.minimumInteritemSpacing = KLPhotoViewControllerLineSpacing;
+    flowLayout.minimumLineSpacing = lineSpacing;
+    flowLayout.minimumInteritemSpacing = lineSpacing;
     
     self.collectionView.allowsSelection = NO;
     self.collectionView.allowsMultipleSelection = NO;
-    self.collectionView.backgroundColor = [UIColor blackColor];
-    self.collectionView.contentInset = UIEdgeInsetsMake(2, 0, 2, 0);
+    self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
@@ -86,7 +88,7 @@ static CGSize cellItemSize;
 - (void)selectedAssetsChanged
 {
     // Only if right bar button is "Delete" icon, need check enablement.
-    if (self.navigationItem.rightBarButtonItem.image) {
+    if (self.isDeleteMode) {
         self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.selectedAssetCount > 0;
     } else {
         self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -132,8 +134,8 @@ static CGSize cellItemSize;
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
-    if (!self.collectionViewAllowsSelection) {
-        self.collectionViewAllowsSelection = YES;
+    if (!self.deleteMode) {
+        self.deleteMode = YES;
     }
     
     KLAlbumCell *cell = (id)recognizer.view;
@@ -150,10 +152,10 @@ static CGSize cellItemSize;
 
 - (void)tapRightNavBarButton:(UIBarButtonItem *)sender
 {
-    if (sender.title.length) {
-        [self startDrawFromPhotoVC];
-    } else {
+    if (self.deleteMode) {
         [self deleteSelectedDrawBoxPhotos];
+    } else {
+        [self startDrawFromPhotoVC];
     }
 }
 
@@ -176,25 +178,29 @@ static CGSize cellItemSize;
             self.dismissBlock();
         }
     }];
-    [[UIAlertController actionSheetControllerWithActions:@[delete, cancel]] show];
+    
+    UIAlertController *alertController = [UIAlertController actionSheetControllerWithActions:@[delete, cancel]];
+    alertController.popoverPresentationController.sourceView = self.view;
+    alertController.popoverPresentationController.sourceRect = self.navigationBar.frame;
+    [alertController show];
 }
 
 - (void)cancelMultiPhotoSelection:(id)sender
 {
-    self.collectionViewAllowsSelection = NO;
+    self.deleteMode = NO;
     [self.drawBoxDC clearSelection];
 }
 
-- (void)setCollectionViewAllowsSelection:(BOOL)collectionViewAllowsSelection
+- (void)setDeleteMode:(BOOL)deleteMode
 {
-    _collectionViewAllowsSelection = collectionViewAllowsSelection;
-    self.collectionView.allowsSelection = collectionViewAllowsSelection;
-    self.collectionView.allowsMultipleSelection = collectionViewAllowsSelection;
+    _deleteMode = deleteMode;
+    self.collectionView.allowsSelection = deleteMode;
+    self.collectionView.allowsMultipleSelection = deleteMode;
     
-    if (collectionViewAllowsSelection) {
+    if (deleteMode) {
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelMultiPhotoSelection:)];
-        self.navigationItem.rightBarButtonItem.title = nil;
         self.navigationItem.rightBarButtonItem.image = [UIImage imageNamed:@"icon_delete"];
+        self.navigationItem.rightBarButtonItem.title = nil;
         
         [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(KLAlbumCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
             [cell animateSpringScale];

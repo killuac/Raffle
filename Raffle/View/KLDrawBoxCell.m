@@ -42,23 +42,33 @@
     // Thumbnail image view
     [self.imageContainerView addSubview:({
         _imageView1 = [UIImageView newAutoLayoutView];
-        _imageView1.contentMode = UIViewContentModeScaleAspectFill;
         _imageView1.clipsToBounds = YES;
+        _imageView1.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView1.layer.borderWidth = 5;
+        _imageView1.layer.borderColor = [UIColor whiteColor].CGColor;
         _imageView1;
     })];
     
     [self.imageContainerView addSubview:({
         _imageView2 = [UIImageView newAutoLayoutView];
-        _imageView2.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView2.alpha = 0.5;
         _imageView2.clipsToBounds = YES;
+        _imageView2.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView2.layer.borderWidth = 5;
+        _imageView2.layer.borderColor = [UIColor whiteColor].CGColor;
+        _imageView2.layer.allowsEdgeAntialiasing = YES;
         _imageView2.transform = CGAffineTransformMakeRotation(M_PI / 45);
         _imageView2;
     })];
     
     [self.imageContainerView addSubview:({
         _imageView3 = [UIImageView newAutoLayoutView];
-        _imageView3.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView3.alpha = 0.5;
         _imageView3.clipsToBounds = YES;
+        _imageView3.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView3.layer.borderWidth = 5;
+        _imageView3.layer.borderColor = [UIColor whiteColor].CGColor;
+        _imageView3.layer.allowsEdgeAntialiasing = YES;
         _imageView3.transform = CGAffineTransformMakeRotation(-M_PI / 45);
         _imageView3;
     })];
@@ -69,7 +79,7 @@
     [self.imageContainerView bringSubviewToFront:self.imageView1];
     
     // Delete button
-    CGFloat buttonHeight = 32;
+    CGFloat buttonHeight = IS_PAD ? 40 : 32;
     [self.contentView addSubview:({
         _deleteButton = [UIButton buttonWithImageName:@"icon_delete"];
         _deleteButton.hidden = YES;

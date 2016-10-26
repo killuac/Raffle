@@ -11,8 +11,6 @@
 #import "KLDrawBoxCell.h"
 #import "KLPhotoViewController.h"
 
-const CGFloat KLMoreViewControllerSectionInset = 8.0;
-
 @interface KLMoreViewController ()
 
 @property (nonatomic, strong) KLMainDataController *dataController;
@@ -24,11 +22,14 @@ const CGFloat KLMoreViewControllerSectionInset = 8.0;
 @implementation KLMoreViewController
 
 static CGSize cellItemSize;
+static CGFloat sectionInset;
 
 + (void)load
 {
     CGFloat width, height;
-    width = height = (SCREEN_WIDTH - KLMoreViewControllerSectionInset * 2 * 4) / 3;
+    sectionInset = IS_PAD ? 16 : 8;
+    NSUInteger columnCount = IS_PAD ? 4 : 3;
+    width = height = (SCREEN_WIDTH - sectionInset * 2 * (columnCount + 1)) / columnCount;
     cellItemSize = CGSizeMake(width, height);
 }
 
@@ -58,10 +59,9 @@ static CGSize cellItemSize;
     self.navigationItem.rightBarButtonItem.enabled = self.dataController.isPageScrollEnabled;
     self.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
     
-    CGFloat inset = KLMoreViewControllerSectionInset;
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
-    flowLayout.sectionInset = UIEdgeInsetsMake(inset, inset, inset, inset);
+    flowLayout.sectionInset = UIEdgeInsetsMake(sectionInset, sectionInset, sectionInset, sectionInset);
     
     self.collectionView.contentInset = flowLayout.sectionInset;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
@@ -131,7 +131,11 @@ static CGSize cellItemSize;
             self.dismissBlock();
         }
     }];
-    [[UIAlertController actionSheetControllerWithActions:@[delete, cancel]] show];
+    
+    UIAlertController *alertController = [UIAlertController actionSheetControllerWithActions:@[delete, cancel]];
+    alertController.popoverPresentationController.sourceView = self.view;
+    alertController.popoverPresentationController.sourceRect = sender.superCollectionViewCell.frame;
+    [alertController show];
 }
 
 - (void)closeMoreDrawBoxes:(id)sender

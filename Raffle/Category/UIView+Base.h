@@ -58,16 +58,16 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 @property (nonatomic, assign, readonly) CGFloat intrinsicContentHeight;
 
 @property (nonatomic, assign, readonly) CGFloat statusBarHeight;
-@property (nonatomic, strong, readonly) UIViewController *viewController;
+@property (nonatomic, strong, readonly) __kindof UIViewController *viewController;
 
-@property (nonatomic, strong, readonly) UITableView *superTableView;
-@property (nonatomic, strong, readonly) UICollectionView *superCollectionView;
+@property (nonatomic, strong, readonly) __kindof UITableView *superTableView;
+@property (nonatomic, strong, readonly) __kindof UICollectionView *superCollectionView;
 
-@property (nonatomic, strong, readonly) UITableViewCell *superTableViewCell;
-@property (nonatomic, strong, readonly) UICollectionViewCell *superCollectionViewCell;
+@property (nonatomic, strong, readonly) __kindof UITableViewCell *superTableViewCell;
+@property (nonatomic, strong, readonly) __kindof UICollectionViewCell *superCollectionViewCell;
 
-@property (nonatomic, strong, readonly) UITableView *subTableView;
-@property (nonatomic, strong, readonly) UICollectionView *subCollectionView;
+@property (nonatomic, strong, readonly) __kindof UITableView *subTableView;
+@property (nonatomic, strong, readonly) __kindof UICollectionView *subCollectionView;
 
 // Avoid off-screen rendered
 - (void)setCornerRadius:(CGFloat)radius;  // by UIRectCornerAllCorners

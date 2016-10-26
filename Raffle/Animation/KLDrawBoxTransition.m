@@ -22,8 +22,8 @@
 //    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
     if (self.isPresenting) {
         [containerView addSubview:toView];
-        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0 initialSpringVelocity:0 options:0 animations:^{
-            toView.transform = CGAffineTransformMakeScale(1.01, 1.01);
+        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:10 options:0 animations:^{
+            toView.transform = CGAffineTransformMakeScale(1.01, 1.0);
         } completion:^(BOOL finished) {
             toView.transform = CGAffineTransformIdentity;
             [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
