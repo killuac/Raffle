@@ -28,8 +28,8 @@
 - (void)addSubviews
 {
     [self.contentView addSubview:({
-        _imageView = [UIImageView newAutoLayoutView];
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView.contentMode = IS_PAD ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
         _imageView.clipsToBounds = YES;
         _imageView;
     })];
@@ -41,16 +41,16 @@
         _overlayView;
     })];
     
-    [self.contentView addSubview:({
+    [self.imageView addSubview:({
         _checkmark = [UIImageView newAutoLayoutView];
-        _checkmark.image = [UIImage imageNamed:@"icon_checkmark"];
         _checkmark.hidden = YES;
+        _checkmark.image = [UIImage imageNamed:@"icon_checkmark"];
         _checkmark;
     })];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_checkmark);
-    [self.imageView constraintsEqualWithSuperView];
     [self.overlayView constraintsEqualWithSuperView];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(_checkmark);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-5-|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-5-|" views:views]];
 }
@@ -63,15 +63,15 @@
 - (void)setHighlighted:(BOOL)highlighted
 {
     [super setHighlighted:highlighted];
-    self.imageView.alpha = highlighted ? 0.5 : 1.0;
+    self.contentView.alpha = highlighted ? 0.5 : 1.0;
 }
 
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
-    self.checkmark.hidden = !selected;
-    self.imageView.alpha = 1.0;
+    self.contentView.alpha = 1.0;
     self.overlayView.hidden = !selected;
+    self.checkmark.hidden = !selected;
 }
 
 - (void)configWithAsset:(PHAsset *)asset
@@ -80,8 +80,9 @@
 //      TODO: Add load image progress
     } resultHandler:^(UIImage *image, NSDictionary *info) {
         self.imageView.image = image;
+        self.imageView.frame = IS_PAD ? AVMakeRectWithAspectRatioInsideRect(image.size, self.imageView.frame) : self.imageView.frame;
         self.selected = asset.isSelected;
-        [self setNeedsLayout];
+        [self.imageView setNeedsLayout];
     }];
 }
 

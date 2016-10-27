@@ -59,12 +59,14 @@ static CGFloat sectionInset;
     self.navigationItem.rightBarButtonItem.enabled = self.dataController.isPageScrollEnabled;
     self.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
     
+    self.view.backgroundColor = [UIColor darkBackgroundColor];
+    
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
     flowLayout.sectionInset = UIEdgeInsetsMake(sectionInset, sectionInset, sectionInset, sectionInset);
     
     self.collectionView.contentInset = flowLayout.sectionInset;
-    self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
+    self.collectionView.backgroundColor = self.view.backgroundColor;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.collectionView registerClass:[KLDrawBoxCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
@@ -84,13 +86,13 @@ static CGFloat sectionInset;
 #pragma mark - Collection view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.dataController.itemCount + 1;
+    return self.dataController.itemCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithDrawBox:[self.dataController objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] editMode:self.editMode];
+    [cell configWithDrawBox:[self.dataController objectAtIndexPath:indexPath] editMode:self.editMode];
     [cell.deleteButton addTarget:self action:@selector(deleteDrawBox:)];
     return cell;
 }

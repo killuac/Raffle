@@ -195,6 +195,9 @@
 		41FE179F1D5B160700CABFCA /* AppDelegate+Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Analytics.m"; sourceTree = "<group>"; };
 		41FE17A01D5B160700CABFCA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		E1DAC92CEAA392608389D6F5 /* Pods_Raffle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Raffle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E30DCE411DC2312F001FC824 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
+		E30DCE421DC2316D001FC824 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
+		E30DCE431DC2316E001FC824 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		E30DF89E1D92E70300161EAE /* KLBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLBubbleButton.h; sourceTree = "<group>"; };
 		E30DF89F1D92E70300161EAE /* KLBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLBubbleButton.m; sourceTree = "<group>"; };
 		E30DF8A11D9827A300161EAE /* KLSwapTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLSwapTransition.h; sourceTree = "<group>"; };
@@ -869,6 +872,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				415BFE781D5B1D01002053D6 /* Base */,
+				E30DCE411DC2312F001FC824 /* zh-Hans */,
+				E30DCE421DC2316D001FC824 /* zh-Hant */,
+				E30DCE431DC2316E001FC824 /* ja */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";

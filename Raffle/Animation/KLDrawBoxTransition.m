@@ -15,19 +15,21 @@
     UIView *containerView = self.transitionContext.containerView;
     
     if (self.isPresenting) {
-        [containerView addSubview:toView];
         [containerView addSubview:fromView];
+        [containerView addSubview:toView];
         
         UICollectionView *fromCollectionView = fromView.subviews.firstObject;
-        UIView *cell = fromCollectionView.visibleCells.firstObject;
-        UICollectionView *collectionView = toView.subviews.firstObject;
-        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:10 options:0 animations:^{
-            cell.alpha = 0;
-            [collectionView performBatchUpdates:^{
-                [collectionView setCollectionViewLayout:collectionView.collectionViewLayout animated:NO];
+        UICollectionView *toCollectionView = toView.subviews.firstObject;
+        toCollectionView.backgroundColor = [UIColor clearColor];
+        
+        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:10 options:0 animations:^{
+            fromCollectionView.alpha = 0;
+            [toCollectionView performBatchUpdates:^{
+                [toCollectionView setCollectionViewLayout:toCollectionView.collectionViewLayout animated:NO];
             } completion:nil];
         } completion:^(BOOL finished) {
-            cell.alpha = 1;
+            fromCollectionView.alpha = 1;
+            toCollectionView.backgroundColor = [UIColor darkBackgroundColor];
             [fromView removeFromSuperview];
             [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
         }];
