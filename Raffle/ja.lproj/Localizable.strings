@@ -16,6 +16,8 @@
 "TakePhoto" = "写真を撮る";
 "ChoosePhoto" = "写真を選択";
 "DeleteDrawBox" = "削除抽選箱";
+"DeletePhotoCountOne" = "写真を削除";
+"DeletePhotoCountOther" = "%lu枚の写真を削除";
 
 "PrizeMode" = "プライズモード：プライズ写真を取り除かない";
 "ParticipantMode" = "参加者モード：当選者写真を取り除く";

@@ -114,13 +114,10 @@
 		415BFE781D5B1D01002053D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = Base; path = Base.lproj/Localizable.stringsdict; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		415BFE7C1D5B1D18002053D6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		415BFE7D1D5B1D18002053D6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		415BFE7E1D5B1D18002053D6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		415BFE7F1D5B1D1E002053D6 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		415BFE801D5B1D1E002053D6 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		415BFE811D5B1D1E002053D6 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		415BFE821D5B1D30002053D6 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		415BFE831D5B1D30002053D6 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		415BFE841D5B1D30002053D6 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		415BFE861D5B20FC002053D6 /* KLAlbumCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLAlbumCell.h; sourceTree = "<group>"; };
 		415BFE871D5B20FC002053D6 /* KLAlbumCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLAlbumCell.m; sourceTree = "<group>"; };
 		415BFE881D5B20FC002053D6 /* KLCircleLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLCircleLayout.h; sourceTree = "<group>"; };
@@ -872,9 +869,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				415BFE781D5B1D01002053D6 /* Base */,
-				415BFE7E1D5B1D18002053D6 /* zh-Hans */,
-				415BFE811D5B1D1E002053D6 /* zh-Hant */,
-				415BFE841D5B1D30002053D6 /* ja */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";

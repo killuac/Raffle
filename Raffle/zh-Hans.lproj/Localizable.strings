@@ -16,6 +16,8 @@
 "TakePhoto" = "拍摄照片";
 "ChoosePhoto" = "选取照片";
 "DeleteDrawBox" = "删除抽奖箱";
+"DeletePhotoCountOne" = "删除照片";
+"DeletePhotoCountOther" = "删除 %lu 张照片";
 
 "PrizeMode" = "奖品模式：奖品照片不会被移除";
 "ParticipantMode" = "参与者模式：中奖者照片会被移除";

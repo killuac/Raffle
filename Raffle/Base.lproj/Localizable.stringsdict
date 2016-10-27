@@ -18,21 +18,5 @@
 			<string>%lu Photos Selected</string>
 		</dict>
 	</dict>
-    <key>DeletePhotoCount</key>
-    <dict>
-        <key>NSStringLocalizedFormatKey</key>
-        <string>%#@deletePhotos@</string>
-        <key>deletePhotos</key>
-        <dict>
-            <key>NSStringFormatSpecTypeKey</key>
-            <string>NSStringPluralRuleType</string>
-            <key>NSStringFormatValueTypeKey</key>
-            <string>lu</string>
-            <key>one</key>
-            <string>Delete Photo</string>
-            <key>other</key>
-            <string>Delete %lu Photos</string>
-        </dict>
-    </dict>
 </dict>
 </plist>

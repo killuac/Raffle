@@ -16,6 +16,8 @@
 "TakePhoto" = "Take Photo";
 "ChoosePhoto" = "Choose Photo";
 "DeleteDrawBox" = "Delete Draw Box";
+"DeletePhotoCountOne" = "Delete Photo";
+"DeletePhotoCountOther" = "Delete %lu Photos";
 
 "PrizeMode" = "Prize Mode: The prize photo won't be removed";
 "ParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";

@@ -171,7 +171,8 @@ static CGFloat lineSpacing;
 - (void)deleteSelectedDrawBoxPhotos
 {
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
-    NSString *title = [NSString localizedStringWithFormat:BUTTON_TITLE_DELETE_PHOTO_COUNT, self.drawBoxDC.selectedAssetCount];
+    NSUInteger count = self.drawBoxDC.selectedAssetCount;
+    NSString *title = count > 1 ? [NSString stringWithFormat:BUTTON_TITLE_DELETE_PHOTO_COUNT_OTHER, count] : BUTTON_TITLE_DELETE_PHOTO_COUNT_ONE;
     UIAlertAction *delete = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
         [self.drawBoxDC deleteSelectedAssets];
         if (self.dismissBlock) {

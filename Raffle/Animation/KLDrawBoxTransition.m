@@ -10,37 +10,36 @@
 
 @implementation KLDrawBoxTransition
 
-- (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext
-{
-    return KLViewDefaultAnimationDuration;
-}
-
 - (void)animateNavigationTransitionFromView:(UIView *)fromView toView:(UIView *)toView
 {
     UIView *containerView = self.transitionContext.containerView;
     
-//    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
     if (self.isPresenting) {
         [containerView addSubview:toView];
-        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:10 options:0 animations:^{
-            toView.transform = CGAffineTransformMakeScale(1.01, 1.0);
+        [containerView addSubview:fromView];
+        
+        UICollectionView *fromCollectionView = fromView.subviews.firstObject;
+        UIView *cell = fromCollectionView.visibleCells.firstObject;
+        UICollectionView *collectionView = toView.subviews.firstObject;
+        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:10 options:0 animations:^{
+            cell.alpha = 0;
+            [collectionView performBatchUpdates:^{
+                [collectionView setCollectionViewLayout:collectionView.collectionViewLayout animated:NO];
+            } completion:nil];
         } completion:^(BOOL finished) {
-            toView.transform = CGAffineTransformIdentity;
+            cell.alpha = 1;
+            [fromView removeFromSuperview];
             [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
         }];
     }
     else {
         [containerView insertSubview:toView belowSubview:fromView];
         
-        fromView.layer.shadowColor = [UIColor blackColor].CGColor;
-        fromView.layer.shadowOpacity = 0.3;
-        fromView.layer.shadowOffset = self.isVertical ? CGSizeMake(0, -3) : CGSizeMake(-3, 0);
-        fromView.layer.shadowRadius = 5.0;
-        
+        UICollectionView *collectionView = fromView.subviews.firstObject;
         [UIView animateWithDuration:self.duration animations:^{
-            toView.alpha = 1;
-            toView.layer.transform = CATransform3DIdentity;
-            fromView.layer.transform = self.isVertical ? CATransform3DMakeTranslation(0, fromView.height, 0) : CATransform3DMakeTranslation(fromView.width, 0, 0);
+            [collectionView performBatchUpdates:^{
+                [collectionView setCollectionViewLayout:collectionView.collectionViewLayout animated:NO];
+            } completion:nil];
         } completion:^(BOOL finished) {
             [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
         }];

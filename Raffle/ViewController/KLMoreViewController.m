@@ -84,13 +84,13 @@ static CGFloat sectionInset;
 #pragma mark - Collection view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.dataController.itemCount;
+    return self.dataController.itemCount + 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithDrawBox:[self.dataController objectAtIndexPath:indexPath] editMode:self.editMode];
+    [cell configWithDrawBox:[self.dataController objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] editMode:self.editMode];
     [cell.deleteButton addTarget:self action:@selector(deleteDrawBox:)];
     return cell;
 }

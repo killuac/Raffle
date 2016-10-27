@@ -10,10 +10,10 @@
 
 @interface KLDrawBoxCell ()
 
-@property (nonatomic, strong) UIImageView *imageView1;
-@property (nonatomic, strong) UIImageView *imageView2;
-@property (nonatomic, strong) UIImageView *imageView3;
-@property (nonatomic, strong) UIView *imageContainerView;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIView *backView1;
+@property (nonatomic, strong) UIView *backView2;
+@property (nonatomic, strong) UIView *containerView;
 
 @property (nonatomic, assign) BOOL editMode;
 
@@ -31,52 +31,46 @@
 
 - (void)addSubviews
 {
-    // Image container view
+    // Container view
     [self.contentView addSubview:({
-        _imageContainerView = [UIView newAutoLayoutView];
-        _imageContainerView;
+        _containerView = [UIView newAutoLayoutView];
+        _containerView;
     })];
     
-    [self.imageContainerView constraintsEqualWithSuperView];
+    [self.containerView constraintsEqualWithSuperView];
+    
+    // Back view
+    [self.containerView addSubview:({
+        _backView1 = [UIView newAutoLayoutView];
+        _backView1.alpha = 0.5;
+        _backView1.backgroundColor = [UIColor whiteColor];
+        _backView1.layer.allowsEdgeAntialiasing = YES;
+        _backView1.transform = CGAffineTransformMakeRotation(M_PI / 45);
+        _backView1;
+    })];
+    
+    [self.containerView addSubview:({
+        _backView2 = [UIView newAutoLayoutView];
+        _backView2.alpha = 0.5;
+        _backView2.backgroundColor = [UIColor whiteColor];
+        _backView2.layer.allowsEdgeAntialiasing = YES;
+        _backView2.transform = CGAffineTransformMakeRotation(-M_PI / 45);
+        _backView2;
+    })];
     
     // Thumbnail image view
-    [self.imageContainerView addSubview:({
-        _imageView1 = [UIImageView newAutoLayoutView];
-        _imageView1.clipsToBounds = YES;
-        _imageView1.contentMode = UIViewContentModeScaleAspectFill;
-        _imageView1.layer.borderWidth = 5;
-        _imageView1.layer.borderColor = [UIColor whiteColor].CGColor;
-        _imageView1;
+    [self.containerView addSubview:({
+        _imageView = [UIImageView newAutoLayoutView];
+        _imageView.clipsToBounds = YES;
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.layer.borderWidth = 5;
+        _imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        _imageView;
     })];
     
-    [self.imageContainerView addSubview:({
-        _imageView2 = [UIImageView newAutoLayoutView];
-        _imageView2.alpha = 0.5;
-        _imageView2.clipsToBounds = YES;
-        _imageView2.contentMode = UIViewContentModeScaleAspectFill;
-        _imageView2.layer.borderWidth = 5;
-        _imageView2.layer.borderColor = [UIColor whiteColor].CGColor;
-        _imageView2.layer.allowsEdgeAntialiasing = YES;
-        _imageView2.transform = CGAffineTransformMakeRotation(M_PI / 45);
-        _imageView2;
-    })];
-    
-    [self.imageContainerView addSubview:({
-        _imageView3 = [UIImageView newAutoLayoutView];
-        _imageView3.alpha = 0.5;
-        _imageView3.clipsToBounds = YES;
-        _imageView3.contentMode = UIViewContentModeScaleAspectFill;
-        _imageView3.layer.borderWidth = 5;
-        _imageView3.layer.borderColor = [UIColor whiteColor].CGColor;
-        _imageView3.layer.allowsEdgeAntialiasing = YES;
-        _imageView3.transform = CGAffineTransformMakeRotation(-M_PI / 45);
-        _imageView3;
-    })];
-    
-    [self.imageView1 constraintsEqualWithSuperView];
-    [self.imageView2 constraintsEqualWithSuperView];
-    [self.imageView3 constraintsEqualWithSuperView];
-    [self.imageContainerView bringSubviewToFront:self.imageView1];
+    [self.backView1 constraintsEqualWithSuperView];
+    [self.backView2 constraintsEqualWithSuperView];
+    [self.imageView constraintsEqualWithSuperView];
     
     // Delete button
     CGFloat buttonHeight = IS_PAD ? 40 : 32;
@@ -110,7 +104,7 @@
     }
     
     [UIView animateWithDefaultDuration:^{
-        self.imageContainerView.alpha = editMode ? 0.5 : 1.0;
+        self.containerView.alpha = editMode ? 0.5 : 1.0;
         self.deleteButton.alpha = editMode ? 1.0 : 0.0;
     } completion:^(BOOL finished) {
         self.deleteButton.hidden = !editMode;
@@ -122,17 +116,7 @@
     self.editMode = editMode;
     
     [drawBox.assets.firstObject thumbnailImageResultHandler:^(UIImage *image, NSDictionary *info) {
-        self.imageView1.image = image;
-    }];
-    
-    if (drawBox.assets.count <= 1) return;
-    [drawBox.assets[1] thumbnailImageResultHandler:^(UIImage *image, NSDictionary *info) {
-        self.imageView2.image = image;
-    }];
-    
-    if (drawBox.assets.count <= 2) return;
-    [drawBox.assets[2] thumbnailImageResultHandler:^(UIImage *image, NSDictionary *info) {
-        self.imageView3.image = image;
+        self.imageView.image = image;
     }];
 }
 
