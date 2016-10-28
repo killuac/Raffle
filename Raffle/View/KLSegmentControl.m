@@ -13,6 +13,7 @@
 #define SELECTION_MARK_MARGIN   (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 8.0 : 5.0)
 
 #pragma mark - Class: KLSegmentCollectionViewCell
+#pragma mark -
 @interface KLSegmentCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
@@ -59,6 +60,7 @@
 
 
 #pragma mark - Class: KLSegmentControl
+#pragma mark -
 @interface KLSegmentControl () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableDictionary *itemSizes;
@@ -119,7 +121,7 @@
         
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _collectionView.backgroundColor = [UIColor darkBackgroundColor];
+        _collectionView.backgroundColor = [UIColor barTintColor];
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;

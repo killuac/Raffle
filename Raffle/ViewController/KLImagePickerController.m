@@ -41,9 +41,15 @@
 {
     if (self = [super init]) {
         _photoLibrary = photoLibrary;
-        _transition = [KLCircleTransition transitionWithGestureEnabled:NO];
+        self.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     }
     return self;
+}
+
+- (void)setTransition:(KLBaseTransition *)transition
+{
+    _transition = transition;
+    self.transitioningDelegate = transition;
 }
 
 - (void)viewDidLoad
@@ -116,6 +122,7 @@
     self.pageViewController.delegate = self;
     self.pageViewController.dataSource = self;
     self.pageScrollView.delegate = self;
+    self.pageViewController.view.backgroundColor = [UIColor darkBackgroundColor];
     self.pageViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
@@ -146,11 +153,10 @@
         _bottomBarItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemDone target:self action:@selector(donePhotoSelection:)];
         _bottomBarItem.rightBarButtonItem.enabled = NO;
         
-        _bottomBar = [[UINavigationBar alloc] init];
-        _bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+        _bottomBar = [UINavigationBar newAutoLayoutView];
+        _bottomBar.barStyle = UIBarStyleBlack;
         _bottomBar.items = @[_bottomBarItem];
         _bottomBar.tintColor = [UIColor whiteColor];
-        _bottomBar.titleTextAttributes = @{ NSForegroundColorAttributeName : _bottomBar.tintColor };
         
         _bottomBar;
     })];

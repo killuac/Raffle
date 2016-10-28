@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "KLPhotoLibrary.h"
+#import "KLScaleTransition.h"
 #import "KLCircleTransition.h"
 
 @class KLImagePickerController;
@@ -26,6 +27,6 @@
 + (instancetype)imagePickerController;
 
 @property (nonatomic, weak) id <KLImagePickerControllerDelegate> delegate;
-@property (nonatomic, strong, readonly) KLCircleTransition *transition;
+@property (nonatomic, strong) KLBaseTransition *transition;
 
 @end

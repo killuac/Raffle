@@ -66,7 +66,7 @@ NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 
 + (instancetype)barTintColor
 {
-    return [UIColor darkBackgroundColor];
+    return KLColorWithRGB(55, 58, 63);
 }
 
 #pragma mark - Background color
@@ -77,7 +77,7 @@ NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 
 + (instancetype)darkBackgroundColor
 {
-    return KLColorWithRGB(44, 48, 54);
+    return KLColorWithRGB(40, 44, 50);
 }
 
 #pragma mark - Text color

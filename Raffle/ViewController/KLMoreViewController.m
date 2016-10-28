@@ -9,9 +9,11 @@
 #import "KLMoreViewController.h"
 #import "KLMainDataController.h"
 #import "KLDrawBoxCell.h"
+#import "KLAddButtonCell.h"
 #import "KLPhotoViewController.h"
+#import "KLImagePickerController.h"
 
-@interface KLMoreViewController ()
+@interface KLMoreViewController () <KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
@@ -69,6 +71,7 @@ static CGFloat sectionInset;
     self.collectionView.backgroundColor = self.view.backgroundColor;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.collectionView registerClass:[KLDrawBoxCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLAddButtonCell class] forCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class])];
 }
 
 #pragma mark - Observer
@@ -86,24 +89,38 @@ static CGFloat sectionInset;
 #pragma mark - Collection view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.dataController.itemCount;
+    return self.dataController.itemCount + 1;   // Last cell is "Add Button"
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    [cell configWithDrawBox:[self.dataController objectAtIndexPath:indexPath] editMode:self.editMode];
-    [cell.deleteButton addTarget:self action:@selector(deleteDrawBox:)];
-    return cell;
+    if (indexPath.item == self.dataController.itemCount) {  // Add Button
+        KLAddButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class]) forIndexPath:indexPath];
+        [cell setHidden:self.editMode animated:YES];
+        return cell;
+    } else {
+        KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+        [cell configWithDrawBox:[self.dataController objectAtIndexPath:indexPath] editMode:self.editMode];
+        if (![cell.deleteButton.allTargets containsObject:self]) {
+            [cell.deleteButton addTarget:self action:@selector(deleteDrawBox:)];
+        }
+        return cell;
+    }
 }
 
 #pragma mark - Collection view delegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:self.dataController.currentDrawBoxDC];
-    photoVC.dismissBlock = ^{ [self reloadData]; };
-    self.navigationController.delegate = photoVC.transition;
-    [self.navigationController pushViewController:photoVC animated:YES];
+    if (indexPath.item == self.dataController.itemCount) {  // Add Button
+        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        imagePicker.delegate = self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    } else {
+        KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:self.dataController.currentDrawBoxDC];
+        photoVC.dismissBlock = ^{ [self reloadData]; };
+        self.navigationController.delegate = photoVC.transition;
+        [self.navigationController pushViewController:photoVC animated:YES];
+    }
 }
 
 #pragma mark - Event handling
@@ -143,6 +160,12 @@ static CGFloat sectionInset;
 - (void)closeMoreDrawBoxes:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - KLImagePickerController delegate
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.dataController addDrawBoxWithAssets:assets];
 }
 
 @end

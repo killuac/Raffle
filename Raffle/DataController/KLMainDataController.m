@@ -63,6 +63,11 @@
     [self.currentDrawBoxDC switchDrawMode];
 }
 
+- (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets
+{
+    // TODO: Add draw box
+}
+
 - (void)deleteDrawBoxAtIndexPath:(NSIndexPath *)indexPath
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {

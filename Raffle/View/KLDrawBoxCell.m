@@ -31,15 +31,12 @@
 
 - (void)addSubviews
 {
-    // Container view
+    // Container and image view
     [self.contentView addSubview:({
         _containerView = [UIView newAutoLayoutView];
         _containerView;
     })];
     
-    [self.containerView constraintsEqualWithSuperView];
-    
-    // Back view
     [self.containerView addSubview:({
         _backView1 = [UIView newAutoLayoutView];
         _backView1.alpha = 0.5;
@@ -58,7 +55,6 @@
         _backView2;
     })];
     
-    // Thumbnail image view
     [self.containerView addSubview:({
         _imageView = [UIImageView newAutoLayoutView];
         _imageView.clipsToBounds = YES;
@@ -71,6 +67,7 @@
     [self.backView1 constraintsEqualWithSuperView];
     [self.backView2 constraintsEqualWithSuperView];
     [self.imageView constraintsEqualWithSuperView];
+    [self.containerView constraintsEqualWithSuperView];
     
     // Delete button
     CGFloat buttonHeight = IS_PAD ? 40 : 32;
@@ -83,9 +80,9 @@
         _deleteButton;
     })];
     
+    [self.deleteButton constraintsCenterInSuperview];
     [NSLayoutConstraint constraintWidthWithItem:self.deleteButton constant:buttonHeight].active = YES;
     [NSLayoutConstraint constraintHeightWithItem:self.deleteButton constant:buttonHeight].active = YES;
-    [self.deleteButton constraintsCenterInSuperview];
 }
 
 - (void)setHighlighted:(BOOL)highlighted
@@ -98,16 +95,9 @@
 {
     _editMode = editMode;
     
-    if (editMode) {
-        self.deleteButton.hidden = NO;
-        self.deleteButton.alpha = 0.0;
-    }
-    
+    [self.deleteButton setHidden:!editMode animated:YES];
     [UIView animateWithDefaultDuration:^{
         self.containerView.alpha = editMode ? 0.5 : 1.0;
-        self.deleteButton.alpha = editMode ? 1.0 : 0.0;
-    } completion:^(BOOL finished) {
-        self.deleteButton.hidden = !editMode;
     }];
 }
 

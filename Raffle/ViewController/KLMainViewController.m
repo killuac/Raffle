@@ -134,7 +134,7 @@
     
 //  Add photo button
     [self.view addSubview:({
-        _addPhotoButton = [KLBubbleButton buttonWithTitle:@"2" imageName:@"icon_add"];
+        _addPhotoButton = [KLBubbleButton buttonWithTitle:@"2" imageName:@"icon_main_add"];
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
         _addPhotoButton.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
         _addPhotoButton.layout = KLButtonLayoutVerticalImageUp;
@@ -355,7 +355,7 @@
 {
     KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
     imagePicker.delegate = self.drawBoxViewController;
-    imagePicker.transitioningDelegate = imagePicker.transition;
+    imagePicker.transition = [KLCircleTransition transitionWithGestureEnabled:NO];
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 

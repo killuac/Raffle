@@ -430,4 +430,18 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
     }];
 }
 
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    if (!hidden) {
+        self.hidden = hidden;
+        self.alpha = 0.0;
+    }
+    
+    [UIView animateWithDefaultDuration:^{
+        self.alpha = hidden ? 0.0 : 1.0;
+    } completion:^(BOOL finished) {
+        self.hidden = hidden;
+    }];
+}
+
 @end

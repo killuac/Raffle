@@ -8,9 +8,11 @@
 
 #import "KLPhotoViewController.h"
 #import "KLAlbumCell.h"
+#import "KLAddButtonCell.h"
 #import "KLDrawBoxDataController.h"
+#import "KLImagePickerController.h"
 
-@interface KLPhotoViewController ()
+@interface KLPhotoViewController () <KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
 @property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
@@ -64,12 +66,12 @@ static CGFloat lineSpacing;
     flowLayout.minimumLineSpacing = lineSpacing;
     flowLayout.minimumInteritemSpacing = lineSpacing;
     
-    self.collectionView.allowsSelection = NO;
     self.collectionView.allowsMultipleSelection = NO;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLAddButtonCell class] forCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class])];
 }
 
 #pragma mark - Observer
@@ -98,30 +100,49 @@ static CGFloat lineSpacing;
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.drawBoxDC.itemCount;
+    return self.drawBoxDC.itemCount + 1;    // Last cell is "Add Button"
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    PHAsset *asset = [self.drawBoxDC objectAtIndexPath:indexPath];
-    [cell configWithAsset:asset];
-    if (asset.isSelected) {
-        [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    if (indexPath.item == self.drawBoxDC.itemCount) {  // Add Button
+        KLAddButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class]) forIndexPath:indexPath];
+        [cell setHidden:self.deleteMode animated:YES];
+        return cell;
+    } else {
+        KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+        PHAsset *asset = [self.drawBoxDC objectAtIndexPath:indexPath];
+        [cell configWithAsset:asset];
+        if (asset.isSelected) [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
+        if (![cell.gestureRecognizers containsObject:longPress]) {
+            [cell addGestureRecognizer:longPress];
+        }
+        return cell;
     }
-    
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
-    if (![cell.gestureRecognizers containsObject:longPress]) {
-        [cell addGestureRecognizer:longPress];
-    }
-    
-    return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (indexPath.item == self.drawBoxDC.itemCount) ? YES : self.deleteMode;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (indexPath.item == self.drawBoxDC.itemCount) ? YES : self.deleteMode;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    [self.drawBoxDC selectAssetAtIndexPath:indexPath];
+    if (indexPath.item == self.drawBoxDC.itemCount) {   // Add Button
+        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        imagePicker.delegate = self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    } else if (self.deleteMode) {
+        [self.drawBoxDC selectAssetAtIndexPath:indexPath];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -148,6 +169,7 @@ static CGFloat lineSpacing;
         [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
         [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
     }
+    [self.collectionView reloadData];
 }
 
 - (void)tapRightNavBarButton:(UIBarButtonItem *)sender
@@ -190,12 +212,12 @@ static CGFloat lineSpacing;
 {
     self.deleteMode = NO;
     [self.drawBoxDC clearSelection];
+    [self.collectionView reloadData];
 }
 
 - (void)setDeleteMode:(BOOL)deleteMode
 {
     _deleteMode = deleteMode;
-    self.collectionView.allowsSelection = deleteMode;
     self.collectionView.allowsMultipleSelection = deleteMode;
     
     if (deleteMode) {
@@ -211,6 +233,12 @@ static CGFloat lineSpacing;
         self.navigationItem.rightBarButtonItem.title = BUTTON_TITLE_START;
         self.navigationItem.rightBarButtonItem.image = nil;
     }
+}
+
+#pragma mark - KLImagePickerController delegate
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.drawBoxDC addPhotos:assets];
 }
 
 @end

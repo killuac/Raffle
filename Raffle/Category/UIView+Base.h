@@ -85,5 +85,6 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations;
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion;
 - (void)animateSpringScale;
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
