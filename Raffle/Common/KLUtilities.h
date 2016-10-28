@@ -38,6 +38,7 @@
 
 typedef void (^KLVoidBlockType)(void);
 typedef void (^KLBOOLBlockType)(BOOL finished);
+typedef void (^KLDismissBlockType)(id object);
 
 NS_INLINE BOOL KLSystemVersionGreaterThanOrEqualTo(NSInteger version) { return [NSProcessInfo processInfo].operatingSystemVersion.majorVersion > version; }
 NS_INLINE NSUInteger KLRandomNumber(NSUInteger min, NSUInteger max) { return arc4random() / (max - min) + min; }    // Exclude max

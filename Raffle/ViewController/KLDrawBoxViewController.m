@@ -54,8 +54,6 @@
 #pragma mark - Observers
 - (void)addObservers
 {
-    self.KVOController = [FBKVOController controllerWithObserver:self];
-    [self.KVOController observe:self.drawBoxDC keyPath:@"allAssets" options:0 action:@selector(reloadData)];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
@@ -90,26 +88,14 @@
 #pragma mark - Data controller delegate
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
-    switch (type) {
-        case KLDataChangeTypeInsert:
-            
-            break;
-            
-        case KLDataChangeTypeDelete:
-            
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self.mainVC becomeFirstResponder];
+    [self reloadData];
+//    [self.mainVC becomeFirstResponder];
 }
 
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
-    [self.drawBoxDC addPhotos:assets];
+    [self.drawBoxDC addPhotos:assets completion:nil];
 }
 
 @end

@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) KLDrawBoxModel *drawBox;
 @property (nonatomic, strong) NSMutableArray *allAssets;
+@property (nonatomic, strong) NSMutableArray *remainingAssets;
 @property (nonatomic, strong) NSMutableArray *selectedAssets;
 
 @end
@@ -23,6 +24,7 @@
     if (self = [self init]) {
         _drawBox = model;
         _allAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
+        _remainingAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _selectedAssets = [NSMutableArray array];
     }
     return self;
@@ -31,6 +33,11 @@
 - (NSUInteger)itemCount
 {
     return self.allAssets.count;
+}
+
+- (NSUInteger)remainingAssetCount
+{
+    return self.remainingAssets.count;
 }
 
 - (BOOL)isAttendeeMode
@@ -60,8 +67,21 @@
     }];
 }
 
+- (void)reloadAllAssets
+{
+    [self.remainingAssets removeAllObjects];
+    [self.remainingAssets addObjectsFromArray:self.allAssets];
+}
+
+- (PHAsset *)randomAnAsset
+{
+    NSUInteger index = KLRandomNumber(0, self.remainingAssetCount);
+    return self.remainingAssets[index];
+}
+
+#pragma mark - Update assets
 // New insert entry at front of the old entry
-- (void)addPhotos:(NSArray<PHAsset *> *)assets
+- (void)addPhotos:(NSArray<PHAsset *> *)assets completion:(KLVoidBlockType)complition
 {
     __block NSUInteger assetCount = 0;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
@@ -72,6 +92,7 @@
                 photoModel.drawBox = [self.drawBox MR_inContext:localContext];
                 
                 [self.allAssets addObject:asset];
+                [self.remainingAssets addObject:asset];
                 assetCount++;
             }
         }];
@@ -81,16 +102,33 @@
             [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
         }
         [self didChangeAtIndexPaths:indexPaths forChangeType:KLDataChangeTypeInsert];
+        
+        if (complition) complition();
     }];
 }
 
-- (PHAsset *)randomAnAsset
+- (void)deleteSelectedAssets
 {
-    NSUInteger index = KLRandomNumber(0, self.itemCount);
-    return [self objectAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    [self.allAssets removeObjectsInArray:self.selectedAssets];
+    [self.remainingAssets removeObjectsInArray:self.selectedAssets];
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        [self.selectedAssets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSUInteger index = [self.drawBox.assets indexOfObject:asset];
+            if (index != NSNotFound) {
+                KLPhotoModel *photoModel = self.drawBox.photos[index];
+                [photoModel MR_deleteEntityInContext:localContext];
+                [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
+            }
+        }];
+    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+        [self clearSelection];
+        [self didChangeAtIndexPaths:indexPaths forChangeType:KLDataChangeTypeDelete];
+    }];
 }
 
-#pragma mark - Assets selection
+#pragma mark - Select assets
 - (NSUInteger)selectedAssetCount
 {
     return self.selectedAssets.count;
@@ -98,65 +136,27 @@
 
 - (void)selectAssetAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self willChangeValueForSelectedAssets];
     PHAsset *asset = [self objectAtIndexPath:indexPath];
     asset.selected = YES;
     if (![self.selectedAssets containsObject:asset]) {
         [self.selectedAssets addObject:asset];
     }
-    [self didChangeValueForSelectedAssets];
+    [self didChangeSelection];
 }
 
 - (void)deselectAssetAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self willChangeValueForSelectedAssets];
     PHAsset *asset = [self objectAtIndexPath:indexPath];
     asset.selected = NO;
     [self.selectedAssets removeObject:asset];
-    [self didChangeValueForSelectedAssets];
+    [self didChangeSelection];
 }
 
 - (void)clearSelection
 {
-    [self willChangeValueForSelectedAssets];
     [self.selectedAssets setValue:@(NO) forKey:@"selected"];
     [self.selectedAssets removeAllObjects];
-    [self didChangeValueForSelectedAssets];
-}
-
-- (void)deleteSelectedAssets
-{
-    NSMutableArray *indexPaths = [NSMutableArray array];
-    
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        [self.selectedAssets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSUInteger index = [self.drawBox.photos indexOfObjectPassingTest:^BOOL(KLPhotoModel * _Nonnull photoModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                return [photoModel.assetLocalIdentifier isEqualToString:asset.localIdentifier];
-            }];
-            if (index != NSNotFound) {
-                KLPhotoModel *photoModel = self.drawBox.photos[index];
-                [photoModel MR_deleteEntity];
-                [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
-            }
-        }];
-        
-        // If all photos deleted in draw box, also need delete draw box.
-        if (self.selectedAssetCount == self.itemCount) {
-            [self.drawBox MR_deleteEntity];
-        }
-    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
-        [self didChangeAtIndexPaths:indexPaths forChangeType:KLDataChangeTypeDelete];
-    }];
-}
-
-- (void)willChangeValueForSelectedAssets
-{
-    [self willChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
-}
-
-- (void)didChangeValueForSelectedAssets
-{
-    [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+    [self didChangeSelection];
 }
 
 #pragma mark - PHPhotoLibraryChangeObserver
@@ -172,11 +172,11 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(allAssets))];
     // TODO: Remove assets that don't exist in photo library
+    // TODO: Also need remove retaining assets that don't exist
     [self.allAssets removeAllObjects];
     [self.allAssets addObjectsFromArray:self.drawBox.assets];
-    [self didChangeValueForKey:NSStringFromSelector(@selector(allAssets))];
+//    [self didChangeAtIndexPaths:@[] forChangeType:KLDataChangeTypeDelete];
 }
 
 @end

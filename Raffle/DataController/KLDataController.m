@@ -32,11 +32,6 @@
     return _currentPageIndex;
 }
 
-- (BOOL)isPageScrollEnabled
-{
-    return self.pageCount > 0;
-}
-
 #pragma mark - Deleate method
 - (void)willChangeContent
 {
@@ -49,6 +44,13 @@
 {
     if ([self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
         [self.delegate controllerDidChangeContent:self];
+    }
+}
+
+- (void)didChangeSelection
+{
+    if ([self.delegate respondsToSelector:@selector(controllerDidChangeSelection:)]) {
+        [self.delegate controllerDidChangeSelection:self];
     }
 }
 

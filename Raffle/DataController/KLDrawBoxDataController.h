@@ -15,15 +15,19 @@
 @property (nonatomic, assign, readonly) BOOL isAttendeeMode;
 @property (nonatomic, assign, readonly) BOOL isReloadButtonHidden;
 @property (nonatomic, assign, readonly) BOOL isShakeEnabled;
+
+@property (nonatomic, assign, readonly) NSUInteger remainingAssetCount;
 @property (nonatomic, assign, readonly) NSUInteger selectedAssetCount;
 
 - (void)switchDrawMode;
-- (void)addPhotos:(NSArray<PHAsset *> *)assets;
+- (void)reloadAllAssets;
+- (PHAsset *)randomAnAsset;
+
+- (void)addPhotos:(NSArray<PHAsset *> *)assets completion:(KLVoidBlockType)complition;
+- (void)deleteSelectedAssets;
+
 - (void)selectAssetAtIndexPath:(NSIndexPath *)indexPath;
 - (void)deselectAssetAtIndexPath:(NSIndexPath *)indexPath;
 - (void)clearSelection;
-- (void)deleteSelectedAssets;
-
-- (PHAsset *)randomAnAsset;
 
 @end

@@ -29,8 +29,7 @@
 + (instancetype)viewController;
 + (instancetype)viewControllerWithDataController:(id)dataController;
 
-@property (nonatomic, copy) KLVoidBlockType dismissBlock;
-@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
+@property (nonatomic, copy) KLDismissBlockType dismissBlock;
 
 @property (nonatomic, strong, readonly) UITabBar *tabBar;
 @property (nonatomic, strong, readonly) UINavigationBar *navigationBar;

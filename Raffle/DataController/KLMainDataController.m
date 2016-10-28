@@ -11,7 +11,7 @@
 
 @interface KLMainDataController () <PHPhotoLibraryChangeObserver>
 
-@property (nonatomic, strong) NSArray <KLDrawBoxModel *> *drawBoxes;
+@property (nonatomic, strong) NSMutableArray <KLDrawBoxModel *> *drawBoxes;
 
 @end
 
@@ -20,10 +20,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _drawBoxes = [KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]];
-        if (self.pageCount == 0) {
-            _drawBoxes = @[[KLDrawBoxModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]]];
-        }
+        _drawBoxes = [NSMutableArray arrayWithArray:[KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]]];
     }
     return self;
 }
@@ -65,14 +62,25 @@
 
 - (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets
 {
-    // TODO: Add draw box
+    DECLARE_WEAK_SELF;
+    NSUInteger itemIndex = self.itemCount;
+    
+    KLDrawBoxModel *drawBox = [KLDrawBoxModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]];
+    [self.drawBoxes addObject:drawBox];
+    
+    KLDrawBoxDataController *drawBoxDC = [self drawBoxDataControllerAtIndex:itemIndex];
+    [drawBoxDC addPhotos:assets completion:^{
+        [welf didChangeAtIndexPaths:@[[NSIndexPath indexPathForItem:itemIndex inSection:0]] forChangeType:KLDataChangeTypeInsert];
+    }];
 }
 
 - (void)deleteDrawBoxAtIndexPath:(NSIndexPath *)indexPath
 {
+    KLDrawBoxModel *drawBox = [self objectAtIndexPath:indexPath];
+    [self.drawBoxes removeObject:drawBox];
+    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        KLDrawBoxModel *drawBox = [self objectAtIndexPath:indexPath];
-        [drawBox MR_deleteEntity];
+        [drawBox MR_deleteEntityInContext:localContext];
     } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
         [self didChangeAtIndexPaths:@[indexPath] forChangeType:KLDataChangeTypeDelete];
     }];
@@ -98,10 +106,9 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(drawBoxes))];
-    // TODO: Remove draw box that don't exist in photo library
-    self.drawBoxes = [KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]];
-    [self didChangeValueForKey:NSStringFromSelector(@selector(drawBoxes))];
+    [self.drawBoxes removeAllObjects];
+    [self.drawBoxes addObjectsFromArray:[KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]]];
+    [self didChangeContent];
 }
 
 @end

@@ -16,7 +16,7 @@
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
-@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
 @property (nonatomic, strong) KLDrawBoxViewController *drawBoxViewController;
@@ -40,6 +40,7 @@
 {
     if (self = [super init]) {
         _dataController = [KLMainDataController dataController];
+        _dataController.delegate = self;
     }
     return self;
 }
@@ -48,13 +49,12 @@
 {
     [super viewDidLoad];
     [self prepareForUI];
-    [self addObservers];
     [self reloadData];
 }
 
 - (BOOL)canBecomeFirstResponder
 {
-    return self.dataController.currentDrawBoxDC.isShakeEnabled;
+    return (self.dataController.pageCount && self.dataController.currentDrawBoxDC.isShakeEnabled);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -86,7 +86,7 @@
 {
     self.pageControl.hidden = (self.dataController.pageCount == 1);
     self.pageControl.numberOfPages = self.dataController.pageCount;
-    self.pageScrollView.scrollEnabled = self.dataController.isPageScrollEnabled;
+    self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
     
     UIViewController *viewController = [self viewControllerAtPageIndex:self.dataController.currentPageIndex];
     if (viewController) {
@@ -184,13 +184,6 @@
     [self.menuButton constraintsEqualWidthAndHeight];
 }
 
-#pragma mark - Observer
-- (void)addObservers
-{
-    self.KVOController = [FBKVOController controllerWithObserver:self];
-    [self.KVOController observe:self.dataController keyPath:@"drawBoxes" options:0 action:@selector(reloadData)];
-}
-
 #pragma mark - Page view controller datasource
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(KLDrawBoxViewController *)viewController
 {
@@ -223,6 +216,24 @@
         self.dataController.currentPageIndex = self.drawBoxViewController.pageIndex;
         self.pageControl.currentPage = self.dataController.currentPageIndex;
     }
+}
+
+#pragma mark - Data controller delegate
+- (void)controllerDidChangeContent:(KLDataController *)controller
+{
+    [self reloadData];
+}
+
+- (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
+{
+    [self reloadData];
+//    [self becomeFirstResponder];
+}
+
+#pragma mark - KLImagePickerController delegate
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.dataController addDrawBoxWithAssets:assets];
 }
 
 #pragma mark - Motion
@@ -328,13 +339,13 @@
 
 - (void)reloadDrawBox:(id)sender
 {
+    [self.dataController.currentDrawBoxDC reloadAllAssets];
     [self.drawBoxViewController reloadData];
 }
 
 - (void)showMoreDrawBoxes:(id)sender
 {
-    KLMoreViewController *moreVC = [KLMoreViewController viewControllerWithDataController:self.dataController];
-    moreVC.dismissBlock = ^{ [self reloadData]; };
+    KLMoreViewController *moreVC = [KLMoreViewController viewControllerWithDataController:self.dataController];    
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moreVC];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
@@ -354,7 +365,7 @@
 - (void)showImagePickerController
 {
     KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-    imagePicker.delegate = self.drawBoxViewController;
+    imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     imagePicker.transition = [KLCircleTransition transitionWithGestureEnabled:NO];
     [self presentViewController:imagePicker animated:YES completion:nil];
 }

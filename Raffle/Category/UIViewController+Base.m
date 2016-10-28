@@ -36,25 +36,15 @@
     return [[self alloc] initWithDataController:(id)dataController];
 }
 
-#pragma mark - Properties
-- (void)setDismissBlock:(KLVoidBlockType)dismissBlock
+#pragma mark - Block
+- (void)setDismissBlock:(KLDismissBlockType)dismissBlock
 {
     objc_setAssociatedObject(self, @selector(dismissBlock), dismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (KLVoidBlockType)dismissBlock
+- (KLDismissBlockType)dismissBlock
 {
     return objc_getAssociatedObject(self, @selector(dismissBlock));
-}
-
-- (void)setSelectedIndexPath:(NSIndexPath *)selectedIndexPath
-{
-    objc_setAssociatedObject(self, @selector(selectedIndexPath), selectedIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSIndexPath *)selectedIndexPath
-{
-    return objc_getAssociatedObject(self, @selector(selectedIndexPath));
 }
 
 #pragma mark - Readonly properties

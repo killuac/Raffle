@@ -81,7 +81,7 @@
 
 - (void)reloadData
 {
-    self.pageScrollView.scrollEnabled = self.photoLibrary.isPageScrollEnabled;
+    self.pageScrollView.scrollEnabled = self.photoLibrary.pageCount > 0;
     
     UIViewController *viewController = [self viewControllerAtPageIndex:self.photoLibrary.currentPageIndex];
     if (viewController) {

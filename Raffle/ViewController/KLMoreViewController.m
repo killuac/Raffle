@@ -13,7 +13,7 @@
 #import "KLPhotoViewController.h"
 #import "KLImagePickerController.h"
 
-@interface KLMoreViewController () <KLImagePickerControllerDelegate>
+@interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
@@ -40,6 +40,7 @@ static CGFloat sectionInset;
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _dataController = dataController;
+        _dataController.delegate = self;
     }
     return self;
 }
@@ -48,7 +49,6 @@ static CGFloat sectionInset;
 {
     [super viewDidLoad];
     [self prepareForUI];
-    [self addObservers];
 }
 
 - (void)prepareForUI
@@ -58,7 +58,7 @@ static CGFloat sectionInset;
     self.navigationItem.backBarButtonItem = [UIBarButtonItem backBarButtonItem];
     self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_close" target:self action:@selector(closeMoreDrawBoxes:)];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.navigationItem.rightBarButtonItem.enabled = self.dataController.isPageScrollEnabled;
+    self.navigationItem.rightBarButtonItem.enabled = self.dataController.itemCount > 0;
     self.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
     
     self.view.backgroundColor = [UIColor darkBackgroundColor];
@@ -74,16 +74,11 @@ static CGFloat sectionInset;
     [self.collectionView registerClass:[KLAddButtonCell class] forCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class])];
 }
 
-#pragma mark - Observer
-- (void)addObservers
-{
-    self.KVOController = [FBKVOController controllerWithObserver:self];
-    [self.KVOController observe:self.dataController keyPath:@"drawBoxes" options:0 action:@selector(reloadData)];
-}
-
 - (void)reloadData
 {
-    [self.collectionView reloadData];
+    if (self.dataController.itemCount > 0) {
+        [self.collectionView reloadData];
+    }
 }
 
 #pragma mark - Collection view data source
@@ -116,11 +111,56 @@ static CGFloat sectionInset;
         imagePicker.delegate = self;
         [self presentViewController:imagePicker animated:YES completion:nil];
     } else {
-        KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:self.dataController.currentDrawBoxDC];
-        photoVC.dismissBlock = ^{ [self reloadData]; };
-        self.navigationController.delegate = photoVC.transition;
+        KLDrawBoxDataController *drawBoxDC = [self.dataController drawBoxDataControllerAtIndex:indexPath.item];
+        KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:drawBoxDC];
+        photoVC.dismissBlock = ^(KLDrawBoxDataController *drawBoxDC) {
+            [self.dataController deleteDrawBoxAtIndexPath:indexPath];
+        };
+//        TODO: self.navigationController.delegate = photoVC.transition;
         [self.navigationController pushViewController:photoVC animated:YES];
     }
+}
+
+#pragma mark - Data controller delegate
+- (void)controllerDidChangeContent:(KLDataController *)controller
+{
+    [self checkRightBarButtonEnablement];
+    [self reloadData];
+}
+
+- (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
+{
+    [self checkRightBarButtonEnablement];
+    
+    switch (type) {
+        case KLDataChangeTypeInsert:
+            [self.collectionView insertItemsAtIndexPaths:indexPaths];
+            break;
+            
+        case KLDataChangeTypeDelete:
+            [self.collectionView deleteItemsAtIndexPaths:indexPaths];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)checkRightBarButtonEnablement
+{
+    self.navigationItem.rightBarButtonItem.enabled = self.dataController.itemCount > 0;
+    if (self.editMode && self.dataController.itemCount == 0) {
+        [self setEditing:NO animated:YES];
+        KLDispatchMainAfter(0.5, ^{
+            [self.collectionView reloadData];   // Delay for display "Add Button"
+        });
+    }
+}
+
+#pragma mark - KLImagePickerController delegate
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.dataController addDrawBoxWithAssets:assets];
 }
 
 #pragma mark - Event handling
@@ -135,7 +175,7 @@ static CGFloat sectionInset;
     self.editMode = !self.editMode;
     self.navigationItem.leftBarButtonItem = self.editMode ? nil : self.leftBarButtonItem;
     self.collectionView.allowsSelection = !self.editMode;
-    [self.collectionView reloadData];
+    [self reloadData];
 }
 
 - (void)deleteDrawBox:(UIButton *)sender
@@ -145,10 +185,6 @@ static CGFloat sectionInset;
         KLDrawBoxCell *cell = (id)[sender superCollectionViewCell];
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
         [self.dataController deleteDrawBoxAtIndexPath:indexPath];
-        
-        if (self.dismissBlock) {
-            self.dismissBlock();
-        }
     }];
     
     UIAlertController *alertController = [UIAlertController actionSheetControllerWithActions:@[delete, cancel]];
@@ -160,12 +196,6 @@ static CGFloat sectionInset;
 - (void)closeMoreDrawBoxes:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - KLImagePickerController delegate
-- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
-{
-    [self.dataController addDrawBoxWithAssets:assets];
 }
 
 @end
