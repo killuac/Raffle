@@ -12,7 +12,7 @@
 @interface KLPhotoLibrary : KLDataController
 
 @property (nonatomic, strong, readonly) NSArray<PHAssetCollection *> *assetCollections;
-@property (nonatomic, strong, readonly) NSArray *selectedAssets;
+@property (nonatomic, strong, readonly) NSArray<PHAsset *> *selectedAssets;
 
 - (void)checkAuthorization:(KLVoidBlockType)handler;
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index;

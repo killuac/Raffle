@@ -83,7 +83,7 @@
 // New insert entry at front of the old entry
 - (void)addPhotos:(NSArray<PHAsset *> *)assets completion:(KLVoidBlockType)complition
 {
-    __block NSUInteger assetCount = 0;
+    NSUInteger oldCount = self.remainingAssets.count;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
         [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
             if (![self.drawBox.assets containsObject:asset]) {
@@ -93,12 +93,11 @@
                 
                 [self.allAssets addObject:asset];
                 [self.remainingAssets addObject:asset];
-                assetCount++;
             }
         }];
     } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
         NSMutableArray *indexPaths = [NSMutableArray array];
-        for (NSUInteger i = 0; i < assetCount; i++) {
+        for (NSUInteger i = oldCount; i < self.remainingAssets.count; i++) {
             [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
         }
         [self didChangeAtIndexPaths:indexPaths forChangeType:KLDataChangeTypeInsert];
@@ -110,16 +109,24 @@
 - (void)deleteSelectedAssets
 {
     NSMutableArray *indexPaths = [NSMutableArray array];
+    [self.selectedAssets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSUInteger index = [self.remainingAssets indexOfObject:asset];
+        if (index != NSNotFound) {
+            [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
+        }
+    }];
+    
     [self.allAssets removeObjectsInArray:self.selectedAssets];
     [self.remainingAssets removeObjectsInArray:self.selectedAssets];
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
         [self.selectedAssets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSUInteger index = [self.drawBox.assets indexOfObject:asset];
+            NSUInteger index = [self.drawBox.photos indexOfObjectPassingTest:^BOOL(KLPhotoModel * _Nonnull photo, NSUInteger idx, BOOL * _Nonnull stop) {
+                return [photo.assetLocalIdentifier isEqualToString:asset.localIdentifier];
+            }];
             if (index != NSNotFound) {
                 KLPhotoModel *photoModel = self.drawBox.photos[index];
                 [photoModel MR_deleteEntityInContext:localContext];
-                [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
             }
         }];
     } completion:^(BOOL contextDidSave, NSError * _Nullable error) {

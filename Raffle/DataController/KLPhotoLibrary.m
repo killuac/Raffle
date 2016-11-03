@@ -179,7 +179,7 @@
     return assetCollection;
 }
 
-- (NSArray *)selectedAssets
+- (NSArray<PHAsset *> *)selectedAssets
 {
     return self.selectedAssetArray;
 }

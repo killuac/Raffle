@@ -260,6 +260,7 @@
 {
     [self dismissViewControllerAnimated:YES completion:^{
         if ([self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
+            [self.photoLibrary.selectedAssets setValue:@(NO) forKey:@"selected"];
             [self.delegate imagePickerController:self didFinishPickingImageAssets:self.photoLibrary.selectedAssets];
         }
     }];
