@@ -10,16 +10,17 @@
 #import "KLBubbleButton.h"
 #import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
+#import "KLCameraViewController.h"
 #import "KLMoreViewController.h"
 #import "KLResultViewController.h"
 #import "KLPhotoViewController.h"
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
-@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLDataControllerDelegate, KLImagePickerControllerDelegate>
+@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
-@property (nonatomic, strong) KLDrawBoxViewController *drawBoxViewController;
+@property (nonatomic, readonly) KLDrawBoxViewController *drawBoxViewController;
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
@@ -96,6 +97,8 @@
         [self.pageViewController.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
     }
+    
+    [self becomeFirstResponder];
 }
 
 - (void)addPageViewController
@@ -227,7 +230,6 @@
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
     [self reloadData];
-//    [self becomeFirstResponder];
 }
 
 #pragma mark - KLImagePickerController delegate
@@ -316,24 +318,29 @@
 
 - (void)addPhotosToDrawBox:(id)sender
 {
-    [self showImagePickerController];
+    KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+    imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
+    imagePicker.transition = [KLCircleTransition transitionWithGestureEnabled:NO];
+    [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
 - (void)switchDrawMode:(id)sender
 {
+    if (self.dataController.itemCount == 0) return;
+    
     [self.dataController switchDrawMode];
     [self setReloadButtonHidden:self.dataController.isReloadButtonHidden];
     
     [UIView animateWithDefaultDuration:^{
-        self.switchModeButton.alpha = 0;
+        UIViewAnimationTransition transition = self.dataController.isAttendeeMode ? UIViewAnimationTransitionFlipFromRight : UIViewAnimationTransitionFlipFromLeft;
+        [UIView setAnimationTransition:transition forView:self.switchModeButton cache:YES];
+        
+        KLDispatchMainAfter(KLViewDefaultAnimationDuration/2, ^{
+            NSString *imageName = self.dataController.isAttendeeMode ? @"icon_attendee_mode" : @"icon_prize_mode";
+            [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+        });
     } completion:^(BOOL finished) {
-        NSString *imageName = self.dataController.isAttendeeMode ? @"icon_attendee_mode" : @"icon_prize_mode";
-        [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        [UIView animateWithDefaultDuration:^{
-            self.switchModeButton.alpha = 1;
-        } completion:^(BOOL finished) {
-//          TODO: Swich animation
-        }];
+//      TODO: Swich animation
     }];
 }
 
@@ -355,19 +362,7 @@
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
-    UIView *view = recognizer.view;
-    CGRect frame = CGRectMake(view.width/3, 0, view.width/3, view.height);
-    if (CGRectContainsPoint(frame, [recognizer locationInView:view])) {
-        [self showImagePickerController];
-    }
-}
-
-- (void)showImagePickerController
-{
-    KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-    imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
-    imagePicker.transition = [KLCircleTransition transitionWithGestureEnabled:NO];
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    // TODO: Show camera view contoller
 }
 
 @end

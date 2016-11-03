@@ -63,7 +63,7 @@
 - (void)switchDrawMode
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        self.drawBox.drawMode = !self.drawBox.drawMode;
+        self.drawBox.drawMode = (self.drawBox.drawMode == KLDrawModeAttendee) ? KLDrawModePrize : KLDrawModeAttendee;
     }];
 }
 

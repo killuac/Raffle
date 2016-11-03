@@ -11,6 +11,20 @@
 
 @implementation KLSoundPlayer
 
++ (void)playSound:(NSString *)fileName
+{
+    SystemSoundID soundID;
+    NSURL *url = [[NSBundle mainBundle] URLForResource:fileName withExtension:@"m4a"];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundID);
+    AudioServicesPlaySystemSoundWithCompletion(soundID, NULL);
+    AudioServicesDisposeSystemSoundID(soundID);
+}
+
++ (void)playVibrate
+{
+    AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, NULL);
+}
+
 + (void)playBubbleButtonSound
 {
     // TODO: Play
@@ -18,7 +32,8 @@
 
 + (void)playStartDrawSound
 {
-    // TODO: Play
+    [self playVibrate];
+    [self playSound:@""];
 }
 
 + (void)playStopDrawSound
@@ -48,7 +63,7 @@
 
 + (void)playMessageReceivedVibrate
 {
-	AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, NULL);
+    [self playVibrate];
 }
 
 @end

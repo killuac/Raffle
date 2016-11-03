@@ -7,6 +7,7 @@
 //
 
 #import "KLMoreViewController.h"
+#import "KLMainViewController.h"
 #import "KLMainDataController.h"
 #import "KLDrawBoxCell.h"
 #import "KLAddButtonCell.h"
@@ -15,6 +16,7 @@
 
 @interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
+@property (nonatomic, readonly) KLMainViewController *mainViewContoller;
 @property (nonatomic, strong) KLMainDataController *dataController;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, assign) BOOL editMode;
@@ -43,6 +45,11 @@ static CGFloat sectionInset;
         _dataController.delegate = self;
     }
     return self;
+}
+
+- (KLMainViewController *)mainViewContoller
+{
+    return (id)self.presentingViewController;
 }
 
 - (void)viewDidLoad
@@ -126,6 +133,10 @@ static CGFloat sectionInset;
 {
     [self checkRightBarButtonEnablement];
     [self reloadData];
+    
+    if ([self.mainViewContoller respondsToSelector:@selector(controllerDidChangeContent:)]) {
+        [self.mainViewContoller controllerDidChangeContent:controller];
+    }
 }
 
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
@@ -143,6 +154,10 @@ static CGFloat sectionInset;
             
         default:
             break;
+    }
+    
+    if ([self.mainViewContoller respondsToSelector:@selector(controller:didChangeAtIndexPaths:forChangeType:)]) {
+        [self.mainViewContoller controller:controller didChangeAtIndexPaths:indexPaths forChangeType:type];
     }
 }
 

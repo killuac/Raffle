@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "KLMainDataController.h"
 
-@interface KLMainViewController : UIViewController
+@interface KLMainViewController : UIViewController <KLDataControllerDelegate>
 
 @end
 

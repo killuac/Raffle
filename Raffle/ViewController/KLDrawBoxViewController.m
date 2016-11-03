@@ -11,7 +11,6 @@
 
 @interface KLDrawBoxViewController () <KLDataControllerDelegate>
 
-@property (nonatomic, strong) KLMainViewController *mainVC;
 @property (nonatomic, strong) KLMainDataController *mainDC;
 
 @end
@@ -37,11 +36,6 @@
 - (NSUInteger)pageIndex
 {
     return self.drawBoxDC.pageIndex;
-}
-
-- (KLMainViewController *)mainVC
-{
-    return (id)self.parentViewController.parentViewController;
 }
 
 - (void)viewDidLoad
@@ -89,7 +83,6 @@
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
     [self reloadData];
-//    [self.mainVC becomeFirstResponder];
 }
 
 #pragma mark - KLImagePickerController delegate
