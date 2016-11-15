@@ -77,6 +77,7 @@
 		E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */; };
 		E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */; };
 		E37880951D74930D000FFCA4 /* CAShapeLayer+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */; };
+		E39E0FCF1DDA115400D73F59 /* UIDevice+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E39E0FCE1DDA115400D73F59 /* UIDevice+Base.m */; };
 		E3D72C151DAABD1000EE2620 /* libAdapterSDKMoPub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */; };
 		E3D72C161DAABD1000EE2620 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E3D72C141DAABD1000EE2620 /* Readme.txt */; };
 		E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF311D88553E008F3421 /* KLPhotoModel.m */; };
@@ -248,6 +249,8 @@
 		E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CABasicAnimation+Base.m"; sourceTree = "<group>"; };
 		E37880931D74930D000FFCA4 /* CAShapeLayer+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Base.h"; sourceTree = "<group>"; };
 		E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+Base.m"; sourceTree = "<group>"; };
+		E39E0FCD1DDA115400D73F59 /* UIDevice+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Base.h"; sourceTree = "<group>"; };
+		E39E0FCE1DDA115400D73F59 /* UIDevice+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Base.m"; sourceTree = "<group>"; };
 		E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdapterSDKMoPub.a; sourceTree = "<group>"; };
 		E3D72C141DAABD1000EE2620 /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		E3DDDF301D88553E008F3421 /* KLPhotoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoModel.h; sourceTree = "<group>"; };
@@ -444,6 +447,8 @@
 				41FE17761D5B15AB00CABFCA /* UIButton+Base.m */,
 				41FE17771D5B15AB00CABFCA /* UIColor+Base.h */,
 				41FE17781D5B15AB00CABFCA /* UIColor+Base.m */,
+				E39E0FCD1DDA115400D73F59 /* UIDevice+Base.h */,
+				E39E0FCE1DDA115400D73F59 /* UIDevice+Base.m */,
 				41FE17791D5B15AB00CABFCA /* UIFont+Base.h */,
 				41FE177A1D5B15AB00CABFCA /* UIFont+Base.m */,
 				41FE177B1D5B15AB00CABFCA /* UIImage+Base.h */,
@@ -790,6 +795,7 @@
 				E3684C4C1D86DBFD004E4636 /* KLMoreViewController.m in Sources */,
 				41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */,
 				415BFE9C1D5B2106002053D6 /* KLDrawBoxModel.m in Sources */,
+				E39E0FCF1DDA115400D73F59 /* UIDevice+Base.m in Sources */,
 				41FE17651D5B15A300CABFCA /* KLSoundPlayer.m in Sources */,
 				41FE17961D5B15AB00CABFCA /* UIImageView+Base.m in Sources */,
 				E30E57001DCA44D600EEB6B3 /* NSDictionary+Base.m in Sources */,
