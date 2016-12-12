@@ -50,7 +50,7 @@
 }
 
 #pragma mark - UIViewControllerAnimatedTransitioning
-- (NSTimeInterval)duration
+- (NSTimeInterval)animationDuration
 {
     return [self transitionDuration:self.transitionContext];
 }
@@ -179,6 +179,14 @@
 - (id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)transitionAnimator
 {
     return self.isInteractive ? self : nil;
+}
+
+- (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting sourceViewController:(UIViewController *)source
+{
+    if ([self.presentationDelegate respondsToSelector:@selector(presentationControllerForPresentedViewController:presentingViewController:sourceViewController:)]) {
+        return [self.presentationDelegate presentationControllerForPresentedViewController:presented presentingViewController:presenting];
+    }
+    return nil;
 }
 
 #pragma mark - UINavigationControllerDelegate

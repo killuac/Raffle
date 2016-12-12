@@ -13,6 +13,15 @@ typedef NS_ENUM(NSUInteger, KLTransitionOrientation) {
     KLTransitionOrientationVertical
 };
 
+
+@protocol KLBaseTransitionPresentationDelegate <NSObject>
+
+@optional
+- (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting;
+
+@end
+
+
 @interface KLBaseTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
 + (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled;  // Must retain the instance with property
@@ -25,7 +34,9 @@ typedef NS_ENUM(NSUInteger, KLTransitionOrientation) {
 @property (nonatomic, assign, readonly, getter=isInteractive) BOOL interactive;
 @property (nonatomic, assign, readonly, getter=isModalTransition) BOOL modalTransition;     // Modal(Present) or Navigation(Push/Pop)
 
-@property (nonatomic, assign, readonly) NSTimeInterval duration;
+@property (nonatomic, weak) id <KLBaseTransitionPresentationDelegate> presentationDelegate;
+
+@property (nonatomic, assign, readonly) NSTimeInterval animationDuration;
 @property (nonatomic, weak, readonly) id <UIViewControllerContextTransitioning> transitionContext;
 @property (nonatomic, weak, readonly) UINavigationController *navigationController;
 

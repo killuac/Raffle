@@ -22,7 +22,7 @@
         UICollectionView *toCollectionView = toView.subviews.firstObject;
         toCollectionView.backgroundColor = [UIColor clearColor];
         
-        [UIView animateWithDuration:self.duration delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:10 options:0 animations:^{
+        [UIView animateWithDuration:self.animationDuration delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:10 options:0 animations:^{
             fromCollectionView.alpha = 0;
             [toCollectionView performBatchUpdates:^{
                 [toCollectionView setCollectionViewLayout:toCollectionView.collectionViewLayout animated:NO];
@@ -38,7 +38,7 @@
         [containerView insertSubview:toView belowSubview:fromView];
         
         UICollectionView *collectionView = fromView.subviews.firstObject;
-        [UIView animateWithDuration:self.duration animations:^{
+        [UIView animateWithDuration:self.animationDuration animations:^{
             [collectionView performBatchUpdates:^{
                 [collectionView setCollectionViewLayout:collectionView.collectionViewLayout animated:NO];
             } completion:nil];

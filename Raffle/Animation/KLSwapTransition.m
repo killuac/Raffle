@@ -28,7 +28,7 @@
         [fromView removeFromSuperview];
         [containerView insertSubview:toView belowSubview:firstView];
         toView.transform = CGAffineTransformMakeScale(0.8, 0.8);
-        [UIView animateWithDuration:self.duration animations:^{
+        [UIView animateWithDuration:self.animationDuration animations:^{
             toView.transform = CGAffineTransformIdentity;
             firstView.transform = self.isVertical ? CGAffineTransformMakeScale(1, MINIMUM_SCALE) : CGAffineTransformMakeScale(MINIMUM_SCALE, 1);
             secondView.transform = self.isVertical ? CGAffineTransformMakeScale(1, MINIMUM_SCALE) : CGAffineTransformMakeScale(MINIMUM_SCALE, 1);
@@ -42,7 +42,7 @@
         toView.hidden = YES;
         firstView.transform = self.isVertical ? CGAffineTransformMakeScale(1, MINIMUM_SCALE) : CGAffineTransformMakeScale(MINIMUM_SCALE, 1);
         secondView.transform = self.isVertical ? CGAffineTransformMakeScale(1, MINIMUM_SCALE) : CGAffineTransformMakeScale(MINIMUM_SCALE, 1);
-        [UIView animateWithDuration:self.duration animations:^{
+        [UIView animateWithDuration:self.animationDuration animations:^{
             fromView.transform = CGAffineTransformMakeScale(0.8, 0.8);
             firstView.transform = CGAffineTransformIdentity;
             secondView.transform = CGAffineTransformIdentity;

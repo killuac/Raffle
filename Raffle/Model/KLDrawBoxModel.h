@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(short, KLDrawMode) {
     KLDrawModeAttendee = 1,
-    KLDrawModePrize = 2,
+    KLDrawModePrize = 2
 };
 
 @interface KLDrawBoxModel : NSManagedObject
