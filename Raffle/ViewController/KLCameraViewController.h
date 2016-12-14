@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface KLCameraViewController : UIImagePickerController
+@interface KLCameraViewController : UIViewController
 
 + (void)checkAuthorization:(KLVoidBlockType)completion;
 

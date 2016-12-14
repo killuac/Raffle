@@ -26,6 +26,7 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 - (void)singleTap:(UITapGestureRecognizer *)recognizer;
 
 - (void)addObservers;
+- (void)removeObservers;
 
 @end
 

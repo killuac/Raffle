@@ -7,28 +7,97 @@
 //
 
 #import "KLCameraViewController.h"
+#import "KLCameraPreviewView.h"
 @import AVFoundation;
 
-@interface KLCameraViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface KLCameraViewController ()
+
+@property (nonatomic, strong) KLCameraPreviewView *previewView;
+
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIButton *albumButton;
+@property (nonatomic, strong) UIButton *takePhotoButton;
+@property (nonatomic, strong) UIButton *flashModeButton;
+@property (nonatomic, strong) UIButton *switchCameraButton;
+
+@property (nonatomic, strong) dispatch_queue_t sessionQueue;
+@property (nonatomic, readonly) AVCaptureSession *session;
+@property (nonatomic, strong) AVCaptureDevice *backCameraDevice;
+@property (nonatomic, strong) AVCaptureDevice *frontCameraDevice;
 
 @end
 
 @implementation KLCameraViewController
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        self.sessionQueue = dispatch_queue_create("SerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return self;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self addSubviews];
     
-    self.sourceType = UIImagePickerControllerSourceTypeCamera;
-    self.delegate = self;
-    
-    [self.class checkAuthorization:nil];
+    [self.class checkAuthorization:^{
+        dispatch_async(self.sessionQueue, ^{
+            [self configureSession];
+        });
+    }];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self addObservers];
+    [self.session startRunning];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self removeObservers];
+    [self.session stopRunning];
+}
+
+- (void)addSubviews
+{
+    _previewView = [KLCameraPreviewView newAutoLayoutView];
+    _previewView.session = [AVCaptureSession new];
+    [self.view addSubview:_previewView];
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
+        self.previewView.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
+    }
+}
+
+#pragma mark - Authorization
 + (void)checkAuthorization:(KLVoidBlockType)completion
 {
-    if (![self isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) return;
-    
     AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     switch (status) {
         case AVAuthorizationStatusNotDetermined: {
@@ -62,6 +131,66 @@
     
     NSString *message = [NSString localizedStringWithFormat:MSG_ACCESS_CAMERA_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_CAMERA_SETTING quotedString]];
     [[UIAlertController alertControllerWithTitle:TITLE_CAMERA message:message actions:@[setting, cancel]] show];
+}
+
+#pragma mark - Configure session
+- (void)configureSession
+{
+    NSError *error = nil;
+    
+    [self.session beginConfiguration];
+    
+    self.session.sessionPreset = AVCaptureSessionPresetPhoto;
+    NSArray *cameraDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    [cameraDevices enumerateObjectsUsingBlock:^(AVCaptureDevice *  _Nonnull device, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (device.position == AVCaptureDevicePositionBack) {
+            self.backCameraDevice = device;
+            self.backCameraDevice.flashMode = AVCaptureFlashModeOff;
+            self.backCameraDevice.exposureMode = AVCaptureExposureModeAutoExpose;
+            self.backCameraDevice.focusMode = AVCaptureFocusModeAutoFocus;
+        } else if (device.position == AVCaptureDevicePositionFront) {
+            self.frontCameraDevice = device;
+        }
+    }];
+    
+    AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.backCameraDevice error:&error];
+    if (error || !videoDeviceInput) {
+        KLLog(@"AVCaptureDeviceInput init error: %@", error.localizedDescription);
+        [self.session commitConfiguration];
+        return;
+    }
+    
+    if ([self.session canAddInput:videoDeviceInput]) {
+        [self.session addInput:videoDeviceInput];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
+            AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
+            if (statusBarOrientation != UIInterfaceOrientationUnknown) {
+                initialVideoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
+            }
+            self.previewView.previewLayer.connection.videoOrientation = initialVideoOrientation;
+        });
+    } else {
+        KLLog(@"Could not add video device input to the session");
+        [self.session commitConfiguration];
+        return;
+    }
+    
+    
+    
+    [self.session commitConfiguration];
+}
+
+#pragma mark - Obserers
+- (void)addObservers
+{
+    
+}
+
+- (void)removeObservers
+{
+    
 }
 
 @end
