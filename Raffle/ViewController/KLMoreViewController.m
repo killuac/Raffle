@@ -114,9 +114,11 @@ static CGFloat sectionInset;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.item == self.dataController.itemCount) {  // Add Button
-        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        imagePicker.delegate = self;
-        [self presentViewController:imagePicker animated:YES completion:nil];
+        [KLImagePickerController checkAuthorization:^{
+            KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+            imagePicker.delegate = self;
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }];
     } else {
         KLDrawBoxDataController *drawBoxDC = [self.dataController drawBoxDataControllerAtIndex:indexPath.item];
         KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:drawBoxDC];

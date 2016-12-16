@@ -8,6 +8,7 @@
 
 #import "KLMainViewController.h"
 #import "KLBubbleButton.h"
+#import "KLCircleTransition.h"
 #import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
 #import "KLCameraViewController.h"
@@ -36,7 +37,7 @@
 
 @implementation KLMainViewController
 
-#pragma mark - Life cycle
+#pragma mark - Lifecycle
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -304,10 +305,9 @@
 
 - (void)stopDraw:(id)sender
 {
-    KLResultViewController *resultVC = [KLResultViewController viewController];
     [self.drawBoxViewController randomAnPhoto:^(UIImage *image, NSDictionary *info) {
+        KLResultViewController *resultVC = [KLResultViewController viewController];
         resultVC.resultImage = image;
-        resultVC.transitioningDelegate = resultVC.transition;
         [self presentViewController:resultVC animated:YES completion:^{
             [self setAddPhotoButtonHidden:NO];
             [self setBottomButtonsHidden:NO];
@@ -318,10 +318,12 @@
 
 - (void)addPhotosToDrawBox:(id)sender
 {
-    KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-    imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
-    imagePicker.transition = [KLCircleTransition transitionWithGestureEnabled:NO];
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    [KLImagePickerController checkAuthorization:^{
+        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
+        imagePicker.transition = [KLCircleTransition transition];
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }];
 }
 
 - (void)switchDrawMode:(id)sender

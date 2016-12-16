@@ -12,11 +12,11 @@
 
 + (instancetype)dateWithString:(NSString *)string;
 
-@property (nonatomic, assign, readonly) BOOL isToday;
-@property (nonatomic, assign, readonly) BOOL isTomorrow;
-@property (nonatomic, assign, readonly) BOOL isYesterday;
-@property (nonatomic, assign, readonly) BOOL isWeekend;
-@property (nonatomic, assign, readonly) BOOL isThisYear;
+@property (nonatomic, readonly) BOOL isToday;
+@property (nonatomic, readonly) BOOL isTomorrow;
+@property (nonatomic, readonly) BOOL isYesterday;
+@property (nonatomic, readonly) BOOL isWeekend;
+@property (nonatomic, readonly) BOOL isThisYear;
 
 - (NSString *)toString;
 - (NSString *)toDateString;

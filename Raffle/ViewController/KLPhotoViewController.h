@@ -7,10 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KLDrawBoxTransition.h"
 
 @interface KLPhotoViewController : UICollectionViewController
-
-@property (nonatomic, strong, readonly) KLDrawBoxTransition *transition;
 
 @end

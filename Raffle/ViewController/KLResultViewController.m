@@ -7,6 +7,7 @@
 //
 
 #import "KLResultViewController.h"
+#import "KLSwapTransition.h"
 @import GoogleMobileAds;
 
 @interface KLResultViewController () <GADBannerViewDelegate>
@@ -31,8 +32,9 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _transition = [KLSwapTransition transitionWithGestureEnabled:NO];
-        _transition.transitionOrientation = KLTransitionOrientationHorizontal;
+        KLSwapTransition *transition = [KLSwapTransition transition];
+        transition.transitionOrientation = KLTransitionOrientationHorizontal;
+        self.transitioningDelegate = transition;
     }
     return self;
 }

@@ -37,7 +37,7 @@
 @property (nonatomic, strong) UILabel *messageLabel;
 
 @property (nonatomic, assign, getter=isShowing) BOOL showing;
-@property (nonatomic, assign, readonly) NSTimeInterval duration;    // Showing duration
+@property (nonatomic, readonly) NSTimeInterval duration;    // Showing duration
 
 @property (nonatomic, strong) NSLayoutConstraint *labelCenterConstraint;
 

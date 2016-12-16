@@ -21,7 +21,7 @@
 @property (nonatomic, strong) UIButton *switchCameraButton;
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
-@property (nonatomic, readonly) AVCaptureSession *session;
+@property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) AVCaptureDevice *backCameraDevice;
 @property (nonatomic, strong) AVCaptureDevice *frontCameraDevice;
 
@@ -29,6 +29,40 @@
 
 @implementation KLCameraViewController
 
+#pragma mark - Authorization
++ (void)checkAuthorization:(KLBOOLBlockType)completion
+{
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (AVAuthorizationStatusNotDetermined == status) {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            [self checkCameraAuthorized:granted completion:completion];
+        }];
+    } else {
+        [self checkCameraAuthorized:(AVAuthorizationStatusAuthorized == status) completion:completion];
+    }
+}
+
++ (void)checkCameraAuthorized:(BOOL)granted completion:(KLBOOLBlockType)completion
+{
+    dispatch_block_t block = ^{
+        if (completion) completion(granted);
+    };
+    
+    [NSThread isMainThread] ? block() : KLDispatchMainAsync(block);
+}
+
++ (void)showAlertFromViewController:(UIViewController *)viewController
+{
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *setting = [UIAlertAction actionWithTitle:BUTTON_TITLE_SETTING style:UIAlertActionStyleCancel handler:^(id action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }];
+    
+    NSString *message = [NSString localizedStringWithFormat:MSG_ACCESS_CAMERA_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_CAMERA_SETTING quotedString]];
+    [[UIAlertController alertControllerWithTitle:TITLE_CAMERA message:message actions:@[setting, cancel]] show];
+}
+
+#pragma mark - Lifecycle
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -47,25 +81,29 @@
     [super viewDidLoad];
     [self addSubviews];
     
-    [self.class checkAuthorization:^{
-        dispatch_async(self.sessionQueue, ^{
-            [self configureSession];
-        });
-    }];
+    dispatch_async(self.sessionQueue, ^{
+        [self configureSession];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self addObservers];
-    [self.session startRunning];
+    
+    dispatch_async(self.sessionQueue, ^{
+        [self.session startRunning];
+    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self removeObservers];
-    [self.session stopRunning];
+    
+    dispatch_async(self.sessionQueue, ^{
+        [self.session stopRunning];
+    });
 }
 
 - (void)addSubviews
@@ -93,44 +131,6 @@
     if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
         self.previewView.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
     }
-}
-
-#pragma mark - Authorization
-+ (void)checkAuthorization:(KLVoidBlockType)completion
-{
-    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    switch (status) {
-        case AVAuthorizationStatusNotDetermined: {
-            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-                if (granted) {
-                    if (completion) completion();
-                } else {
-                    [self showAlert];
-                }
-            }];
-            break;
-        }
-            
-        case AVAuthorizationStatusAuthorized:
-            if (completion) completion();
-            break;
-            
-        case AVAuthorizationStatusDenied:
-        case AVAuthorizationStatusRestricted:
-            [self showAlert];
-            break;
-    }
-}
-
-+ (void)showAlert
-{
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
-    UIAlertAction *setting = [UIAlertAction actionWithTitle:BUTTON_TITLE_SETTING style:UIAlertActionStyleCancel handler:^(id action) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    }];
-    
-    NSString *message = [NSString localizedStringWithFormat:MSG_ACCESS_CAMERA_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_CAMERA_SETTING quotedString]];
-    [[UIAlertController alertControllerWithTitle:TITLE_CAMERA message:message actions:@[setting, cancel]] show];
 }
 
 #pragma mark - Configure session
@@ -176,8 +176,6 @@
         [self.session commitConfiguration];
         return;
     }
-    
-    
     
     [self.session commitConfiguration];
 }

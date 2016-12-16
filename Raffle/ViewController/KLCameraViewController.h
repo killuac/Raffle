@@ -10,6 +10,7 @@
 
 @interface KLCameraViewController : UIViewController
 
-+ (void)checkAuthorization:(KLVoidBlockType)completion;
++ (void)checkAuthorization:(KLBOOLBlockType)completion;
++ (void)showAlertFromViewController:(UIViewController *)viewController;
 
 @end

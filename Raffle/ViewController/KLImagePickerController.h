@@ -8,10 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "KLPhotoLibrary.h"
-#import "KLScaleTransition.h"
-#import "KLCircleTransition.h"
 
-@class KLImagePickerController;
+@class KLImagePickerController, KLBaseTransition;
 
 @protocol KLImagePickerControllerDelegate <NSObject>
 
@@ -23,6 +21,8 @@
 
 
 @interface KLImagePickerController : UIViewController
+
++ (void)checkAuthorization:(KLVoidBlockType)completion;
 
 + (instancetype)imagePickerController;
 

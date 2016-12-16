@@ -12,22 +12,22 @@ NS_INLINE BOOL KLStringIsEmpty(NSString *string) { return ([string stringByTrimm
 
 @interface NSString (Base)
 
-@property (nonatomic, copy, readonly) NSString *MD5String;
-@property (nonatomic, copy, readonly) NSString *SHA1String;
+@property (nonatomic, readonly) NSString *MD5String;
+@property (nonatomic, readonly) NSString *SHA1String;
 
-@property (nonatomic, copy, readonly) NSString *base62String;
-@property (nonatomic, copy, readonly) NSString *stringFromBase62;
+@property (nonatomic, readonly) NSString *base62String;
+@property (nonatomic, readonly) NSString *stringFromBase62;
 
-@property (nonatomic, copy, readonly) NSString *quotedString;
+@property (nonatomic, readonly) NSString *quotedString;
 
-@property (nonatomic, assign, readonly) BOOL isValidMobile;
-@property (nonatomic, assign, readonly) BOOL isValidEmail;
-@property (nonatomic, assign, readonly) BOOL isValidPassword;
-@property (nonatomic, assign, readonly) BOOL isValidSMSCode;
-@property (nonatomic, assign, readonly) BOOL isNumberCharacter;
-@property (nonatomic, assign, readonly) BOOL isEmailCharacter;
-@property (nonatomic, assign, readonly) BOOL isNicknameCharacter;
-@property (nonatomic, assign, readonly) BOOL containsUnicodeCharacter;
+@property (nonatomic, readonly) BOOL isValidMobile;
+@property (nonatomic, readonly) BOOL isValidEmail;
+@property (nonatomic, readonly) BOOL isValidPassword;
+@property (nonatomic, readonly) BOOL isValidSMSCode;
+@property (nonatomic, readonly) BOOL isNumberCharacter;
+@property (nonatomic, readonly) BOOL isEmailCharacter;
+@property (nonatomic, readonly) BOOL isNicknameCharacter;
+@property (nonatomic, readonly) BOOL containsUnicodeCharacter;
 
 - (NSString *)increment;
 - (NSString *)decrement;

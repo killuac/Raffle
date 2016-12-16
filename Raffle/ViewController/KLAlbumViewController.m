@@ -8,12 +8,18 @@
 
 #import "KLAlbumViewController.h"
 #import "KLAlbumCell.h"
+#import "KLCameraPreviewView.h"
 #import "KLImagePickerController.h"
+#import "KLCameraViewController.h"
 
 @interface KLAlbumViewController ()
 
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
 @property (nonatomic, strong) PHAssetCollection *assetCollection;
+@property (nonatomic, assign) NSUInteger assetsCount;
+@property (nonatomic, readonly) BOOL isShowCameraPreview;
+
+@property (nonatomic, strong) KLCameraPreviewView *cameraPreviewView;
 
 @end
 
@@ -21,6 +27,7 @@
 
 static CGSize cellItemSize;
 static CGFloat lineSpacing;
+static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
 
 + (void)load
 {
@@ -44,8 +51,20 @@ static CGFloat lineSpacing;
         _photoLibrary = photoLibrary;
         _pageIndex = pageIndex;
         _assetCollection = [photoLibrary assetCollectionAtIndex:pageIndex];
+        _assetsCount = _assetCollection.assets.count;
+        
+        if (self.isShowCameraPreview) {
+            [KLCameraViewController checkAuthorization:^(BOOL finished) {
+                self.assetsCount += 1;  // The first cell for camera preview display
+            }];
+        }
     }
     return self;
+}
+
+- (BOOL)isShowCameraPreview
+{
+    return self.pageIndex == 0;
 }
 
 - (void)viewDidLoad
@@ -68,6 +87,7 @@ static CGFloat lineSpacing;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:cameraPreviewCellIdentifier];
 }
 
 #pragma mark - Observer
@@ -90,31 +110,53 @@ static CGFloat lineSpacing;
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.assetCollection.assets.count;
+    return self.assetsCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.isShowCameraPreview && indexPath.item == 0) {
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cameraPreviewCellIdentifier forIndexPath:indexPath];
+        if (!self.cameraPreviewView) {
+            self.cameraPreviewView = [KLCameraPreviewView new];
+        }
+        [cell.contentView addSubview:self.cameraPreviewView];
+        return cell;
+    }
+    
     KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    PHAsset *asset = self.assetCollection.assets[indexPath.item];
+    PHAsset *asset = [self.photoLibrary assetAtIndexPath:indexPath];
     [cell configWithAsset:asset];
     
     if (asset.isSelected) {
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
     }
-    
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.isShowCameraPreview && indexPath.item == 0) {
+        [self.cameraPreviewView startRunning];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.isShowCameraPreview && indexPath.item == 0) {
+        [self.cameraPreviewView stopRunning];
+    }
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    [self.photoLibrary selectAsset:self.assetCollection.assets[indexPath.item]];
+    [self.photoLibrary selectAsset:[self.photoLibrary assetAtIndexPath:indexPath]];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.photoLibrary deselectAsset:self.assetCollection.assets[indexPath.item]];
+    [self.photoLibrary deselectAsset:[self.photoLibrary assetAtIndexPath:indexPath]];
 }
 
 #pragma mark - UIScrollViewDelegate

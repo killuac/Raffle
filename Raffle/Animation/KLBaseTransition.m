@@ -20,6 +20,11 @@
 
 @implementation KLBaseTransition
 
++ (instancetype)transition
+{
+    return [[self alloc] initWithGestureEnabled:NO];
+}
+
 + (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled
 {
     return [[self alloc] initWithGestureEnabled:gestureEnabled];

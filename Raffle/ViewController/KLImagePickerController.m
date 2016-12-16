@@ -7,8 +7,10 @@
 //
 
 #import "KLImagePickerController.h"
-#import "KLAlbumViewController.h"
 #import "KLSegmentControl.h"
+#import "KLScaleTransition.h"
+#import "KLCircleTransition.h"
+#import "KLAlbumViewController.h"
 
 @interface KLImagePickerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate, KLSegmentControlDelegate>
 
@@ -26,12 +28,50 @@
 
 @implementation KLImagePickerController
 
+#pragma mark - Authorization
++ (void)checkAuthorization:(KLVoidBlockType)completion
+{
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    if (PHAuthorizationStatusNotDetermined == status) {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            // This callback is not on main thread.
+            [self checkPhotoLibraryWithStatus:status completion:completion];
+        }];
+    } else {
+        [self checkPhotoLibraryWithStatus:status completion:completion];
+    }
+}
+
++ (void)checkPhotoLibraryWithStatus:(NSInteger)status completion:(KLVoidBlockType)completion
+{
+    dispatch_block_t block = ^{
+        if (PHAuthorizationStatusAuthorized == status) {
+            if (completion) completion();
+        } else {
+            [self showAlert];
+        }
+    };
+    
+    [NSThread isMainThread] ? block() : KLDispatchMainAsync(block);
+}
+
++ (void)showAlert
+{
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *setting = [UIAlertAction actionWithTitle:BUTTON_TITLE_SETTING style:UIAlertActionStyleCancel handler:^(id action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }];
+    
+    NSString *message = [NSString localizedStringWithFormat:MSG_ACCESS_PHOTOS_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_PHOTOS_SETTING quotedString]];
+    [[UIAlertController alertControllerWithTitle:TITLE_PHOTOS message:message actions:@[setting, cancel]] show];
+}
+
 - (BOOL)prefersStatusBarHidden
 {
     return YES;
 }
 
-#pragma mark - Life cycle
+#pragma mark - Lifecycle
 + (instancetype)imagePickerController
 {
     return [[self alloc] initWithPhotoLibrary:[KLPhotoLibrary new]];
@@ -57,10 +97,6 @@
     [super viewDidLoad];
     [self addObservers];
     [self prepareForUI];
-    
-    [self.photoLibrary checkAuthorization:^{
-        [self showAlert];
-    }];
 }
 
 - (void)prepareForUI
@@ -185,17 +221,6 @@
 - (CGFloat)bottomBarHeight
 {
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 44 : 34;
-}
-
-- (void)showAlert
-{
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
-    UIAlertAction *setting = [UIAlertAction actionWithTitle:BUTTON_TITLE_SETTING style:UIAlertActionStyleCancel handler:^(id action) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    }];
-    
-    NSString *message = [NSString localizedStringWithFormat:MSG_ACCESS_PHOTOS_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_PHOTOS_SETTING quotedString]];
-    [[UIAlertController alertControllerWithTitle:TITLE_PHOTOS message:message actions:@[setting, cancel]] show];
 }
 
 #pragma mark - Page view controller datasource and delegate

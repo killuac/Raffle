@@ -15,8 +15,8 @@ UIKIT_EXTERN const NSTimeInterval KLLabelScrollDelay;
 + (instancetype)labelWithText:(NSString *)text;
 + (instancetype)labelWithText:(NSString *)text attributes:(NSDictionary<NSString *, id> *)attributes;
 
-@property (nonatomic, assign, readonly) BOOL isScrollable;
-@property (nonatomic, assign, readonly) NSTimeInterval scrollDuration;
+@property (nonatomic, readonly) BOOL isScrollable;
+@property (nonatomic, readonly) NSTimeInterval scrollDuration;
 
 - (void)scrollIfNeeded;
 

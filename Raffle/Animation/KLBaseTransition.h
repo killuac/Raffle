@@ -24,21 +24,22 @@ typedef NS_ENUM(NSUInteger, KLTransitionOrientation) {
 
 @interface KLBaseTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
++ (instancetype)transition;     // Default NO
 + (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled;  // Must retain the instance with property
 - (instancetype)initWithGestureEnabled:(BOOL)gestureEnabled;
 
 @property (nonatomic, assign) KLTransitionOrientation transitionOrientation;    // KLTransitionOrientationVertical by default
-@property (nonatomic, assign, readonly) BOOL isVertical;
+@property (nonatomic, readonly) BOOL isVertical;
 
-@property (nonatomic, assign, readonly, getter=isPresenting) BOOL presenting;
-@property (nonatomic, assign, readonly, getter=isInteractive) BOOL interactive;
-@property (nonatomic, assign, readonly, getter=isModalTransition) BOOL modalTransition;     // Modal(Present) or Navigation(Push/Pop)
+@property (nonatomic, readonly, getter=isPresenting) BOOL presenting;
+@property (nonatomic, readonly, getter=isInteractive) BOOL interactive;
+@property (nonatomic, readonly, getter=isModalTransition) BOOL modalTransition;     // Modal(Present) or Navigation(Push/Pop)
 
 @property (nonatomic, weak) id <KLBaseTransitionPresentationDelegate> presentationDelegate;
 
-@property (nonatomic, assign, readonly) NSTimeInterval animationDuration;
-@property (nonatomic, weak, readonly) id <UIViewControllerContextTransitioning> transitionContext;
-@property (nonatomic, weak, readonly) UINavigationController *navigationController;
+@property (nonatomic, readonly) NSTimeInterval animationDuration;
+@property (nonatomic, readonly) id <UIViewControllerContextTransitioning> transitionContext;
+@property (nonatomic, readonly) UINavigationController *navigationController;
 
 // Below methods need overwrite by subclass if needed
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView;

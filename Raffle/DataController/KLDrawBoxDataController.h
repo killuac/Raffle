@@ -12,12 +12,12 @@
 @interface KLDrawBoxDataController : KLDataController
 
 @property (nonatomic, assign) NSUInteger pageIndex;
-@property (nonatomic, assign, readonly) BOOL isAttendeeMode;
-@property (nonatomic, assign, readonly) BOOL isReloadButtonHidden;
-@property (nonatomic, assign, readonly) BOOL isShakeEnabled;
+@property (nonatomic, readonly) BOOL isAttendeeMode;
+@property (nonatomic, readonly) BOOL isReloadButtonHidden;
+@property (nonatomic, readonly) BOOL isShakeEnabled;
 
-@property (nonatomic, assign, readonly) NSUInteger remainingAssetCount;
-@property (nonatomic, assign, readonly) NSUInteger selectedAssetCount;
+@property (nonatomic, readonly) NSUInteger remainingAssetCount;
+@property (nonatomic, readonly) NSUInteger selectedAssetCount;
 
 - (void)switchDrawMode;
 - (void)reloadAllAssets;

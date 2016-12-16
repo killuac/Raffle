@@ -14,6 +14,6 @@
 
 + (instancetype)viewControllerWithPhotoLibrary:(KLPhotoLibrary *)photoLibrary atPageIndex:(NSUInteger)pageIndex;
 
-@property (nonatomic, assign, readonly) NSUInteger pageIndex;
+@property (nonatomic, readonly) NSUInteger pageIndex;
 
 @end

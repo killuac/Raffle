@@ -31,14 +31,14 @@
 
 @property (nonatomic, copy) KLDismissBlockType dismissBlock;
 
-@property (nonatomic, strong, readonly) UITabBar *tabBar;
-@property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
-@property (nonatomic, strong, readonly) UIViewController *rootViewController;
-@property (nonatomic, strong, readonly) UIViewController *visibleViewController;
+@property (nonatomic, readonly) UITabBar *tabBar;
+@property (nonatomic, readonly) UINavigationBar *navigationBar;
+@property (nonatomic, readonly) UIViewController *rootViewController;
+@property (nonatomic, readonly) UIViewController *visibleViewController;
 
-@property (nonatomic, assign, readonly) CGFloat statusBarHeight;
-@property (nonatomic, assign, readonly) CGFloat navigationBarHeight;
-@property (nonatomic, assign, readonly) CGFloat tabBarHeight;
+@property (nonatomic, readonly) CGFloat statusBarHeight;
+@property (nonatomic, readonly) CGFloat navigationBarHeight;
+@property (nonatomic, readonly) CGFloat tabBarHeight;
 
 - (void)showInitialViewController;
 - (void)showMainViewController;

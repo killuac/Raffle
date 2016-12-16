@@ -55,20 +55,20 @@ UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 @property (nonatomic, assign) CGSize size;
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;
-@property (nonatomic, assign, readonly) CGFloat intrinsicContentWidth;
-@property (nonatomic, assign, readonly) CGFloat intrinsicContentHeight;
+@property (nonatomic, readonly) CGFloat intrinsicContentWidth;
+@property (nonatomic, readonly) CGFloat intrinsicContentHeight;
 
-@property (nonatomic, assign, readonly) CGFloat statusBarHeight;
-@property (nonatomic, strong, readonly) __kindof UIViewController *viewController;
+@property (nonatomic, readonly) CGFloat statusBarHeight;
+@property (nonatomic, readonly) __kindof UIViewController *viewController;
 
-@property (nonatomic, strong, readonly) __kindof UITableView *superTableView;
-@property (nonatomic, strong, readonly) __kindof UICollectionView *superCollectionView;
+@property (nonatomic, readonly) __kindof UITableView *superTableView;
+@property (nonatomic, readonly) __kindof UICollectionView *superCollectionView;
 
-@property (nonatomic, strong, readonly) __kindof UITableViewCell *superTableViewCell;
-@property (nonatomic, strong, readonly) __kindof UICollectionViewCell *superCollectionViewCell;
+@property (nonatomic, readonly) __kindof UITableViewCell *superTableViewCell;
+@property (nonatomic, readonly) __kindof UICollectionViewCell *superCollectionViewCell;
 
-@property (nonatomic, strong, readonly) __kindof UITableView *subTableView;
-@property (nonatomic, strong, readonly) __kindof UICollectionView *subCollectionView;
+@property (nonatomic, readonly) __kindof UITableView *subTableView;
+@property (nonatomic, readonly) __kindof UICollectionView *subCollectionView;
 
 // Avoid off-screen rendered
 - (void)setCornerRadius:(CGFloat)radius;  // by UIRectCornerAllCorners

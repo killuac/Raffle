@@ -11,7 +11,7 @@
 
 @interface KLDrawBoxCell : UICollectionViewCell
 
-@property (nonatomic, strong, readonly) UIButton *deleteButton;
+@property (nonatomic, readonly) UIButton *deleteButton;
 
 - (void)configWithDrawBox:(KLDrawBoxModel *)drawBox editMode:(BOOL)editMode;
 

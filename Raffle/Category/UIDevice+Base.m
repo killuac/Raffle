@@ -14,12 +14,6 @@
 #import <net/if_dl.h>
 #import <AdSupport/ASIdentifierManager.h>
 
-@interface UIDevice ()
-
-//@property (nonatomic, copy, readonly) NSString *MACAddress;
-
-@end
-
 @implementation UIDevice (Base)
 
 - (NSString *)MACAddress

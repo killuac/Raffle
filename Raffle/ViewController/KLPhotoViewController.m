@@ -9,6 +9,7 @@
 #import "KLPhotoViewController.h"
 #import "KLAlbumCell.h"
 #import "KLAddButtonCell.h"
+#import "KLDrawBoxTransition.h"
 #import "KLDrawBoxDataController.h"
 #import "KLImagePickerController.h"
 
@@ -45,7 +46,7 @@ static CGFloat lineSpacing;
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _drawBoxDC = dataController;
         _drawBoxDC.delegate = self;
-        _transition = [KLDrawBoxTransition transitionWithGestureEnabled:NO];
+        self.transitioningDelegate = [KLDrawBoxTransition transition];
     }
     return self;
 }
@@ -128,9 +129,11 @@ static CGFloat lineSpacing;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
     if (indexPath.item == self.drawBoxDC.itemCount) {   // Add Button
-        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        imagePicker.delegate = self;
-        [self presentViewController:imagePicker animated:YES completion:nil];
+        [KLImagePickerController checkAuthorization:^{
+            KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+            imagePicker.delegate = self;
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }];
     } else if (self.deleteMode) {
         [self.drawBoxDC selectAssetAtIndexPath:indexPath];
     }

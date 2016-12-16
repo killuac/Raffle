@@ -50,10 +50,10 @@ typedef NS_ENUM(NSUInteger, KLDataChangeType) {
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @property (nonatomic, assign, getter=isLoadingData) BOOL loadingData;
 
-@property (nonatomic, assign, readonly) NSUInteger pageCount;
-@property (nonatomic, assign, readonly) NSUInteger sectionCount;
-@property (nonatomic, assign, readonly) NSUInteger itemCount;
-@property (nonatomic, strong, readonly) NSArray<NSString *> *segmentTitles;
+@property (nonatomic, readonly) NSUInteger pageCount;
+@property (nonatomic, readonly) NSUInteger sectionCount;
+@property (nonatomic, readonly) NSUInteger itemCount;
+@property (nonatomic, readonly) NSArray<NSString *> *segmentTitles;
 
 - (void)willChangeContent;
 - (void)didChangeContent;

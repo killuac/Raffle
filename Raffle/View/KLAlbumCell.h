@@ -11,7 +11,7 @@
 
 @interface KLAlbumCell : UICollectionViewCell
 
-@property (nonatomic, strong, readonly) UIImageView *imageView;
+@property (nonatomic, readonly) UIImageView *imageView;
 
 - (void)configWithAsset:(PHAsset *)asset;
 

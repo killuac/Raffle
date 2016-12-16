@@ -7,17 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KLDrawBoxDataController.h"
 #import "KLImagePickerController.h"
 
-@class KLMainDataController;
+@class KLMainDataController, KLDrawBoxDataController;
 
 @interface KLDrawBoxViewController : UIViewController <KLImagePickerControllerDelegate>
 
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex;
 
-@property (nonatomic, assign, readonly) NSUInteger pageIndex;
-@property (nonatomic, strong, readonly) KLDrawBoxDataController *drawBoxDC;
+@property (nonatomic, readonly) NSUInteger pageIndex;
+@property (nonatomic, readonly) KLDrawBoxDataController *drawBoxDC;
 
 - (void)reloadData;
 - (void)randomAnPhoto:(KLAssetBlockType)resultHandler;

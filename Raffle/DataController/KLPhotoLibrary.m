@@ -10,7 +10,7 @@
 
 @interface KLPhotoLibrary () <PHPhotoLibraryChangeObserver>
 
-@property (nonatomic, strong, readonly) PHPhotoLibrary *photoLibrary;
+@property (nonatomic, readonly) PHPhotoLibrary *photoLibrary;
 @property (nonatomic, strong) NSMutableArray *assetCollectionArray;
 @property (nonatomic, strong) NSMutableArray *selectedAssetArray;
 
@@ -18,38 +18,13 @@
 
 @implementation KLPhotoLibrary
 
-- (void)checkAuthorization:(KLVoidBlockType)handler
-{
-    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
-    if (PHAuthorizationStatusNotDetermined == status) {
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-            // This callback is not on main thread.
-            [self checkPhotoLibraryWithStatus:status handler:handler];
-        }];
-    } else {
-        [self checkPhotoLibraryWithStatus:status handler:handler];
-    }
-}
-
-- (void)checkPhotoLibraryWithStatus:(NSInteger)status handler:(KLVoidBlockType)handler
-{
-    dispatch_block_t block = ^{
-        if (PHAuthorizationStatusAuthorized == status) {
-            [self fetchAssetCollections:nil];
-        } else if (PHAuthorizationStatusDenied == status || PHAuthorizationStatusAuthorized == status) {
-            handler();
-        }
-    };
-    
-    [NSThread isMainThread] ? block() : KLDispatchMainAsync(block);
-}
-
 #pragma mark - Lifecycle
 - (instancetype)init
 {
     if (self = [super init]) {
         _assetCollectionArray = [NSMutableArray array];
         _selectedAssetArray = [NSMutableArray array];
+        [self fetchAssetCollections:nil];
         [self.photoLibrary registerChangeObserver:self];
     }
     return self;
@@ -168,6 +143,12 @@
 - (NSArray<NSString *> *)segmentTitles
 {
     return [self.assetCollections valueForKeyPath:@"@unionOfObjects.localizedTitle"];
+}
+
+- (PHAsset *)assetAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger index = (self.currentPageIndex == 0) ? indexPath.item - 1 : indexPath.item;
+    return self.assetCollections[self.currentPageIndex].assets[index];
 }
 
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index

@@ -11,9 +11,9 @@
 
 @interface KLMainDataController : KLDataController
 
-@property (nonatomic, strong, readonly) KLDrawBoxDataController *currentDrawBoxDC;
-@property (nonatomic, assign, readonly) BOOL isAttendeeMode;
-@property (nonatomic, assign, readonly) BOOL isReloadButtonHidden;
+@property (nonatomic, readonly) KLDrawBoxDataController *currentDrawBoxDC;
+@property (nonatomic, readonly) BOOL isAttendeeMode;
+@property (nonatomic, readonly) BOOL isReloadButtonHidden;
 
 - (void)switchDrawMode;
 - (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets;

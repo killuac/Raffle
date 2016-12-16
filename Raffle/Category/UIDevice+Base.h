@@ -10,8 +10,8 @@
 
 @interface UIDevice (Base)
 
-@property (nonatomic, copy, readonly) NSString *MACAddress;
-@property (nonatomic, copy, readonly) NSString *uniqueDeviceIdentifier;
-@property (nonatomic, copy, readonly) NSString *uniqueAdvertisingIdentifier;
+@property (nonatomic, readonly) NSString *MACAddress;
+@property (nonatomic, readonly) NSString *uniqueDeviceIdentifier;
+@property (nonatomic, readonly) NSString *uniqueAdvertisingIdentifier;
 
 @end

@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KLSwapTransition.h"
+
+@class KLSwapTransition;
 
 @interface KLResultViewController : UIViewController
 
 @property (nonatomic, strong) UIImage *resultImage;
-@property (nonatomic, strong, readonly) KLSwapTransition *transition;
 
 @end

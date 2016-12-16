@@ -31,8 +31,8 @@ NS_INLINE UIImage *KLImageAvatarByGender(KLGenderType gender) {
 
 @interface UIImage (Base)
 
-@property (nonatomic, assign, readonly) CGFloat width;
-@property (nonatomic, assign, readonly) CGFloat height;
+@property (nonatomic, readonly) CGFloat width;
+@property (nonatomic, readonly) CGFloat height;
 
 - (UIImage *)originalImage;
 - (UIImage *)resizableCroppedImage;             // Resize and crop in center

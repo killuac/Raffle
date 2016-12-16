@@ -8,6 +8,7 @@
 
 #import "KLDrawBoxViewController.h"
 #import "KLMainViewController.h"
+#import "KLDrawBoxDataController.h"
 
 @interface KLDrawBoxViewController () <KLDataControllerDelegate>
 
@@ -17,7 +18,7 @@
 
 @implementation KLDrawBoxViewController
 
-#pragma mark - Life cycle
+#pragma mark - Lifecycle
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex
 {
     return [[self alloc] initWithDataController:dataController atPageIndex:pageIndex];
