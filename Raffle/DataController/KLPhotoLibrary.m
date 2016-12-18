@@ -145,12 +145,6 @@
     return [self.assetCollections valueForKeyPath:@"@unionOfObjects.localizedTitle"];
 }
 
-- (PHAsset *)assetAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSUInteger index = (self.currentPageIndex == 0) ? indexPath.item - 1 : indexPath.item;
-    return self.assetCollections[self.currentPageIndex].assets[index];
-}
-
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index
 {
     PHAssetCollection *assetCollection = self.assetCollections[index];

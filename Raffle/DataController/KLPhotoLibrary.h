@@ -14,7 +14,6 @@
 @property (nonatomic, readonly) NSArray<PHAssetCollection *> *assetCollections;
 @property (nonatomic, readonly) NSArray<PHAsset *> *selectedAssets;
 
-- (PHAsset *)assetAtIndexPath:(NSIndexPath *)indexPath;
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index;
 
 - (void)selectAsset:(PHAsset *)asset;

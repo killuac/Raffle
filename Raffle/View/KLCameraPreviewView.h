@@ -12,6 +12,8 @@
 
 @interface KLCameraPreviewView : UIView
 
++ (instancetype)newViewWithSession;
+
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *previewLayer;
 

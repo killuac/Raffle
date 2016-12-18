@@ -20,23 +20,24 @@
 @property (nonatomic, readonly) BOOL isShowCameraPreview;
 
 @property (nonatomic, strong) KLCameraPreviewView *cameraPreviewView;
+@property (nonatomic, strong) UIButton *cameraButton;
 
 @end
 
 @implementation KLAlbumViewController
 
-static CGSize cellItemSize;
-static CGFloat lineSpacing;
-static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
+static CGSize CellItemSize;
+static CGFloat LineSpacing;
+static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 
 + (void)load
 {
     CGFloat width, height;
-    lineSpacing = IS_PAD ? 12 : 3;
+    LineSpacing = IS_PAD ? 12 : 3;
     NSUInteger columnCount = IS_PAD ? 5 : 4;
     NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
-    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
-    cellItemSize = CGSizeMake(width, height);
+    width = height = (SCREEN_WIDTH - LineSpacing * spacingCount) / columnCount;
+    CellItemSize = CGSizeMake(width, height);
 }
 
 #pragma mark - Lifecycle
@@ -54,7 +55,7 @@ static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
         _assetsCount = _assetCollection.assets.count;
         
         if (self.isShowCameraPreview) {
-            [KLCameraViewController checkAuthorization:^(BOOL finished) {
+            [KLCameraViewController checkAuthorization:^(BOOL granted) {
                 self.assetsCount += 1;  // The first cell for camera preview display
             }];
         }
@@ -78,16 +79,23 @@ static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
 - (void)prepareForUI
 {
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
-    flowLayout.itemSize = cellItemSize;
-    flowLayout.minimumLineSpacing = lineSpacing;
-    flowLayout.minimumInteritemSpacing = lineSpacing;
+    flowLayout.itemSize = CellItemSize;
+    flowLayout.minimumLineSpacing = LineSpacing;
+    flowLayout.minimumInteritemSpacing = LineSpacing;
     
     self.collectionView.allowsMultipleSelection = YES;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(LineSpacing, LineSpacing, LineSpacing, LineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:cameraPreviewCellIdentifier];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CameraPreviewCellIdentifier];
+    
+    self.cameraPreviewView = [KLCameraPreviewView newViewWithSession];
+    [self.cameraPreviewView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showCameraViewController)]];
+    self.cameraButton = [UIButton buttonWithImageName:@"icon_camera_block"];
+    [self.cameraButton addTarget:self action:@selector(showCameraViewController)];
+    [self.cameraPreviewView addSubview:self.cameraButton];
+    [self.cameraButton constraintsCenterInSuperview];
 }
 
 #pragma mark - Observer
@@ -95,6 +103,13 @@ static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
 {
     self.KVOController = [FBKVOController controllerWithObserver:self];
     [self.KVOController observe:self.assetCollection keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionDidStartRunning:) name:AVCaptureSessionDidStartRunningNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)reloadData
@@ -107,6 +122,13 @@ static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
     }
 }
 
+- (void)sessionDidStartRunning:(NSNotification *)notification
+{
+    KLDispatchMainAsync(^{
+        [self.cameraButton removeFromSuperview];
+    });
+}
+
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -116,22 +138,55 @@ static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isShowCameraPreview && indexPath.item == 0) {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cameraPreviewCellIdentifier forIndexPath:indexPath];
-        if (!self.cameraPreviewView) {
-            self.cameraPreviewView = [KLCameraPreviewView new];
-        }
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CameraPreviewCellIdentifier forIndexPath:indexPath];
         [cell.contentView addSubview:self.cameraPreviewView];
+        [self.cameraPreviewView constraintsEqualWithSuperView];
         return cell;
     }
     
     KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
-    PHAsset *asset = [self.photoLibrary assetAtIndexPath:indexPath];
+    PHAsset *asset = [self assetAtIndexPath:indexPath];
     [cell configWithAsset:asset];
-    
     if (asset.isSelected) {
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
     }
     return cell;
+}
+
+- (PHAsset *)assetAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger index = (self.pageIndex == 0) ? indexPath.item - 1 : indexPath.item;
+    return self.assetCollection.assets[index];
+}
+
+- (void)showCameraViewController
+{
+    [KLCameraViewController checkAuthorization:^(BOOL granted) {
+        if (granted) {
+            KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:self.albumImage];
+            cameraVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            [self presentViewController:cameraVC animated:YES completion:nil];
+        } else {
+            [KLCameraViewController showAlert];
+        }
+    }];
+}
+
+- (UIImage *)albumImage
+{
+    UIImage *image = nil;
+    if (self.assetsCount > 1) {
+        KLAlbumCell *cell = (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:cell.imageView.image];
+        imageView.size = CGSizeMake(40, 40);
+        imageView.layer.masksToBounds = YES;
+        imageView.layer.cornerRadius = imageView.size.width / 2;
+        UIGraphicsBeginImageContextWithOptions(imageView.size, 1.0,  0.0);
+        [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    return image;
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -151,12 +206,16 @@ static NSString *cameraPreviewCellIdentifier = @"cameraPreviewCellIdentifier";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    [self.photoLibrary selectAsset:[self.photoLibrary assetAtIndexPath:indexPath]];
+    if (!self.isShowCameraPreview || indexPath.item > 0) {
+        [self.photoLibrary selectAsset:[self assetAtIndexPath:indexPath]];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.photoLibrary deselectAsset:[self.photoLibrary assetAtIndexPath:indexPath]];
+    if (!self.isShowCameraPreview || indexPath.item > 0) {
+        [self.photoLibrary deselectAsset:[self assetAtIndexPath:indexPath]];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate

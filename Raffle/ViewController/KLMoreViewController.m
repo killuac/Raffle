@@ -25,16 +25,16 @@
 
 @implementation KLMoreViewController
 
-static CGSize cellItemSize;
-static CGFloat sectionInset;
+static CGSize CellItemSize;
+static CGFloat SectionInset;
 
 + (void)load
 {
     CGFloat width, height;
-    sectionInset = IS_PAD ? 16 : 8;
+    SectionInset = IS_PAD ? 16 : 8;
     NSUInteger columnCount = IS_PAD ? 4 : 3;
-    width = height = (SCREEN_WIDTH - sectionInset * 2 * (columnCount + 1)) / columnCount;
-    cellItemSize = CGSizeMake(width, height);
+    width = height = (SCREEN_WIDTH - SectionInset * 2 * (columnCount + 1)) / columnCount;
+    CellItemSize = CGSizeMake(width, height);
 }
 
 #pragma mark - Lifecycle
@@ -71,8 +71,8 @@ static CGFloat sectionInset;
     self.view.backgroundColor = [UIColor darkBackgroundColor];
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
-    flowLayout.itemSize = cellItemSize;
-    flowLayout.sectionInset = UIEdgeInsetsMake(sectionInset, sectionInset, sectionInset, sectionInset);
+    flowLayout.itemSize = CellItemSize;
+    flowLayout.sectionInset = UIEdgeInsetsMake(SectionInset, SectionInset, SectionInset, SectionInset);
     
     self.collectionView.contentInset = flowLayout.sectionInset;
     self.collectionView.backgroundColor = self.view.backgroundColor;

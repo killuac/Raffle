@@ -43,6 +43,7 @@ typedef NS_ENUM(NSUInteger, KLButtonLayout) {
 
 @property (nonatomic, assign) KLButonStyle style;
 @property (nonatomic, assign) KLButtonLayout layout;
+@property (nonatomic, assign, getter=isChecked) BOOL checked;
 
 - (void)setNormalTitle:(NSString *)title;
 - (void)addTarget:(id)target action:(SEL)action;

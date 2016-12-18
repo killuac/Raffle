@@ -8,6 +8,15 @@
 
 #import "UIButton+Base.h"
 
+@interface UIButton ()
+
+@property (nonatomic, assign) CGSize contentSize;
+
+@property (nonatomic, copy) NSString *imageName;
+@property (nonatomic, copy) NSString *selectedImageName;
+
+@end
+
 @implementation UIButton (Base)
 
 + (void)load
@@ -30,9 +39,11 @@
     [button setTitleColor:[UIColor buttonTitleColor] forState:UIControlStateNormal];
     
     if (imageName.length) {
+        button.imageName = imageName;
         [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
     }
     if (selImageName.length) {
+        button.selectedImageName = selImageName;
         [button setImage:[UIImage imageNamed:selImageName] forState:UIControlStateSelected];
     }
     if (disabledImageName.length) {
@@ -68,6 +79,38 @@
 - (CGSize)contentSize
 {
     return [objc_getAssociatedObject(self, @selector(contentSize)) CGSizeValue];
+}
+
+- (NSString *)imageName
+{
+    return objc_getAssociatedObject(self, @selector(imageName));
+}
+
+- (void)setImageName:(NSString *)imageName
+{
+    objc_setAssociatedObject(self, @selector(imageName), imageName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSString *)selectedImageName
+{
+    return objc_getAssociatedObject(self, @selector(selectedImageName));
+}
+
+- (void)setSelectedImageName:(NSString *)selectedImageName
+{
+    objc_setAssociatedObject(self, @selector(selectedImageName), selectedImageName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)isChecked
+{
+    return [objc_getAssociatedObject(self, @selector(isChecked)) boolValue];
+}
+
+- (void)setChecked:(BOOL)checked
+{
+    objc_setAssociatedObject(self, @selector(isChecked), @(checked), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    NSString *imageName = checked ? self.selectedImageName : self.imageName;
+    [self setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
 }
 
 #pragma mark - Layout

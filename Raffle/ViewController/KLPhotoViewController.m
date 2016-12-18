@@ -22,17 +22,17 @@
 
 @implementation KLPhotoViewController
 
-static CGSize cellItemSize;
-static CGFloat lineSpacing;
+static CGSize CellItemSize;
+static CGFloat LineSpacing;
 
 + (void)load
 {
     CGFloat width, height;
-    lineSpacing = IS_PAD ? 12 : 3;
+    LineSpacing = IS_PAD ? 12 : 3;
     NSUInteger columnCount = IS_PAD ? 5 : 4;
     NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
-    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
-    cellItemSize = CGSizeMake(width, height);
+    width = height = (SCREEN_WIDTH - LineSpacing * spacingCount) / columnCount;
+    CellItemSize = CGSizeMake(width, height);
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -63,14 +63,14 @@ static CGFloat lineSpacing;
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_START target:self action:@selector(tapRightNavBarButton:)];
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
-    flowLayout.itemSize = cellItemSize;
-    flowLayout.minimumLineSpacing = lineSpacing;
-    flowLayout.minimumInteritemSpacing = lineSpacing;
+    flowLayout.itemSize = CellItemSize;
+    flowLayout.minimumLineSpacing = LineSpacing;
+    flowLayout.minimumInteritemSpacing = LineSpacing;
     
     self.collectionView.allowsMultipleSelection = NO;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(LineSpacing, LineSpacing, LineSpacing, LineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
     [self.collectionView registerClass:[KLAddButtonCell class] forCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class])];
 }

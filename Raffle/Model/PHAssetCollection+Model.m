@@ -53,7 +53,7 @@
 {
     [self removeAllAssets];
     
-    KLDispatchGlobalAsync(^{
+    dispatch_block_t block = ^{
         NSMutableArray *assetArray = [NSMutableArray array];
         [self.fetchResult enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
             if (asset) [assetArray addObject:asset];
@@ -65,7 +65,9 @@
             if (completion) completion();
             [self didChangeValueForKey:NSStringFromSelector(@selector(assets))];
         });
-    });
+    };
+    
+    [NSThread isMainThread] ? KLDispatchGlobalAsync(block) : block();
 }
 
 - (void)setAssetArray:(NSMutableArray<PHAsset *> *)assetArray

@@ -252,6 +252,7 @@
 #pragma mark - Scroll delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    NSLog(@"SHIT: %f", scrollView.contentOffset.x);
     if (scrollView.width == 0) return;
     CGFloat offsetRate = (scrollView.contentOffset.x - scrollView.width) / scrollView.width;
     [self.segmentControl scrollWithOffsetRate:offsetRate];

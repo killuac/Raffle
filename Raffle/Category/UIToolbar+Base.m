@@ -46,8 +46,9 @@
         self.distributed = distributed;
         self.separators = [NSMutableArray array];
         self.barButtonItems = items;
-        NSMutableArray *barItems = [NSMutableArray arrayWithObject:[UIBarButtonItem flexibleSpaceBarButtonItem]];
+        [self setTopBorderColor:[UIColor clearColor]];
         
+        NSMutableArray *barItems = [NSMutableArray arrayWithObject:[UIBarButtonItem flexibleSpaceBarButtonItem]];
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [barItems addObject:obj];
             [barItems addObject:[UIBarButtonItem flexibleSpaceBarButtonItem]];
@@ -118,7 +119,7 @@
     }];
 }
 
-- (void)setSeparatorColor:(UIColor *)color
+- (void)setTopBorderColor:(UIColor *)color
 {
     UIView *separator = [[UIView alloc] init];
     separator.width = 1;
