@@ -7,7 +7,6 @@
 //
 
 #import "KLCameraPreviewView.h"
-#import "KLCameraViewController.h"
 @import AVFoundation;
 
 @interface KLCameraPreviewView ()
@@ -45,20 +44,17 @@
 + (instancetype)newViewWithSession
 {
     KLCameraPreviewView *view = [self newAutoLayoutView];
-    [KLCameraViewController checkAuthorization:^(BOOL granted) {
-        if (granted) {
-            view.session = [AVCaptureSession new];
-            view.sessionQueue = dispatch_queue_create("PreviewSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
-            
-            dispatch_async(view.sessionQueue, ^{
-                [view configureSession];
-            });
-            
-            KLDispatchMainAsync(^{
-                [view addObservers];
-            });
-        }
-    }];
+    view.session = [AVCaptureSession new];
+    view.sessionQueue = dispatch_queue_create("PreviewSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+    
+    dispatch_async(view.sessionQueue, ^{
+        [view configureSession];
+    });
+    
+    KLDispatchMainAsync(^{
+        [view addObservers];
+    });
+    
     return view;
 }
 
@@ -74,8 +70,6 @@
 - (void)addObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionWasInterrupted:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionInterruptionEnded:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)dealloc
@@ -89,16 +83,6 @@
     if (statusBarOrientation != UIInterfaceOrientationUnknown) {
         self.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
     }
-}
-
-- (void)sessionWasInterrupted:(NSNotification *)notification
-{
-    [self stopRunning:nil];
-}
-
-- (void)sessionInterruptionEnded:(NSNotification *)notification
-{
-    [self startRunning:nil];
 }
 
 #pragma mark - configure session

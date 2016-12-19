@@ -72,23 +72,24 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 {
     [super viewDidLoad];
     [self prepareForUI];
-    [self addObservers];
     [self reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self addObservers];
     [self.cameraPreviewView startRunning:^{
         self.cameraPreviewView.userInteractionEnabled = YES;
     }];
 }
 
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    [self.cameraPreviewView stopRunning:nil];
-//}
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self removeObservers];
+    [self.cameraPreviewView stopRunning:nil];
+}
 
 - (void)prepareForUI
 {
@@ -106,17 +107,25 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     
     if (!self.isShowCameraPreview) return;
     
-    self.cameraPreviewView = [KLCameraPreviewView newViewWithSession];
-    self.cameraPreviewView.userInteractionEnabled = NO;
-    [self.cameraPreviewView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showCameraViewController)]];
+    self.cameraPreviewView = [KLCameraPreviewView newAutoLayoutView];
     self.cameraButton = [UIButton buttonWithImageName:@"icon_camera_block"];
     [self.cameraButton addTarget:self action:@selector(showCameraViewController)];
     [self.cameraPreviewView addSubview:self.cameraButton];
     [self.cameraButton constraintsCenterInSuperview];
     
-    self.cameraPreviewView.transform = CGAffineTransformMakeScale(CGFLOAT_MIN, CGFLOAT_MIN);
-    [UIView animateWithDefaultDuration:^{
-        self.cameraPreviewView.transform = CGAffineTransformIdentity;
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    [KLCameraViewController checkAuthorization:^(BOOL granted) {
+        if (granted) {
+            self.cameraPreviewView = [KLCameraPreviewView newViewWithSession];
+            self.cameraPreviewView.userInteractionEnabled = NO;
+        }
+        [self.cameraPreviewView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showCameraViewController)]];
+        if (status == AVAuthorizationStatusNotDetermined) {
+            [self.cameraPreviewView startRunning:^{
+                [self reloadData];
+                self.cameraPreviewView.userInteractionEnabled = YES;
+            }];
+        }
     }];
 }
 
@@ -126,10 +135,12 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     self.KVOController = [FBKVOController controllerWithObserver:self];
     [self.KVOController observe:self.assetCollection keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionWasInterrupted:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionInterruptionEnded:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionDidStartRunning:) name:AVCaptureSessionDidStartRunningNotification object:self.cameraPreviewView.session];
 }
 
-- (void)dealloc
+- (void)removeObservers
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -149,6 +160,16 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     KLDispatchMainAsync(^{
         [self.cameraButton removeFromSuperview];
     });
+}
+
+- (void)sessionWasInterrupted:(NSNotification *)notification
+{
+    [self.cameraPreviewView stopRunning:nil];
+}
+
+- (void)sessionInterruptionEnded:(NSNotification *)notification
+{
+    [self.cameraPreviewView startRunning:nil];
 }
 
 #pragma mark - UICollectionViewDataSource

@@ -282,14 +282,14 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)sessionWasInterrupted:(NSNotification *)notification
 {
+    [self stopSessionRunning];
     [self.previewView addBlurBackground];
-    [self startSessionRunning];
 }
 
 - (void)sessionInterruptionEnded:(NSNotification *)notification
 {
+    [self startSessionRunning];
     [self.previewView removeBlurBackground];
-    [self stopSessionRunning];
 }
 
 #pragma mark - Delegates
@@ -329,8 +329,9 @@ static void *SessionRunningContext = &SessionRunningContext;
 {
     self.takePhotoButton.enabled = NO;
     [self.previewView addBlurBackground];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
     [UIView animateWithDuration:0.4 animations:^{
-        [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.previewView cache:YES];
+        [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.previewView cache:NO];
     }];
     
     dispatch_async(self.sessionQueue, ^{
