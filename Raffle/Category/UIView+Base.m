@@ -379,11 +379,12 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
 //    UIGraphicsEndImageContext();
     
     UIVisualEffectView *background = [UIVisualEffectView newAutoLayoutView];
-    background.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    background.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     background.tag = 100;
     background.userInteractionEnabled = YES;
     [self addSubview:background];
 
+    [background setHidden:NO animated:YES];
     [background constraintsEqualWithSuperView];
 }
 
@@ -432,6 +433,11 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
 
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated
 {
+    if (!animated) {
+        self.hidden = hidden;
+        return;
+    }
+    
     if (!hidden) {
         self.hidden = hidden;
         self.alpha = 0.0;

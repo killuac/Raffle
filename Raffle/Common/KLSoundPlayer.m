@@ -41,6 +41,11 @@
     // TODO: Play
 }
 
++ (void)playCameraShutterSound
+{
+    AudioServicesPlaySystemSoundWithCompletion(1108, NULL);
+}
+
 + (void)playMessageSentSound
 {
     AudioServicesPlaySystemSoundWithCompletion(1004, NULL);

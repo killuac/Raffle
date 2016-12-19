@@ -10,81 +10,18 @@
 #import "KLCameraPreviewView.h"
 @import AVFoundation;
 
-
-#pragma mark - KLPreviewViewController
-#pragma mark -
-@interface KLPreviewViewController : UIViewController
-
-@property (nonatomic, strong) KLCameraPreviewView *previewView;
-
-@end
-
-@implementation KLPreviewViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self addSubviews];
-}
-
-- (void)addSubviews
-{
-    _previewView = [KLCameraPreviewView newAutoLayoutView];
-    [self.view addSubview:_previewView];
-    [self.previewView constraintsEqualWithSuperView];
-    
-    UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
-    if (statusBarOrientation != UIInterfaceOrientationUnknown) {
-        initialVideoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
-    }
-    self.previewView.previewLayer.connection.videoOrientation = initialVideoOrientation;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return YES;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskAll;
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-        if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
-            self.previewView.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
-        }
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        [CATransaction setDisableActions:NO];
-        [CATransaction commit];
-    }];
-}
-
-@end
-
-
-#pragma mark - KLCameraViewController
-#pragma mark -
 @interface KLCameraViewController () <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate>
 
-@property (nonatomic, strong) KLPreviewViewController *previewVC;
 @property (nonatomic, strong) UIImage *albumImage;
+@property (nonatomic, strong) KLCameraPreviewView *previewView;
+@property (nonatomic, strong) UIBarButtonItem *takePhotoButton;
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, strong) AVCaptureDevice *backCameraDevice;
-@property (nonatomic, strong) AVCaptureDevice *frontCameraDevice;
 @property (nonatomic, strong) AVCaptureDeviceInput *videoDeviceInput;
 
 @property (nonatomic, assign, getter=isSessionRunning) BOOL sessionRunning;
+@property (nonatomic, assign, getter=isFaceDetectionOn) BOOL faceDetectionOn;
 
 @end
 
@@ -136,20 +73,14 @@ static void *SessionRunningContext = &SessionRunningContext;
     if (self = [super init]) {
         self.albumImage = image;
         self.session = [AVCaptureSession new];
-        self.sessionQueue = dispatch_queue_create("SerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+        self.sessionQueue = dispatch_queue_create("CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self addPreviewViewController];
     [self addSubviews];
     
     dispatch_async(self.sessionQueue, ^{
@@ -157,37 +88,27 @@ static void *SessionRunningContext = &SessionRunningContext;
     });
 }
 
-- (void)addPreviewViewController
-{
-    self.previewVC = [KLPreviewViewController new];
-    self.previewVC.previewView.session = self.session;
-    [self addChildViewController:self.previewVC];
-    [self.view addSubview:self.previewVC.view];
-    [self.previewVC didMoveToParentViewController:self];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self addObservers];
-    
-    dispatch_async(self.sessionQueue, ^{
-        [self.session startRunning];
-    });
+    [self startSessionRunning];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self removeObservers];
-    
-    dispatch_async(self.sessionQueue, ^{
-        [self.session stopRunning];
-    });
+    [self stopSessionRunning];
 }
 
 - (void)addSubviews
 {
+    // Preview
+    self.previewView = [KLCameraPreviewView newAutoLayoutView];
+    self.previewView.session = self.session;
+    [self.view addSubview:self.previewView];
+    
     // Top toolbar
     UIBarButtonItem *flashButtonItem = [UIBarButtonItem barButtonItemWithOnImageName:@"icon_flash_on" offImageName:@"icon_flash_off" target:self action:@selector(switchFlashMode:)];
     UIBarButtonItem *faceButtonItem = [UIBarButtonItem barButtonItemWithOnImageName:@"icon_face_on" offImageName:@"icon_face_off" target:self action:@selector(switchFaceDetection:)];
@@ -202,22 +123,49 @@ static void *SessionRunningContext = &SessionRunningContext;
     UIBarButtonItem *takePhotoItem = [UIBarButtonItem barButtonItemWithImageName:@"button_camera" target:self action:@selector(takePhoto:)];
     UIImage *image = self.albumImage ?: [UIImage imageNamed:@"button_album"];
     UIBarButtonItem *albumButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(switchToAlbum:)];
+    self.takePhotoButton = takePhotoItem;
     items = @[closeButtonItem, takePhotoItem, albumButtonItem];
     UIToolbar *bottomToolbar = [UIToolbar toolbarWithItems:items];
     [self.view addSubview:bottomToolbar];
     
     // Layout subviews
-    UIView *previewVCView = self.previewVC.view;
-    previewVCView.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(topToolbar, previewVCView, bottomToolbar);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[previewVCView]|" options:0 views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topToolbar(40)][previewVCView][bottomToolbar(80)]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
+    NSDictionary *views = NSDictionaryOfVariableBindings(topToolbar, _previewView, bottomToolbar);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_previewView]|" options:0 views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topToolbar(40)][_previewView][bottomToolbar(80)]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+#pragma mark - Orientation
 - (BOOL)shouldAutorotate
 {
     return NO;
 }
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+//{
+//    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+//
+//    [CATransaction begin];
+//    [CATransaction setDisableActions:YES];
+//    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+//        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+//        if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
+//            self.previewView.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
+//        }
+//    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+//        [CATransaction setDisableActions:NO];
+//        [CATransaction commit];
+//    }];
+//}
 
 #pragma mark - Configure session
 - (void)configureSession
@@ -227,16 +175,9 @@ static void *SessionRunningContext = &SessionRunningContext;
     [self.session beginConfiguration];
     
     self.session.sessionPreset = AVCaptureSessionPresetPhoto;
-    NSArray *cameraDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-    [cameraDevices enumerateObjectsUsingBlock:^(AVCaptureDevice *  _Nonnull device, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (device.position == AVCaptureDevicePositionBack) {
-            self.backCameraDevice = device;
-        } else if (device.position == AVCaptureDevicePositionFront) {
-            self.frontCameraDevice = device;
-        }
-    }];
+    AVCaptureDevice *cameraDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
-    self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.backCameraDevice error:&error];
+    self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:cameraDevice error:&error];
     if (error || !self.videoDeviceInput) {
         KLLog(@"AVCaptureDeviceInput init error: %@", error.localizedDescription);
         [self.session commitConfiguration];
@@ -279,14 +220,28 @@ static void *SessionRunningContext = &SessionRunningContext;
     [self.session commitConfiguration];
 }
 
+- (void)startSessionRunning
+{
+    dispatch_async(self.sessionQueue, ^{
+        [self.session startRunning];
+    });
+}
+
+- (void)stopSessionRunning
+{
+    dispatch_async(self.sessionQueue, ^{
+        [self.session stopRunning];
+    });
+}
+
 #pragma mark - Obserers
 - (void)addObservers
 {
     [self.session addObserver:self forKeyPath:@"running" options:NSKeyValueObservingOptionNew context:SessionRunningContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionRuntimeError:) name:AVCaptureSessionRuntimeErrorNotification object:self.session];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionWasInterrupted:) name:UIApplicationWillResignActiveNotification object:self.session];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionInterruptionEnded:) name:UIApplicationDidBecomeActiveNotification object:self.session];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionWasInterrupted:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionInterruptionEnded:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.videoDeviceInput.device];
 }
 
@@ -327,12 +282,14 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)sessionWasInterrupted:(NSNotification *)notification
 {
-    
+    [self.previewView addBlurBackground];
+    [self startSessionRunning];
 }
 
 - (void)sessionInterruptionEnded:(NSNotification *)notification
 {
-    
+    [self.previewView removeBlurBackground];
+    [self stopSessionRunning];
 }
 
 #pragma mark - Delegates
@@ -350,31 +307,101 @@ static void *SessionRunningContext = &SessionRunningContext;
 - (void)switchFlashMode:(UIBarButtonItem *)barButton
 {
     barButton.on = !barButton.isOn;
+    BOOL isFlashOn = barButton.isOn;
+    
+    dispatch_async(self.sessionQueue, ^{
+        AVCaptureDevice *device = self.videoDeviceInput.device;
+        NSError *error = nil;
+        if ([device lockForConfiguration:&error] ) {
+            if (isFlashOn && [device isFlashModeSupported:AVCaptureFlashModeOn] ) {
+                device.flashMode = AVCaptureFlashModeOn;
+            } else {
+                device.flashMode = AVCaptureFlashModeOff;
+            }
+            [device unlockForConfiguration];
+        } else {
+            NSLog(@"Could not lock device for configuration: %@", error);
+        }
+    });
 }
 
 - (void)switchCamera:(id)sender
 {
+    self.takePhotoButton.enabled = NO;
+    [self.previewView addBlurBackground];
+    [UIView animateWithDuration:0.4 animations:^{
+        [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.previewView cache:YES];
+    }];
     
+    dispatch_async(self.sessionQueue, ^{
+        AVCaptureDevice *currentCameraDevice = self.videoDeviceInput.device;
+        AVCaptureDevicePosition preferredPosition;
+        switch (currentCameraDevice.position) {
+            case AVCaptureDevicePositionUnspecified:
+            case AVCaptureDevicePositionFront:
+                preferredPosition = AVCaptureDevicePositionBack;
+                break;
+            case AVCaptureDevicePositionBack:
+                preferredPosition = AVCaptureDevicePositionFront;
+                break;
+        }
+        
+        NSArray<AVCaptureDevice *> *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+        NSUInteger index = [devices indexOfObjectPassingTest:^BOOL(AVCaptureDevice * _Nonnull device, NSUInteger idx, BOOL * _Nonnull stop) {
+            return (device.position == preferredPosition);
+        }];
+        
+        AVCaptureDevice *newCameraDevice = nil;
+        if (index != NSNotFound) {
+            newCameraDevice = devices[index];
+        }
+        
+        if (newCameraDevice) {
+            AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:newCameraDevice error:NULL];
+            [self.session beginConfiguration];
+            
+            [self.session removeInput:self.videoDeviceInput];
+            if ([self.session canAddInput:videoDeviceInput]) {
+                self.videoDeviceInput = videoDeviceInput;
+                [self.session addInput:videoDeviceInput];
+                [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:currentCameraDevice];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:newCameraDevice];
+            } else {
+                [self.session addInput:self.videoDeviceInput];
+            }
+            
+            [self.session commitConfiguration];
+        }
+        
+        KLDispatchMainAsync(^{
+            self.takePhotoButton.enabled = YES;
+            [self.previewView removeBlurBackground];
+        });
+    });
 }
 
 - (void)switchFaceDetection:(UIBarButtonItem *)barButton
 {
     barButton.on = !barButton.isOn;
+    self.faceDetectionOn = barButton.on;
+    
+    
 }
 
 - (void)takePhoto:(id)sender
 {
+    [KLSoundPlayer playCameraShutterSound];
     
 }
 
 - (void)switchToAlbum:(id)sender
 {
-    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)closeCamera:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

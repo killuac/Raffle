@@ -13,6 +13,7 @@
 @interface KLCameraPreviewView ()
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
+@property (nonatomic, strong) UIVisualEffectView *blurMaskView;
 
 @end
 
@@ -40,13 +41,14 @@
     self.previewLayer.session = session;
 }
 
+#pragma mark - Life cycle
 + (instancetype)newViewWithSession
 {
     KLCameraPreviewView *view = [self newAutoLayoutView];
     [KLCameraViewController checkAuthorization:^(BOOL granted) {
         if (granted) {
             view.session = [AVCaptureSession new];
-            view.sessionQueue = dispatch_queue_create("SerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+            view.sessionQueue = dispatch_queue_create("PreviewSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
             
             dispatch_async(view.sessionQueue, ^{
                 [view configureSession];
@@ -54,7 +56,6 @@
             
             KLDispatchMainAsync(^{
                 [view addObservers];
-                [view startRunning];
             });
         }
     }];
@@ -69,9 +70,12 @@
     return self;
 }
 
+#pragma mark - Observers
 - (void)addObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionWasInterrupted:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionInterruptionEnded:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)dealloc
@@ -87,6 +91,17 @@
     }
 }
 
+- (void)sessionWasInterrupted:(NSNotification *)notification
+{
+    [self stopRunning:nil];
+}
+
+- (void)sessionInterruptionEnded:(NSNotification *)notification
+{
+    [self startRunning:nil];
+}
+
+#pragma mark - configure session
 - (void)configureSession
 {
     NSError *error = nil;
@@ -106,7 +121,7 @@
     
     if ([self.session canAddInput:videoDeviceInput]) {
         [self.session addInput:videoDeviceInput];
-        dispatch_async(dispatch_get_main_queue(), ^{
+        KLDispatchMainAsync(^{
             UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
             AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
             if (statusBarOrientation != UIInterfaceOrientationUnknown) {
@@ -123,25 +138,27 @@
     [self.session commitConfiguration];
 }
 
-- (void)startRunning
+- (void)startRunning:(KLVoidBlockType)completion
 {
-    if (!self.session) return;
+    if (!self.sessionQueue) return;
     dispatch_async(self.sessionQueue, ^{
         [self.session startRunning];
         KLDispatchMainAsync(^{
-            self.transform = CGAffineTransformMakeScale(CGFLOAT_MIN, CGFLOAT_MIN);
-            [UIView animateWithDefaultDuration:^{
-                self.transform = CGAffineTransformIdentity;
-            }];
+            [self removeBlurBackground];
+            if (completion) completion();
         });
     });
 }
 
-- (void)stopRunning
+- (void)stopRunning:(KLVoidBlockType)completion
 {
-    if (!self.session) return;
+    if (!self.sessionQueue) return;
     dispatch_async(self.sessionQueue, ^{
         [self.session stopRunning];
+        KLDispatchMainAsync(^{
+            [self addBlurBackground];
+            if (completion) completion();
+        });
     });
 }
 

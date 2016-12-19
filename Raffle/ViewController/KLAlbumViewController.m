@@ -76,6 +76,20 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     [self reloadData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.cameraPreviewView startRunning:^{
+        self.cameraPreviewView.userInteractionEnabled = YES;
+    }];
+}
+
+//- (void)viewWillDisappear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [self.cameraPreviewView stopRunning:nil];
+//}
+
 - (void)prepareForUI
 {
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
@@ -90,12 +104,20 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CameraPreviewCellIdentifier];
     
+    if (!self.isShowCameraPreview) return;
+    
     self.cameraPreviewView = [KLCameraPreviewView newViewWithSession];
+    self.cameraPreviewView.userInteractionEnabled = NO;
     [self.cameraPreviewView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showCameraViewController)]];
     self.cameraButton = [UIButton buttonWithImageName:@"icon_camera_block"];
     [self.cameraButton addTarget:self action:@selector(showCameraViewController)];
     [self.cameraPreviewView addSubview:self.cameraButton];
     [self.cameraButton constraintsCenterInSuperview];
+    
+    self.cameraPreviewView.transform = CGAffineTransformMakeScale(CGFLOAT_MIN, CGFLOAT_MIN);
+    [UIView animateWithDefaultDuration:^{
+        self.cameraPreviewView.transform = CGAffineTransformIdentity;
+    }];
 }
 
 #pragma mark - Observer
@@ -104,7 +126,7 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     self.KVOController = [FBKVOController controllerWithObserver:self];
     [self.KVOController observe:self.assetCollection keyPath:NSStringFromSelector(@selector(assets)) options:0 action:@selector(reloadData)];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionDidStartRunning:) name:AVCaptureSessionDidStartRunningNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionDidStartRunning:) name:AVCaptureSessionDidStartRunningNotification object:self.cameraPreviewView.session];
 }
 
 - (void)dealloc
@@ -163,9 +185,11 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 {
     [KLCameraViewController checkAuthorization:^(BOOL granted) {
         if (granted) {
-            KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:self.albumImage];
-            cameraVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-            [self presentViewController:cameraVC animated:YES completion:nil];
+            [self.cameraPreviewView stopRunning:^{
+                KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:self.albumImage];
+                cameraVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+                [self presentViewController:cameraVC animated:YES completion:nil];
+            }];
         } else {
             [KLCameraViewController showAlert];
         }
@@ -180,27 +204,38 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
         UIImageView *imageView = [[UIImageView alloc] initWithImage:cell.imageView.image];
         imageView.size = CGSizeMake(40, 40);
         imageView.layer.masksToBounds = YES;
-        imageView.layer.cornerRadius = imageView.size.width / 2;
-        UIGraphicsBeginImageContextWithOptions(imageView.size, 1.0,  0.0);
+        imageView.layer.cornerRadius = 4;
+        imageView.layer.borderWidth = 2;
+        imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        UIGraphicsBeginImageContextWithOptions(imageView.size, 0.0,  0.0);
         [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }
-    return image;
+    return [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 #pragma mark - UICollectionViewDelegate
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (self.isShowCameraPreview && indexPath.item == 0) {
-        [self.cameraPreviewView startRunning];
-    }
-}
+//- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (self.isShowCameraPreview && indexPath.item == 0) {
+//        [self.cameraPreviewView startRunning];
+//    }
+//}
+//
+//- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (self.isShowCameraPreview && indexPath.item == 0) {
+//        [self.cameraPreviewView stopRunning];
+//    }
+//}
 
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isShowCameraPreview && indexPath.item == 0) {
-        [self.cameraPreviewView stopRunning];
+        return NO;
+    } else {
+        return YES;
     }
 }
 

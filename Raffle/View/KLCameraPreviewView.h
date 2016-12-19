@@ -17,7 +17,7 @@
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *previewLayer;
 
-- (void)startRunning;
-- (void)stopRunning;
+- (void)startRunning:(KLVoidBlockType)completion;
+- (void)stopRunning:(KLVoidBlockType)completion;
 
 @end
