@@ -381,7 +381,7 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
     UIVisualEffectView *background = [UIVisualEffectView newAutoLayoutView];
     background.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     background.tag = 100;
-    background.userInteractionEnabled = YES;
+    background.userInteractionEnabled = NO;
     [self addSubview:background];
 
     [background setHidden:NO animated:YES];

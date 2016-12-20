@@ -130,12 +130,12 @@ static CGFloat ImageTitleEdgeVInset = 8.0;
     }
     
     CGFloat hInset = ImageTitleEdgeHInset, spacing;
-    CGFloat imageWidth = self.imageView.image.width;
+    CGFloat imageWidth = self.currentImage.width;
     CGFloat titleWidth = self.titleLabelSize.width;
     
     if (self.isVerticalLayout) {
         [self contentSizeToFit];
-        spacing = MAX(self.imageView.image.height, self.titleLabelSize.height) / 2 + ImageTitleEdgeVInset;
+        spacing = MAX(self.currentImage.height, self.titleLabelSize.height) / 2 + ImageTitleEdgeVInset;
     } else {
         spacing = hInset * 2;
         self.size = self.contentSize = CGSizeMake(self.width+spacing, self.height);
@@ -181,20 +181,20 @@ static CGFloat ImageTitleEdgeVInset = 8.0;
 
 - (CGSize)titleLabelSize
 {
-    return [self.titleLabel.text sizeWithFont:self.titleLabel.font];
+    return [self.currentTitle sizeWithFont:self.titleLabel.font];
 }
 
 // Only for vertical layout
 - (void)contentSizeToFit
 {
-    CGFloat width = MAX(self.imageView.image.width, self.titleLabelSize.width);
-    CGFloat height = self.imageView.image.height + self.titleLabelSize.height + ImageTitleEdgeVInset * 2;
+    CGFloat width = MAX(self.currentImage.width, self.titleLabelSize.width);
+    CGFloat height = self.currentImage.height + self.titleLabelSize.height + ImageTitleEdgeVInset * 2;
     self.size = self.contentSize = CGSizeMake(width, height);
 }
 
 - (CGSize)swizzle_intrinsicContentSize
 {
-    if (self.imageView.image && self.titleLabel.text.length) {
+    if (self.currentImage && self.currentTitle.length) {
         return self.contentSize;
     } else {
         return [self swizzle_intrinsicContentSize];

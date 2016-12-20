@@ -252,6 +252,7 @@ static CGFloat LineSpacing;
     self.deleteMode = NO;
     [self.drawBoxDC clearSelection];
     [self reloadData];
+    self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.itemCount > 0;
 }
 
 - (void)setDeleteMode:(BOOL)deleteMode

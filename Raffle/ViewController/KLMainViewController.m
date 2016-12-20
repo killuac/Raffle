@@ -18,7 +18,7 @@
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
-@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLImagePickerControllerDelegate>
+@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
@@ -85,6 +85,7 @@
 {
     self.pageControl.hidden = (self.dataController.pageCount == 1);
     self.pageControl.numberOfPages = self.dataController.pageCount;
+    self.pageControl.currentPage = self.dataController.currentPageIndex;
     self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
     
     UIViewController *viewController = [self viewControllerAtPageIndex:self.dataController.currentPageIndex];
@@ -109,6 +110,7 @@
     _pageViewController.delegate = self;
     _pageViewController.dataSource = self;
     _pageViewController.view.backgroundColor = [UIColor backgroundColor];
+    [self.pageViewController.view addBlurBackground];
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
@@ -126,14 +128,13 @@
 
 - (void)addSubviews
 {
-    [self.view addBlurBackground];
-    
 //  Page control
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
         _pageControl.enabled = NO;
         _pageControl.numberOfPages = self.dataController.pageCount;
-        _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+        _pageControl.pageIndicatorTintColor = [UIColor whiteColor];
+        _pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
         _pageControl;
     })];
     
@@ -220,7 +221,7 @@
 {
     NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
     NSString *title = assetCount > 0 ? @(assetCount).stringValue : nil;
-    if (![title isEqualToString:self.addPhotoButton.titleLabel.text]) {
+    if (![title isEqualToString:self.addPhotoButton.currentTitle]) {
         [self.addPhotoButton setNormalTitle:title];
         self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
     }
@@ -257,6 +258,7 @@
     if (completed) {
         self.dataController.currentPageIndex = self.drawBoxViewController.pageIndex;
         self.pageControl.currentPage = self.dataController.currentPageIndex;
+        [self updateAddPhotoButtonTitle];
     }
 }
 
@@ -406,7 +408,7 @@
     
     KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:nil];
     cameraVC.transition = [KLCircleTransition transition];
-//    cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
+    cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     [self presentViewController:cameraVC animated:YES completion:nil];
 }
 

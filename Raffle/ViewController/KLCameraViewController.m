@@ -8,7 +8,7 @@
 
 #import "KLCameraViewController.h"
 #import "KLCameraPreviewView.h"
-#import "KLImagePickerController.h"
+#import "KLMainViewController.h"
 #import "KLCircleTransition.h"
 @import AVFoundation;
 
@@ -17,10 +17,12 @@
 @property (nonatomic, strong) UIImage *albumImage;
 @property (nonatomic, strong) KLCameraPreviewView *previewView;
 @property (nonatomic, strong) UIBarButtonItem *takePhotoButton;
+@property (nonatomic, strong) UIBarButtonItem *albumButton;
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) AVCaptureDeviceInput *videoDeviceInput;
+@property (nonatomic, strong) CIDetector *detector;
 
 @property (nonatomic, assign, getter=isSessionRunning) BOOL sessionRunning;
 @property (nonatomic, assign, getter=isFaceDetectionOn) BOOL faceDetectionOn;
@@ -76,6 +78,7 @@ static void *SessionRunningContext = &SessionRunningContext;
         self.albumImage = image;
         self.session = [AVCaptureSession new];
         self.sessionQueue = dispatch_queue_create("CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+        self.detector = [CIDetector detectorOfType:CIDetectorTypeFace context:<#(nullable CIContext *)#> options:<#(nullable NSDictionary<NSString *,id> *)#>];
     }
     return self;
 }
@@ -101,6 +104,8 @@ static void *SessionRunningContext = &SessionRunningContext;
     [super viewWillAppear:animated];
     [self addObservers];
     [self startSessionRunning];
+    
+    self.albumButton.enabled = ![self.presentingViewController isKindOfClass:[KLMainViewController class]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -131,6 +136,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     UIBarButtonItem *takePhotoItem = [UIBarButtonItem barButtonItemWithImageName:@"button_camera" target:self action:@selector(takePhoto:)];
     UIImage *image = self.albumImage ?: [UIImage imageNamed:@"button_album"];
     UIBarButtonItem *albumButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(switchToAlbum:)];
+    self.albumButton = albumButtonItem;
     self.takePhotoButton = takePhotoItem;
     items = @[closeButtonItem, takePhotoItem, albumButtonItem];
     UIToolbar *bottomToolbar = [UIToolbar toolbarWithItems:items];
@@ -405,19 +411,20 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)switchToAlbum:(id)sender
 {
-    if ([self.presentingViewController isKindOfClass:[KLAlbumViewController class]]) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    } else {
-        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        imagePicker.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//        imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
-        [self presentViewController:imagePicker animated:YES completion:nil];
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)closeCamera:(id)sender
 {
-    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    if ([self.presentingViewController isKindOfClass:[KLMainViewController class]]) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(cameraViewControllerDidClose:)]) {
+        [self.delegate cameraViewControllerDidClose:self];
+    }
 }
 
 @end

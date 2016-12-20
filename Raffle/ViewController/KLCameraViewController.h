@@ -7,8 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KLPhotoLibrary.h"
 
-@class KLBaseTransition;
+@class KLCameraViewController, KLBaseTransition;
+
+@protocol KLCameraViewControllerDelegate <NSObject>
+
+@optional
+- (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets;
+- (void)cameraViewControllerDidClose:(KLCameraViewController *)cameraVC;
+
+@end
 
 @interface KLCameraViewController : UIViewController
 
@@ -17,6 +26,7 @@
 
 + (instancetype)cameraViewControllerWithAlbumImage:(UIImage *)image;
 
+@property (nonatomic, weak) id <KLCameraViewControllerDelegate> delegate;
 @property (nonatomic, strong) KLBaseTransition *transition;
 
 @end

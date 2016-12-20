@@ -88,11 +88,12 @@
     NSUInteger oldCount = self.remainingAssets.count;
     [self willChangeValueForRemainingAssetCount];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        id localDrawBox = [self.drawBox MR_inContext:localContext];
         [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
             if (![self.drawBox.assets containsObject:asset]) {
                 KLPhotoModel *photoModel = [KLPhotoModel MR_createEntityInContext:localContext];
                 photoModel.assetLocalIdentifier = asset.localIdentifier;
-                photoModel.drawBox = [self.drawBox MR_inContext:localContext];
+                photoModel.drawBox = localDrawBox;
                 
                 [self.allAssets addObject:asset];
                 [self.remainingAssets addObject:asset];

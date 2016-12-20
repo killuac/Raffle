@@ -209,6 +209,7 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
             [self.cameraPreviewView stopRunning:^{
                 KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:self.albumImage];
                 cameraVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+                cameraVC.delegate = [(id)self.parentViewController delegate];
                 [self presentViewController:cameraVC animated:YES completion:nil];
             }];
         } else {

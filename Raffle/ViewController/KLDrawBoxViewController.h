@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "KLImagePickerController.h"
+#import "KLCameraViewController.h"
 
 @class KLMainDataController, KLDrawBoxDataController;
 
-@interface KLDrawBoxViewController : UIViewController <KLImagePickerControllerDelegate>
+@interface KLDrawBoxViewController : UIViewController <KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex;
 
