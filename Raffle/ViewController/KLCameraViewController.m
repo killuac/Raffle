@@ -8,6 +8,8 @@
 
 #import "KLCameraViewController.h"
 #import "KLCameraPreviewView.h"
+#import "KLImagePickerController.h"
+#import "KLCircleTransition.h"
 @import AVFoundation;
 
 @interface KLCameraViewController () <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate>
@@ -76,6 +78,12 @@ static void *SessionRunningContext = &SessionRunningContext;
         self.sessionQueue = dispatch_queue_create("CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
+}
+
+- (void)setTransition:(KLBaseTransition *)transition
+{
+    _transition = transition;
+    self.transitioningDelegate = transition;
 }
 
 - (void)viewDidLoad
@@ -397,7 +405,14 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)switchToAlbum:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([self.presentingViewController isKindOfClass:[KLAlbumViewController class]]) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        imagePicker.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+//        imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }
 }
 
 - (void)closeCamera:(id)sender

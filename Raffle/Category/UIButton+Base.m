@@ -19,6 +19,9 @@
 
 @implementation UIButton (Base)
 
+static CGFloat ImageTitleEdgeHInset = 5.0;
+static CGFloat ImageTitleEdgeVInset = 8.0;
+
 + (void)load
 {
     KLClassSwizzleMethod([self class], @selector(intrinsicContentSize), @selector(swizzle_intrinsicContentSize), NO);
@@ -50,7 +53,6 @@
         [button setImage:[UIImage imageNamed:disabledImageName] forState:UIControlStateDisabled];
     }
     
-    [button sizeToFit];
     [button setLayout:layout];
     
     button.KVOController = [FBKVOController controllerWithObserver:button];
@@ -117,40 +119,47 @@
 - (void)setLayout:(KLButtonLayout)layout
 {
     objc_setAssociatedObject(self, @selector(layout), @(layout), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (KLButtonLayoutHorizontalNone == layout || !self.imageView || !self.titleLabel) return;
     
-    CGFloat hInset = 5.0, vInset = 8.0, spacing;
+    [self sizeToFit];   // For call setLayout multiple times
+    
+    if (layout == KLButtonLayoutNone) {
+        self.imageEdgeInsets = UIEdgeInsetsZero;
+        self.titleEdgeInsets = UIEdgeInsetsZero;
+        self.contentEdgeInsets = UIEdgeInsetsZero;
+        return;
+    }
+    
+    CGFloat hInset = ImageTitleEdgeHInset, spacing;
+    CGFloat imageWidth = self.imageView.image.width;
+    CGFloat titleWidth = self.titleLabelSize.width;
+    
     if (self.isVerticalLayout) {
         [self contentSizeToFit];
-        self.size = self.contentSize;
-        spacing = self.height / 2 - vInset;
+        spacing = MAX(self.imageView.image.height, self.titleLabelSize.height) / 2 + ImageTitleEdgeVInset;
     } else {
         spacing = hInset * 2;
         self.size = self.contentSize = CGSizeMake(self.width+spacing, self.height);
     }
     
-    CGFloat imageWidth = self.imageView.image.width;
-    CGFloat titleWidth = self.titleLabelSize.width;
-    
     switch (layout) {
-        case KLButtonLayoutHorizontalImageLeft:
+        case KLButtonLayoutImageLeft:
             self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, spacing);
             self.titleEdgeInsets = UIEdgeInsetsMake(0, spacing, 0, 0);
             break;
             
-        case KLButtonLayoutHorizontalImageRight:
+        case KLButtonLayoutImageRight:
             self.imageEdgeInsets = UIEdgeInsetsMake(0, titleWidth+hInset, 0, -(titleWidth+hInset));
             self.titleEdgeInsets = UIEdgeInsetsMake(0, -(imageWidth+hInset), 0, imageWidth+hInset);
             break;
             
-        case KLButtonLayoutVerticalImageUp:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, titleWidth/2, spacing, -titleWidth/2);
+        case KLButtonLayoutImageUp:
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, spacing, -titleWidth);
             self.titleEdgeInsets = UIEdgeInsetsMake(spacing, -imageWidth, -spacing, 0);
             self.contentEdgeInsets = UIEdgeInsetsMake(0, -self.width, 0, -self.width);  // For solve iphone5/5s issue
             break;
             
-        case KLButtonLayoutVerticalImageDown:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, titleWidth/2, -spacing, -titleWidth/2);
+        case KLButtonLayoutImageDown:
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, -spacing, -titleWidth);
             self.titleEdgeInsets = UIEdgeInsetsMake(-spacing, -imageWidth, spacing, 0);
             self.contentEdgeInsets = UIEdgeInsetsMake(0, -self.width, 0, -self.width);
             break;
@@ -167,7 +176,7 @@
 
 - (BOOL)isVerticalLayout
 {
-    return (KLButtonLayoutVerticalImageUp == self.layout || KLButtonLayoutVerticalImageDown == self.layout);
+    return (KLButtonLayoutImageUp == self.layout || KLButtonLayoutImageDown == self.layout);
 }
 
 - (CGSize)titleLabelSize
@@ -179,8 +188,8 @@
 - (void)contentSizeToFit
 {
     CGFloat width = MAX(self.imageView.image.width, self.titleLabelSize.width);
-    CGFloat height = self.imageView.image.height + self.titleLabelSize.height + 10.0;
-    self.contentSize = CGSizeMake(width, height);
+    CGFloat height = self.imageView.image.height + self.titleLabelSize.height + ImageTitleEdgeVInset * 2;
+    self.size = self.contentSize = CGSizeMake(width, height);
 }
 
 - (CGSize)swizzle_intrinsicContentSize
@@ -262,7 +271,7 @@
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName
 {
-    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
+    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutImageLeft: KLButtonLayoutNone;
     return [self buttonWithTitle:title imageName:imageName layout:layout];
 }
 
@@ -273,7 +282,7 @@
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selImageName
 {
-    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
+    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutImageLeft: KLButtonLayoutNone;
     return [self buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:selImageName disabledImageName:nil layout:layout];
 }
 
@@ -284,7 +293,7 @@
 
 + (instancetype)buttonWithTitle:(NSString *)title imageName:(NSString *)imageName disabledImageName:(NSString *)disabledImageName
 {
-    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutHorizontalImageLeft: KLButtonLayoutHorizontalNone;
+    KLButtonLayout layout = (title.length && imageName.length) ? KLButtonLayoutImageLeft: KLButtonLayoutNone;
     return [self buttonWithType:UIButtonTypeSystem title:title imageName:imageName selectedImageName:nil disabledImageName:disabledImageName layout:layout];
 }
 
@@ -332,7 +341,7 @@
 #pragma mark - Default, primary, destructive buttons
 + (instancetype)customButtonWithTitle:(NSString *)title
 {
-    return [self buttonWithType:UIButtonTypeCustom title:title imageName:nil selectedImageName:nil disabledImageName:nil layout:KLButtonLayoutHorizontalNone];
+    return [self buttonWithType:UIButtonTypeCustom title:title imageName:nil selectedImageName:nil disabledImageName:nil layout:KLButtonLayoutNone];
 }
 
 + (instancetype)defaultButtonWithTitle:(NSString *)title

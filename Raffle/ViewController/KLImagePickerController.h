@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "KLPhotoLibrary.h"
+#import "KLAlbumViewController.h"
 
 @class KLImagePickerController, KLBaseTransition;
 

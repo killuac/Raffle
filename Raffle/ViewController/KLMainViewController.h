@@ -9,7 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "KLMainDataController.h"
 
+@class KLDrawBoxViewController;
+
 @interface KLMainViewController : UIViewController <KLDataControllerDelegate>
+
+@property (nonatomic, readonly) KLMainDataController *dataController;
+@property (nonatomic, readonly) KLDrawBoxViewController *drawBoxViewController;
 
 @end
 

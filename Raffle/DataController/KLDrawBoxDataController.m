@@ -69,8 +69,10 @@
 
 - (void)reloadAllAssets
 {
+    [self willChangeValueForRemainingAssetCount];
     [self.remainingAssets removeAllObjects];
     [self.remainingAssets addObjectsFromArray:self.allAssets];
+    [self didChangeValueForRemainingAssetCount];
 }
 
 - (PHAsset *)randomAnAsset
@@ -84,6 +86,7 @@
 - (void)addPhotos:(NSArray<PHAsset *> *)assets completion:(KLVoidBlockType)complition
 {
     NSUInteger oldCount = self.remainingAssets.count;
+    [self willChangeValueForRemainingAssetCount];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
         [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
             if (![self.drawBox.assets containsObject:asset]) {
@@ -96,6 +99,8 @@
             }
         }];
     } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+        [self didChangeValueForRemainingAssetCount];
+        
         NSMutableArray *indexPaths = [NSMutableArray array];
         for (NSUInteger i = oldCount; i < self.remainingAssets.count; i++) {
             [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
@@ -116,6 +121,7 @@
         }
     }];
     
+    [self willChangeValueForRemainingAssetCount];
     [self.allAssets removeObjectsInArray:self.selectedAssets];
     [self.remainingAssets removeObjectsInArray:self.selectedAssets];
     
@@ -132,7 +138,22 @@
     } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
         [self clearSelection];
         [self didChangeAtIndexPaths:indexPaths forChangeType:KLDataChangeTypeDelete];
+        [self didChangeValueForRemainingAssetCount];
     }];
+}
+
+- (void)willChangeValueForRemainingAssetCount
+{
+    KLDispatchMainAsync(^{
+        [self willChangeValueForKey:NSStringFromSelector(@selector(remainingAssetCount))];
+    });
+}
+
+- (void)didChangeValueForRemainingAssetCount
+{
+    KLDispatchMainAsync(^{
+        [self didChangeValueForKey:NSStringFromSelector(@selector(remainingAssetCount))];
+    });
 }
 
 #pragma mark - Select assets

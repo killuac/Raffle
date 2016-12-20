@@ -20,9 +20,6 @@
 
 @interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLImagePickerControllerDelegate>
 
-@property (nonatomic, strong) KLMainDataController *dataController;
-@property (nonatomic, readonly) KLDrawBoxViewController *drawBoxViewController;
-
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
 
@@ -99,7 +96,9 @@
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
     }
     
-    [self becomeFirstResponder];
+    [self becomeFirstResponder];    // For motion detection
+    [self addObservers];
+    [self updateAddPhotoButtonTitle];
 }
 
 - (void)addPageViewController
@@ -127,6 +126,8 @@
 
 - (void)addSubviews
 {
+    [self.view addBlurBackground];
+    
 //  Page control
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
@@ -138,10 +139,9 @@
     
 //  Add photo button
     [self.view addSubview:({
-        _addPhotoButton = [KLBubbleButton buttonWithTitle:@"2" imageName:@"icon_main_add"];
+        _addPhotoButton = [KLBubbleButton buttonWithTitle:nil imageName:@"icon_main_add"];
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
         _addPhotoButton.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
-        _addPhotoButton.layout = KLButtonLayoutVerticalImageUp;
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
@@ -186,6 +186,44 @@
     [self.reloadButton constraintsEqualWidthAndHeight];
     [self.switchModeButton constraintsEqualWidthAndHeight];
     [self.menuButton constraintsEqualWidthAndHeight];
+}
+
+#pragma mark - Observers
+- (void)addObservers
+{
+    [self removeObservers];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTouchStart:) name:KLPhotoViewControllerDidTouchStart object:nil];
+    
+    if (!self.dataController.currentDrawBoxDC) return;
+    self.KVOController = [FBKVOController controllerWithObserver:self];
+    [self.KVOController observe:self.dataController.currentDrawBoxDC keyPath:NSStringFromSelector(@selector(remainingAssetCount)) options:0 action:@selector(updateAddPhotoButtonTitle)];
+}
+
+- (void)removeObservers
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)dealloc
+{
+    [self removeObservers];
+}
+
+- (void)didTouchStart:(NSNotification *)notification
+{
+    KLDrawBoxDataController *drawboxDC = notification.object;
+    self.dataController.currentPageIndex = drawboxDC.pageIndex;
+    [self reloadData];
+}
+
+- (void)updateAddPhotoButtonTitle
+{
+    NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
+    NSString *title = assetCount > 0 ? @(assetCount).stringValue : nil;
+    if (![title isEqualToString:self.addPhotoButton.titleLabel.text]) {
+        [self.addPhotoButton setNormalTitle:title];
+        self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
+    }
 }
 
 #pragma mark - Page view controller datasource
@@ -236,7 +274,9 @@
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
+    NSUInteger pageCount = self.dataController.pageCount;
     [self.dataController addDrawBoxWithAssets:assets];
+    if (pageCount == 0) [self addObservers];
 }
 
 #pragma mark - Motion
@@ -320,8 +360,8 @@
 {
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
         imagePicker.transition = [KLCircleTransition transition];
+        imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }];
 }
@@ -364,7 +404,10 @@
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
-    // TODO: Show camera view contoller
+    KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:nil];
+    cameraVC.transition = [KLCircleTransition transition];
+//    cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
+    [self presentViewController:cameraVC animated:YES completion:nil];
 }
 
 @end

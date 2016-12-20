@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class KLBaseTransition;
+
 @interface KLCameraViewController : UIViewController
 
 + (void)checkAuthorization:(KLBOOLBlockType)completion;
 + (void)showAlert;
 
 + (instancetype)cameraViewControllerWithAlbumImage:(UIImage *)image;
+
+@property (nonatomic, strong) KLBaseTransition *transition;
 
 @end

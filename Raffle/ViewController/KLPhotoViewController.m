@@ -13,6 +13,8 @@
 #import "KLDrawBoxDataController.h"
 #import "KLImagePickerController.h"
 
+NSNotificationName const KLPhotoViewControllerDidTouchStart = @"KLPhotoViewControllerDidTouchStart";
+
 @interface KLPhotoViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
@@ -155,13 +157,13 @@ static CGFloat LineSpacing;
 
 - (void)controllerDidChangeContent:(KLDataController *)controller
 {
-    [self checkRightBarButtonEnablement];
+    [self updateUI];
     [self reloadData];
 }
 
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
-    [self checkRightBarButtonEnablement];
+    [self updateUI];
     
     switch (type) {
         case KLDataChangeTypeInsert:
@@ -177,9 +179,8 @@ static CGFloat LineSpacing;
     }
 }
 
-- (void)checkRightBarButtonEnablement
+- (void)updateUI
 {
-    self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.itemCount > 0;
     if (self.deleteMode && self.drawBoxDC.itemCount == 0) {
         [self cancelMultiPhotoSelection:nil];
         KLDispatchMainAfter(0.5, ^{
@@ -227,6 +228,7 @@ static CGFloat LineSpacing;
 
 - (void)startDrawFromPhotoVC
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:KLPhotoViewControllerDidTouchStart object:self.drawBoxDC];
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 

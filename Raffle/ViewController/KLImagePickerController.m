@@ -10,7 +10,6 @@
 #import "KLSegmentControl.h"
 #import "KLScaleTransition.h"
 #import "KLCircleTransition.h"
-#import "KLAlbumViewController.h"
 
 @interface KLImagePickerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate, KLSegmentControlDelegate>
 

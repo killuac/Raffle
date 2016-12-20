@@ -16,11 +16,11 @@ typedef NS_ENUM(NSUInteger, KLButonStyle) {
 };
 
 typedef NS_ENUM(NSUInteger, KLButtonLayout) {
-    KLButtonLayoutHorizontalNone,
-    KLButtonLayoutHorizontalImageLeft,      // Default for image and title
-    KLButtonLayoutHorizontalImageRight,
-    KLButtonLayoutVerticalImageUp,
-    KLButtonLayoutVerticalImageDown
+    KLButtonLayoutNone,
+    KLButtonLayoutImageLeft,    // Default for image and title
+    KLButtonLayoutImageRight,
+    KLButtonLayoutImageUp,
+    KLButtonLayoutImageDown
 };
 
 @interface UIButton (Base)
