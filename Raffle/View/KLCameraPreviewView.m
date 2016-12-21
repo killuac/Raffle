@@ -72,9 +72,14 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
-- (void)dealloc
+- (void)removeObservers
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)dealloc
+{
+    [self removeObservers];
 }
 
 - (void)orientationDidChange:(NSNotification *)notification
@@ -94,12 +99,17 @@
     
     self.session.sessionPreset = AVCaptureSessionPresetLow;
     AVCaptureDevice *cameraDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (!cameraDevice) {
+        dispatch_suspend(self.sessionQueue);
+        [self removeObservers];
+        [self.session commitConfiguration];
+        return;
+    }
     
     AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:cameraDevice error:&error];
     if (error || !videoDeviceInput) {
         KLLog(@"AVCaptureDeviceInput init error: %@", error.localizedDescription);
         [self.session commitConfiguration];
-        dispatch_suspend(self.sessionQueue);
         return;
     }
     

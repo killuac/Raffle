@@ -65,7 +65,7 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 
 - (BOOL)isShowCameraPreview
 {
-    return self.pageIndex == 0;
+    return (self.pageIndex == 0 && [AVCaptureDevice devices].count > 0);
 }
 
 - (void)viewDidLoad
@@ -198,7 +198,7 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 
 - (PHAsset *)assetAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSUInteger index = (self.pageIndex == 0) ? indexPath.item - 1 : indexPath.item;
+    NSUInteger index = self.isShowCameraPreview ? indexPath.item - 1 : indexPath.item;
     return self.assetCollection.assets[index];
 }
 

@@ -26,6 +26,7 @@
 		4176C4401DC31C660054FF13 /* KLAddButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C43F1DC31C660054FF13 /* KLAddButtonCell.m */; };
 		4176C4471DC341B30054FF13 /* KLInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C4461DC341B30054FF13 /* KLInnerShadowView.m */; };
 		41E163021E01395200A53B72 /* KLCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163011E01395200A53B72 /* KLCameraPreviewView.m */; };
+		41E163241E0A1EEB00A53B72 /* CIDetector+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */; };
 		41FE17171D5B10A200CABFCA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE17161D5B10A200CABFCA /* main.m */; };
 		41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE17191D5B10A200CABFCA /* AppDelegate.m */; };
 		41FE17201D5B10A200CABFCA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41FE171E1D5B10A200CABFCA /* Main.storyboard */; };
@@ -145,6 +146,8 @@
 		4176C4461DC341B30054FF13 /* KLInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLInnerShadowView.m; sourceTree = "<group>"; };
 		41E163001E01395200A53B72 /* KLCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLCameraPreviewView.h; sourceTree = "<group>"; };
 		41E163011E01395200A53B72 /* KLCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLCameraPreviewView.m; sourceTree = "<group>"; };
+		41E163221E0A1EEB00A53B72 /* CIDetector+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CIDetector+Base.h"; sourceTree = "<group>"; };
+		41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CIDetector+Base.m"; sourceTree = "<group>"; };
 		41FE17121D5B10A200CABFCA /* Raffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Raffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41FE17161D5B10A200CABFCA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		41FE17181D5B10A200CABFCA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -432,6 +435,8 @@
 		41FE17551D5B153A00CABFCA /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				41E163221E0A1EEB00A53B72 /* CIDetector+Base.h */,
+				41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */,
 				41FE17671D5B15AB00CABFCA /* NSData+Base.h */,
 				41FE17681D5B15AB00CABFCA /* NSData+Base.m */,
 				41FE17691D5B15AB00CABFCA /* NSDate+Base.h */,
@@ -805,6 +810,7 @@
 				41FE17961D5B15AB00CABFCA /* UIImageView+Base.m in Sources */,
 				E30E57001DCA44D600EEB6B3 /* NSDictionary+Base.m in Sources */,
 				E3684C451D86DBFD004E4636 /* KLMainDataController.m in Sources */,
+				41E163241E0A1EEB00A53B72 /* CIDetector+Base.m in Sources */,
 				E3684C461D86DBFD004E4636 /* KLPhotoLibrary.m in Sources */,
 				E3539C7D1D90421000CBE9F2 /* KLPhotoViewController.m in Sources */,
 				41FE17981D5B15AB00CABFCA /* UISwitch+Base.m in Sources */,

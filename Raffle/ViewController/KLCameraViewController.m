@@ -10,6 +10,7 @@
 #import "KLCameraPreviewView.h"
 #import "KLMainViewController.h"
 #import "KLCircleTransition.h"
+#import "CIDetector+Base.h"
 @import AVFoundation;
 
 @interface KLCameraViewController () <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate>
@@ -22,6 +23,8 @@
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) AVCaptureDeviceInput *videoDeviceInput;
+@property (nonatomic, strong) AVCaptureMetadataOutput *metadataOutput;
+@property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
 @property (nonatomic, strong) CIDetector *detector;
 
 @property (nonatomic, assign, getter=isSessionRunning) BOOL sessionRunning;
@@ -78,7 +81,7 @@ static void *SessionRunningContext = &SessionRunningContext;
         self.albumImage = image;
         self.session = [AVCaptureSession new];
         self.sessionQueue = dispatch_queue_create("CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
-        self.detector = [CIDetector detectorOfType:CIDetectorTypeFace context:<#(nullable CIContext *)#> options:<#(nullable NSDictionary<NSString *,id> *)#>];
+        self.detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh tracking:YES];
     }
     return self;
 }
@@ -216,21 +219,46 @@ static void *SessionRunningContext = &SessionRunningContext;
         return;
     }
     
-    AVCaptureMetadataOutput *metadataOutput = [AVCaptureMetadataOutput new];
-    if ([self.session canAddOutput:metadataOutput]) {
-        [self.session addOutput:metadataOutput];
-        if ([metadataOutput.availableMetadataObjectTypes containsObject:AVMetadataObjectTypeFace] ) {
-            [metadataOutput setMetadataObjectTypes:@[AVMetadataObjectTypeFace]];
-            [metadataOutput setMetadataObjectsDelegate:self queue:self.sessionQueue];
+    self.stillImageOutput = [AVCaptureStillImageOutput new];
+    if ([self.stillImageOutput.availableImageDataCodecTypes containsObject:AVVideoCodecJPEG]) {
+        [self.stillImageOutput setOutputSettings:@{ AVVideoCodecKey : AVVideoCodecJPEG }];
+    }
+    if ([self.session canAddOutput:self.stillImageOutput]) {
+        [self.session addOutput:self.stillImageOutput];
+    } else {
+        KLLog(@"Could not add still image output to the session");
+        [self.session commitConfiguration];
+        return;
+    }
+    
+    [self.session commitConfiguration];
+    
+    [self addMetadataOutput];
+}
+
+- (void)addMetadataOutput
+{
+    [self.session beginConfiguration];
+    self.metadataOutput = [AVCaptureMetadataOutput new];
+    if ([self.session canAddOutput:self.metadataOutput]) {
+        [self.session addOutput:self.metadataOutput];
+        if ([self.metadataOutput.availableMetadataObjectTypes containsObject:AVMetadataObjectTypeFace] ) {
+            [self.metadataOutput setMetadataObjectTypes:@[AVMetadataObjectTypeFace]];
+            [self.metadataOutput setMetadataObjectsDelegate:self queue:self.sessionQueue];
         } else {
             KLLog(@"Don't support face detection");
         }
     } else {
         KLLog(@"Could not add metadata output to the session");
-        [self.session commitConfiguration];
-        return;
     }
-    
+    [self.session commitConfiguration];
+}
+
+- (void)removeMetadataOutput
+{
+    [self.session beginConfiguration];
+    [self.session removeOutput:self.metadataOutput];
+    self.metadataOutput = nil;
     [self.session commitConfiguration];
 }
 
@@ -276,7 +304,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)subjectAreaDidChange:(NSNotification *)notification
 {
-    
+    // TODO: Set focus
 }
 
 - (void)sessionRuntimeError:(NSNotification *)notification
@@ -309,12 +337,38 @@ static void *SessionRunningContext = &SessionRunningContext;
 #pragma mark - Delegates
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-    
+    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+    CIImage *image = [[CIImage alloc] initWithCVPixelBuffer:pixelBuffer options:(__bridge NSDictionary *)attachments];
+    if (attachments) {
+        CFRelease(attachments);
+    }
+
+    NSArray *features = [self.detector featuresInCIImage:image];
+    if (features.count > 0) {
+        KLDispatchMainAsync(^{
+            [self drawRectangleWithImage:image features:features];
+        });
+    }
+}
+
+- (void)drawRectangleWithImage:(CIImage *)image features:(NSArray<CIFaceFeature *> *)features
+{
+    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
+    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
+        KLLog(@"SHIT: %@", NSStringFromCGRect(faceViewBounds));
+        UIView *faceRectangle = [[UIView alloc] initWithFrame:faceViewBounds];
+        faceRectangle.layer.borderWidth = 1.0;
+        faceRectangle.layer.borderColor = [UIColor orangeColor].CGColor;
+        [self.previewView addSubview:faceRectangle];
+    }];
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
 {
-    
+//    KLLog(@"Metadata Objects: %@", metadataObjects);
 }
 
 #pragma mark - Event handling
@@ -334,7 +388,7 @@ static void *SessionRunningContext = &SessionRunningContext;
             }
             [device unlockForConfiguration];
         } else {
-            NSLog(@"Could not lock device for configuration: %@", error);
+            KLLog(@"Could not lock device for configuration: %@", error);
         }
     });
 }
@@ -400,13 +454,46 @@ static void *SessionRunningContext = &SessionRunningContext;
     barButton.on = !barButton.isOn;
     self.faceDetectionOn = barButton.on;
     
-    
+    [self.previewView addBlurBackground];
+    dispatch_async(self.sessionQueue, ^{
+        if (self.faceDetectionOn) {
+            [self addMetadataOutput];
+        } else {
+            [self removeMetadataOutput];
+        }
+        
+        KLDispatchMainAsync(^{
+            [self.previewView removeBlurBackground];
+        });
+    });
 }
 
 - (void)takePhoto:(id)sender
 {
     [KLSoundPlayer playCameraShutterSound];
+    [self captureStillImage];
+}
+
+- (void)captureStillImage
+{
+    UIView *blackView = [[UIView alloc] initWithFrame:self.previewView.bounds];
+    blackView.backgroundColor = [UIColor darkBackgroundColor];
+    [self.previewView addSubview:blackView];
     
+    dispatch_async(self.sessionQueue, ^{
+        AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+        [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
+            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(imageDataSampleBuffer);
+            CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, imageDataSampleBuffer, kCMAttachmentMode_ShouldPropagate);
+            CIImage *image = [[CIImage alloc] initWithCVPixelBuffer:pixelBuffer options:(__bridge NSDictionary *)attachments];
+            if (attachments) CFRelease(attachments);
+            
+        }];
+    });
+    
+    KLDispatchMainAfter(6.0/60, ^{
+        [blackView removeFromSuperview];
+    });
 }
 
 - (void)switchToAlbum:(id)sender
