@@ -28,7 +28,7 @@
         options[CIDetectorAccuracy] = CIDetectorAccuracyHigh;
     }
     options[CIDetectorTracking] = @(tracking);
-//    options[CIDetectorMinFeatureSize] = @(0.1);
+    options[CIDetectorMinFeatureSize] = @(0.01);
     
     return [self detectorOfType:CIDetectorTypeFace context:self.sharedContext options:options];
 }

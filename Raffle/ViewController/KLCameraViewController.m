@@ -10,10 +10,9 @@
 #import "KLCameraPreviewView.h"
 #import "KLMainViewController.h"
 #import "KLCircleTransition.h"
-#import "CIDetector+Base.h"
 @import AVFoundation;
 
-@interface KLCameraViewController () <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate>
+@interface KLCameraViewController () <AVCaptureMetadataOutputObjectsDelegate>
 
 @property (nonatomic, strong) UIImage *albumImage;
 @property (nonatomic, strong) KLCameraPreviewView *previewView;
@@ -25,7 +24,6 @@
 @property (nonatomic, strong) AVCaptureDeviceInput *videoDeviceInput;
 @property (nonatomic, strong) AVCaptureMetadataOutput *metadataOutput;
 @property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
-@property (nonatomic, strong) CIDetector *detector;
 
 @property (nonatomic, assign, getter=isSessionRunning) BOOL sessionRunning;
 @property (nonatomic, assign, getter=isFaceDetectionOn) BOOL faceDetectionOn;
@@ -81,7 +79,6 @@ static void *SessionRunningContext = &SessionRunningContext;
         self.albumImage = image;
         self.session = [AVCaptureSession new];
         self.sessionQueue = dispatch_queue_create("CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
-        self.detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh tracking:YES];
     }
     return self;
 }
@@ -209,16 +206,6 @@ static void *SessionRunningContext = &SessionRunningContext;
         return;
     }
     
-    AVCaptureVideoDataOutput *videoDataOutput = [AVCaptureVideoDataOutput new];
-    if ([self.session canAddOutput:videoDataOutput]) {
-        [self.session addOutput:videoDataOutput];
-        [videoDataOutput setSampleBufferDelegate:self queue:self.sessionQueue];
-    } else {
-        KLLog(@"Could not add video data output to the session");
-        [self.session commitConfiguration];
-        return;
-    }
-    
     self.stillImageOutput = [AVCaptureStillImageOutput new];
     if ([self.stillImageOutput.availableImageDataCodecTypes containsObject:AVVideoCodecJPEG]) {
         [self.stillImageOutput setOutputSettings:@{ AVVideoCodecKey : AVVideoCodecJPEG }];
@@ -334,41 +321,27 @@ static void *SessionRunningContext = &SessionRunningContext;
     [self.previewView removeBlurBackground];
 }
 
-#pragma mark - Delegates
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
+#pragma mark - Output delegates
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
 {
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
-    CIImage *image = [[CIImage alloc] initWithCVPixelBuffer:pixelBuffer options:(__bridge NSDictionary *)attachments];
-    if (attachments) {
-        CFRelease(attachments);
-    }
-
-    NSArray *features = [self.detector featuresInCIImage:image];
-    if (features.count > 0) {
+    if (metadataObjects.count > 0) {
         KLDispatchMainAsync(^{
-            [self drawRectangleWithImage:image features:features];
+            [self drawRectangleWithMetadataObjects:metadataObjects];
         });
     }
 }
 
-- (void)drawRectangleWithImage:(CIImage *)image features:(NSArray<CIFaceFeature *> *)features
+- (void)drawRectangleWithMetadataObjects:(NSArray<AVMetadataFaceObject *> *)metadataObjects
 {
     [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
-    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
-        KLLog(@"SHIT: %@", NSStringFromCGRect(faceViewBounds));
+    
+    [metadataObjects enumerateObjectsUsingBlock:^(AVMetadataFaceObject *  _Nonnull faceObject, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
         UIView *faceRectangle = [[UIView alloc] initWithFrame:faceViewBounds];
         faceRectangle.layer.borderWidth = 1.0;
         faceRectangle.layer.borderColor = [UIColor orangeColor].CGColor;
         [self.previewView addSubview:faceRectangle];
     }];
-}
-
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
-//    KLLog(@"Metadata Objects: %@", metadataObjects);
 }
 
 #pragma mark - Event handling
@@ -454,7 +427,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     barButton.on = !barButton.isOn;
     self.faceDetectionOn = barButton.on;
     
-    [self.previewView addBlurBackground];
+    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     dispatch_async(self.sessionQueue, ^{
         if (self.faceDetectionOn) {
             [self addMetadataOutput];

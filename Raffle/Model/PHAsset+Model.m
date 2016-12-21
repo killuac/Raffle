@@ -61,10 +61,11 @@
 - (void)requestImageWithSize:(CGSize)size progressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-    options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
-    options.resizeMode = PHImageRequestOptionsResizeModeFast;
-    options.networkAccessAllowed = YES;
     options.synchronous = NO;
+    options.networkAccessAllowed = YES;
+    options.version = PHImageRequestOptionsVersionCurrent;
+    options.resizeMode = PHImageRequestOptionsResizeModeFast;
+    options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
     options.progressHandler = progressHandler;
     
     [[PHImageManager defaultManager] requestImageForAsset:self targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:resultHandler];
