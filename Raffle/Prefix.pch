@@ -24,6 +24,7 @@
 #import "NSString+Base.h"
 #import "NSDate+Base.h"
 #import "NSLayoutConstraint+Base.h"
+#import "NSUserDefaults+Base.h"
 
 #import "UIView+Base.h"
 #import "UIColor+Base.h"

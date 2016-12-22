@@ -6,7 +6,8 @@
 //  Copyright © 2015 Syzygy. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+@import ImageIO;
 
 typedef NS_ENUM(NSInteger, KLGenderType) {
     KLGenderTypeUnknown = 0,
@@ -29,12 +30,17 @@ NS_INLINE UIImage *KLImageAvatarByGender(KLGenderType gender) {
     return (gender > 0) ? [UIImage imageNamed:@"image_male_avatar.png"] : [UIImage imageNamed:@"image_male_avatar.png"];
 }
 
+UIKIT_EXTERN CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOrientation imageOrientation);
+
+
 @interface UIImage (Base)
 
 @property (nonatomic, readonly) CGFloat width;
 @property (nonatomic, readonly) CGFloat height;
+@property (nonatomic, readonly) CGImagePropertyOrientation exifImageOrientation;
 
 - (UIImage *)originalImage;
+- (UIImage *)rotatedImage;
 - (UIImage *)resizableCroppedImage;             // Resize and crop in center
 - (UIImage *)brightenWithAlpha:(CGFloat)alpha;  // Value range (0, 1)
 - (UIImage *)antialiasingImage;                 // layer.allowsEdgeAntialiasing = YES

@@ -19,7 +19,7 @@
     return sharedContext;
 }
 
-+ (CIDetector *)faceDetectorWithAccuracy:(KLDetectorAccuracy)accuracy tracking:(BOOL)tracking
++ (CIDetector *)faceDetectorWithAccuracy:(KLDetectorAccuracy)accuracy
 {
     NSMutableDictionary *options = [NSMutableDictionary new];
     if (accuracy == KLDetectorAccuracyLow) {
@@ -27,33 +27,17 @@
     } else {
         options[CIDetectorAccuracy] = CIDetectorAccuracyHigh;
     }
-    options[CIDetectorTracking] = @(tracking);
     options[CIDetectorMinFeatureSize] = @(0.01);
     
     return [self detectorOfType:CIDetectorTypeFace context:self.sharedContext options:options];
 }
 
-- (NSArray<CIFeature *> *)featuresInCIImage:(CIImage *)image
+- (NSArray<CIFeature *> *)featuresInUIImage:(UIImage *)image
 {
-    UIImageOrientation orientation;
-    switch (UIDevice.currentDevice.orientation) {
-        case UIDeviceOrientationPortraitUpsideDown:
-            orientation = UIImageOrientationDown;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            orientation = UIImageOrientationLeft;
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            orientation = UIImageOrientationRight;
-            break;
-        default:
-            orientation = UIImageOrientationUp;
-            break;
-    }
     NSMutableDictionary *options = [NSMutableDictionary new];
-    options[CIDetectorImageOrientation] = @(orientation);
+    options[CIDetectorImageOrientation] = @(image.exifImageOrientation);
     
-    return [self featuresInImage:image options:options];
+    return [self featuresInImage:image.CIImage options:options];
 }
 
 @end

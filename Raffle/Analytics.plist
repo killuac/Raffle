@@ -16,9 +16,9 @@
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>MainVC_LongPressTakePhoto</string>
+				<string>MainVC_LongPressToShowCameraViewController</string>
 				<key>KLLogEventSelectorName</key>
-				<string>longPressTakePhoto:</string>
+				<string>longPressToShowCameraViewController:</string>
 				<key>KLIsNeedPlaySound</key>
 				<true/>
 			</dict>
@@ -60,24 +60,6 @@
 			</dict>
 		</array>
 	</dict>
-	<key>KLResultViewController</key>
-	<dict>
-		<key>KLLogTrackedEvents</key>
-		<array>
-			<dict>
-				<key>KLLogEventName</key>
-				<string>ResultVC_ClickTopAdBanner</string>
-				<key>KLLogEventSelectorName</key>
-				<string>clickTopAdBanner</string>
-			</dict>
-			<dict>
-				<key>KLLogEventName</key>
-				<string>ResultVC_ClickBottomAdBanner</string>
-				<key>KLLogEventSelectorName</key>
-				<string>clickBottomAdBanner</string>
-			</dict>
-		</array>
-	</dict>
 	<key>KLImagePickerController</key>
 	<dict>
 		<key>KLLogTrackedEvents</key>
@@ -90,9 +72,57 @@
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>AlbumVC_CloseAlbum</string>
+				<string>AlbumVC_SelectSegmentControlAtIndex</string>
 				<key>KLLogEventSelectorName</key>
-				<string>closeAlbum:</string>
+				<string>selectSegmentControlAtIndex:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>AlbumVC_ScrollToSelectSegmentControl</string>
+				<key>KLLogEventSelectorName</key>
+				<string>scrollToSelectAlbum</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>AlbumVC_ScrollSegmentControl</string>
+				<key>KLLogEventSelectorName</key>
+				<string>scrollSegmentControl</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>AlbumVC_LongPressToFaceDetection</string>
+				<key>KLLogEventSelectorName</key>
+				<string>longPressToFaceDetection:</string>
+			</dict>
+		</array>
+	</dict>
+	<key>KLCameraViewController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>CameraVC_SwitchFlashMode</string>
+				<key>KLLogEventSelectorName</key>
+				<string>switchFlashMode:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>CameraVC_SwitchFaceDetection</string>
+				<key>KLLogEventSelectorName</key>
+				<string>switchFaceDetection:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>CameraVC_SwitchCamera</string>
+				<key>KLLogEventSelectorName</key>
+				<string>switchCamera:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>CameraVC_TakePhoto</string>
+				<key>KLLogEventSelectorName</key>
+				<string>takePhoto:</string>
 			</dict>
 		</array>
 	</dict>
@@ -118,6 +148,18 @@
 				<key>KLLogEventSelectorName</key>
 				<string>deleteDrawBox:</string>
 			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>MoreVC_ShowImagePickerController</string>
+				<key>KLLogEventSelectorName</key>
+				<string>showImagePickerControllerFromMoreVC</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>MoreVC_ShowPhotoViewController</string>
+				<key>KLLogEventSelectorName</key>
+				<string>showPhotoViewControllerAtIndexPath</string>
+			</dict>
 		</array>
 	</dict>
 	<key>KLPhotoViewController</key>
@@ -134,19 +176,61 @@
 				<key>KLLogEventName</key>
 				<string>PhotoVC_StartDraw</string>
 				<key>KLLogEventSelectorName</key>
-				<string>startDrawFromPhotoVC</string>
+				<string>startDrawFromPhotoVC:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>PhotoVC_DeleteSelectedDrawBoxPhotos</string>
 				<key>KLLogEventSelectorName</key>
-				<string>deleteSelectedDrawBoxPhotos</string>
+				<string>deleteSelectedDrawBoxPhotos:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>PhotoVC_CancelMultiPhotoSelection</string>
+				<string>PhotoVC_ShowImagePickerController</string>
 				<key>KLLogEventSelectorName</key>
-				<string>cancelMultiPhotoSelection:</string>
+				<string>showImagePickerControllerFromPhotoVC</string>
+			</dict>
+		</array>
+	</dict>
+	<key>KLFaceViewController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>FaceVC_LongPressToMultiSelectFacePhotos</string>
+				<key>KLLogEventSelectorName</key>
+				<string>longPressToMultiSelectFacePhotos:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>FaceVC_DeleteSelectedFacePhotos</string>
+				<key>KLLogEventSelectorName</key>
+				<string>deleteSelectedFacePhotos</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>FaceVC_AddFacePhotosToDrawBox</string>
+				<key>KLLogEventSelectorName</key>
+				<string>addFacePhotosToDrawBox:</string>
+			</dict>
+		</array>
+	</dict>
+	<key>KLResultViewController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>ResultVC_ClickTopAdBanner</string>
+				<key>KLLogEventSelectorName</key>
+				<string>clickTopAdBanner</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>ResultVC_ClickBottomAdBanner</string>
+				<key>KLLogEventSelectorName</key>
+				<string>clickBottomAdBanner</string>
 			</dict>
 		</array>
 	</dict>

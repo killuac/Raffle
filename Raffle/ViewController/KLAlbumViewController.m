@@ -188,6 +188,7 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     }
     
     KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+    cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToFaceDetection:)];
     PHAsset *asset = [self assetAtIndexPath:indexPath];
     [cell configWithAsset:asset];
     if (asset.isSelected) {
@@ -279,6 +280,18 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     self.assetCollection.contentOffset = scrollView.contentOffset;
+}
+
+#pragma mark - Event handling
+- (void)longPressToFaceDetection:(UILongPressGestureRecognizer *)recognizer
+{
+    if (recognizer.state != UIGestureRecognizerStateBegan) return;
+    
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(id)recognizer.view];
+    PHAsset *asset = [self assetAtIndexPath:indexPath];
+    [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
+        
+    }];
 }
 
 @end

@@ -63,7 +63,7 @@
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.synchronous = NO;
     options.networkAccessAllowed = YES;
-    options.version = PHImageRequestOptionsVersionCurrent;
+    options.version = PHImageRequestOptionsVersionOriginal;
     options.resizeMode = PHImageRequestOptionsResizeModeFast;
     options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
     options.progressHandler = progressHandler;

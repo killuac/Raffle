@@ -105,13 +105,11 @@ static CGFloat LineSpacing;
         return cell;
     } else {
         KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+        cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
         PHAsset *asset = [self.drawBoxDC objectAtIndexPath:indexPath];
         [cell configWithAsset:asset];
-        if (asset.isSelected) [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-        
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
-        if (![cell.gestureRecognizers containsObject:longPress]) {
-            [cell addGestureRecognizer:longPress];
+        if (asset.isSelected) {
+            [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         }
         return cell;
     }
@@ -131,11 +129,7 @@ static CGFloat LineSpacing;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
     if (indexPath.item == self.drawBoxDC.itemCount) {   // Add Button
-        [KLImagePickerController checkAuthorization:^{
-            KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-            imagePicker.delegate = self;
-            [self presentViewController:imagePicker animated:YES completion:nil];
-        }];
+        [self showImagePickerControllerFromPhotoVC];
     } else if (self.deleteMode) {
         [self.drawBoxDC selectAssetAtIndexPath:indexPath];
     }
@@ -144,6 +138,15 @@ static CGFloat LineSpacing;
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.drawBoxDC deselectAssetAtIndexPath:indexPath];
+}
+
+- (void)showImagePickerControllerFromPhotoVC
+{
+    [KLImagePickerController checkAuthorization:^{
+        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        imagePicker.delegate = self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }];
 }
 
 #pragma mark - Data controller delegate
@@ -220,19 +223,19 @@ static CGFloat LineSpacing;
 - (void)tapRightNavBarButton:(UIBarButtonItem *)sender
 {
     if (self.deleteMode) {
-        [self deleteSelectedDrawBoxPhotos];
+        [self deleteSelectedDrawBoxPhotos:sender];
     } else {
-        [self startDrawFromPhotoVC];
+        [self startDrawFromPhotoVC:sender];
     }
 }
 
-- (void)startDrawFromPhotoVC
+- (void)startDrawFromPhotoVC:(id)sender
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:KLPhotoViewControllerDidTouchStart object:self.drawBoxDC];
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)deleteSelectedDrawBoxPhotos
+- (void)deleteSelectedDrawBoxPhotos:(id)sender
 {
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
     NSUInteger count = self.drawBoxDC.selectedAssetCount;

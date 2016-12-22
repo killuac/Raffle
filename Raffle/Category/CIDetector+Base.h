@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, KLDetectorAccuracy) {
 
 @interface CIDetector (Base)
 
-+ (CIDetector *)faceDetectorWithAccuracy:(KLDetectorAccuracy)accuracy tracking:(BOOL)tracking;
-- (NSArray<CIFeature *> *)featuresInCIImage:(CIImage *)image;
++ (CIDetector *)faceDetectorWithAccuracy:(KLDetectorAccuracy)accuracy;
+- (NSArray<CIFeature *> *)featuresInUIImage:(UIImage *)image;
 
 @end

@@ -27,6 +27,8 @@
 		4176C4471DC341B30054FF13 /* KLInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C4461DC341B30054FF13 /* KLInnerShadowView.m */; };
 		41E163021E01395200A53B72 /* KLCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163011E01395200A53B72 /* KLCameraPreviewView.m */; };
 		41E163241E0A1EEB00A53B72 /* CIDetector+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */; };
+		41E278A21E0BA3AC001FBE68 /* KLFaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E278A11E0BA3AC001FBE68 /* KLFaceViewController.m */; };
+		41E278A51E0BA724001FBE68 /* NSUserDefaults+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E278A41E0BA724001FBE68 /* NSUserDefaults+Base.m */; };
 		41FE17171D5B10A200CABFCA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE17161D5B10A200CABFCA /* main.m */; };
 		41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41FE17191D5B10A200CABFCA /* AppDelegate.m */; };
 		41FE17201D5B10A200CABFCA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41FE171E1D5B10A200CABFCA /* Main.storyboard */; };
@@ -148,6 +150,10 @@
 		41E163011E01395200A53B72 /* KLCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLCameraPreviewView.m; sourceTree = "<group>"; };
 		41E163221E0A1EEB00A53B72 /* CIDetector+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CIDetector+Base.h"; sourceTree = "<group>"; };
 		41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CIDetector+Base.m"; sourceTree = "<group>"; };
+		41E278A01E0BA3AC001FBE68 /* KLFaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLFaceViewController.h; sourceTree = "<group>"; };
+		41E278A11E0BA3AC001FBE68 /* KLFaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLFaceViewController.m; sourceTree = "<group>"; };
+		41E278A31E0BA724001FBE68 /* NSUserDefaults+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+Base.h"; sourceTree = "<group>"; };
+		41E278A41E0BA724001FBE68 /* NSUserDefaults+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+Base.m"; sourceTree = "<group>"; };
 		41FE17121D5B10A200CABFCA /* Raffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Raffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41FE17161D5B10A200CABFCA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		41FE17181D5B10A200CABFCA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -449,6 +455,8 @@
 				41FE176E1D5B15AB00CABFCA /* NSString+Base.m */,
 				41FE176F1D5B15AB00CABFCA /* NSTimer+Base.h */,
 				41FE17701D5B15AB00CABFCA /* NSTimer+Base.m */,
+				41E278A31E0BA724001FBE68 /* NSUserDefaults+Base.h */,
+				41E278A41E0BA724001FBE68 /* NSUserDefaults+Base.m */,
 				41FE17711D5B15AB00CABFCA /* UIAlertController+Base.h */,
 				41FE17721D5B15AB00CABFCA /* UIAlertController+Base.m */,
 				41FE17731D5B15AB00CABFCA /* UIBarButtonItem+Base.h */,
@@ -551,6 +559,8 @@
 				E3684C3B1D86DBFD004E4636 /* KLCameraViewController.m */,
 				E3684C3C1D86DBFD004E4636 /* KLDrawBoxViewController.h */,
 				E3684C3D1D86DBFD004E4636 /* KLDrawBoxViewController.m */,
+				41E278A01E0BA3AC001FBE68 /* KLFaceViewController.h */,
+				41E278A11E0BA3AC001FBE68 /* KLFaceViewController.m */,
 				E3684C3E1D86DBFD004E4636 /* KLImagePickerController.h */,
 				E3684C3F1D86DBFD004E4636 /* KLImagePickerController.m */,
 				E3684C401D86DBFD004E4636 /* KLMainViewController.h */,
@@ -817,6 +827,7 @@
 				E3684C491D86DBFD004E4636 /* KLDrawBoxViewController.m in Sources */,
 				41FE17941D5B15AB00CABFCA /* UIFont+Base.m in Sources */,
 				41E163021E01395200A53B72 /* KLCameraPreviewView.m in Sources */,
+				41E278A51E0BA724001FBE68 /* NSUserDefaults+Base.m in Sources */,
 				41FE17951D5B15AB00CABFCA /* UIImage+Base.m in Sources */,
 				E3539C7A1D9041BD00CBE9F2 /* KLResultViewController.m in Sources */,
 				E3684C4B1D86DBFD004E4636 /* KLMainViewController.m in Sources */,
@@ -838,6 +849,7 @@
 				4105A7941D6FDFA900215D76 /* KLCircleTransition.m in Sources */,
 				41FE17A21D5B160700CABFCA /* AppDelegate+Analytics.m in Sources */,
 				41FE178F1D5B15AB00CABFCA /* NSTimer+Base.m in Sources */,
+				41E278A21E0BA3AC001FBE68 /* KLFaceViewController.m in Sources */,
 				E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */,
 				E3684C4A1D86DBFD004E4636 /* KLImagePickerController.m in Sources */,
 				E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */,

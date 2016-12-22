@@ -10,7 +10,6 @@
 #import "KLSegmentControl.h"
 #import "KLScaleTransition.h"
 #import "KLCircleTransition.h"
-#import "CIDetector+Base.h"
 
 @interface KLImagePickerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate, KLSegmentControlDelegate>
 
@@ -259,6 +258,11 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    [self scrollToSelectAlbum];
+}
+
+- (void)scrollToSelectAlbum
+{
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
     self.photoLibrary.currentPageIndex = albumVC.pageIndex;
     [self.segmentControl selectSegmentAtIndex:albumVC.pageIndex];
@@ -267,8 +271,13 @@
 #pragma mark - Segment control delegate
 - (void)segmentControl:(KLSegmentControl *)segmentControl didSelectSegmentAtIndex:(NSUInteger)index
 {
-    if (self.photoLibrary.currentPageIndex == index) return;
-    
+    if (self.photoLibrary.currentPageIndex != index) {
+        [self selectSegmentControlAtIndex:index];
+    }
+}
+
+- (void)selectSegmentControlAtIndex:(NSUInteger)index
+{
     DECLARE_WEAK_SELF;
     self.photoLibrary.currentPageIndex = index;
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
@@ -283,96 +292,27 @@
 #pragma mark - Event handling
 - (void)donePhotoSelection:(id)sender
 {
-//    [self dismissViewControllerAnimated:YES completion:^{
-//        if ([self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
-//            [self.photoLibrary.selectedAssets setValue:@(NO) forKey:@"selected"];
-//            [self.delegate imagePickerController:self didFinishPickingImageAssets:self.photoLibrary.selectedAssets];
-//        }
-//    }];
-    
-    
-    
-    PHAsset *asset = self.photoLibrary.selectedAssets.firstObject;
-    [asset originalImageResultHandler:^(UIImage *uiImage, NSDictionary *info) {
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:uiImage];
-        imageView.frame = self.view.bounds;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self.view addSubview:imageView];
-        
-        int exifOrientation;
-        switch (uiImage.imageOrientation) {
-            case UIImageOrientationUp:
-                exifOrientation = kCGImagePropertyOrientationUp;
-                break;
-            case UIImageOrientationDown:
-                exifOrientation = kCGImagePropertyOrientationDown;
-                break;
-            case UIImageOrientationLeft:
-                exifOrientation = kCGImagePropertyOrientationLeft;
-                break;
-            case UIImageOrientationRight:
-                exifOrientation = kCGImagePropertyOrientationRight;
-                break;
-            case UIImageOrientationUpMirrored:
-                exifOrientation = kCGImagePropertyOrientationUpMirrored;
-                break;
-            case UIImageOrientationDownMirrored:
-                exifOrientation = kCGImagePropertyOrientationDownMirrored;
-                break;
-            case UIImageOrientationLeftMirrored:
-                exifOrientation = kCGImagePropertyOrientationLeftMirrored;
-                break;
-            case UIImageOrientationRightMirrored:
-                exifOrientation = kCGImagePropertyOrientationRightMirrored;
-                break;
+    [self.photoLibrary.selectedAssets setValue:@(NO) forKey:@"selected"];
+    [self dismissViewControllerAnimated:YES completion:^{
+        if ([self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
+            [self.delegate imagePickerController:self didFinishPickingImageAssets:self.photoLibrary.selectedAssets];
         }
-        
-        CIImage *image = [CIImage imageWithCGImage:uiImage.CGImage];
-        CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh tracking:NO];
-        NSArray *features = [detector featuresInImage:image options:@{ CIDetectorImageOrientation: @(exifOrientation) }];
-        
-        CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
-        [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
-            CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
-            CGSize viewSize = imageView.size, imageSize = image.extent.size;
-            CGFloat scale = MIN(viewSize.width/imageSize.width, viewSize.height/imageSize.height);
-            CGFloat offsetX = (viewSize.width - imageSize.width * scale) / 2;
-            CGFloat offsetY = (viewSize.height - imageSize.height * scale) / 2;
-            faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scale, scale));
-            faceViewBounds.origin.x += offsetX;
-            faceViewBounds.origin.y += offsetY;
-            
-            UIView *faceRectangle = [[UIView alloc] initWithFrame:faceViewBounds];
-            faceRectangle.layer.borderWidth = 1.0;
-            faceRectangle.layer.borderColor = [UIColor orangeColor].CGColor;
-            [imageView addSubview:faceRectangle];
-        }];
-        
-//        imageView.transform = CGAffineTransformMakeRotation(M_PI_2);
     }];
 }
 
-//- (void)drawRectangleWithImage:(CIImage *)image features:(NSArray<CIFaceFeature *> *)features
+//- (void)faceDetectionProcessing:(KLVoidBlockType)completion;
 //{
-//    CGSize viewSize = self.previewView.size;
-//    CGSize imageSize = image.extent.size;
+//    [self.photoLibrary.selectedAssets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+//        [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
+//            CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
+//            NSArray *features = [detector featuresInUIImage:image];
 //
-//    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-//    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
-//
-//    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
-//        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
-//        CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
-//        CGFloat offsetX = (viewSize.width - imageSize.width * scale) / 2;
-//        CGFloat offsetY = (viewSize.height - imageSize.height * scale) / 2;
-//        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scale, scale));
-//        faceViewBounds.origin.x += offsetX;
-//        faceViewBounds.origin.y += offsetY;
-//
-//        UIView *faceRectangle = [[UIView alloc] initWithFrame:faceViewBounds];
-//        faceRectangle.layer.borderWidth = 1.0;
-//        faceRectangle.layer.borderColor = [UIColor orangeColor].CGColor;
-//        [self.previewView addSubview:faceRectangle];
+//            CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.height);
+//            [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
+//                CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
+//                
+//            }];
+//        }];
 //    }];
 //}
 

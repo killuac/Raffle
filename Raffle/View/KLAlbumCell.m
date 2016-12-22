@@ -58,6 +58,13 @@
 - (void)prepareForReuse
 {
     self.selected = self.highlighted = NO;
+    [self removeGestureRecognizer:self.longPress];
+}
+
+- (void)setLongPress:(UILongPressGestureRecognizer *)longPress
+{
+    _longPress = longPress;
+    [self addGestureRecognizer:longPress];
 }
 
 - (void)setHighlighted:(BOOL)highlighted
@@ -90,7 +97,7 @@
 - (void)animateSpringScale
 {
     [UIView animateWithDefaultDuration:^{
-        self.transform = CGAffineTransformMakeScale(1.05, 1.05);
+        self.transform = CGAffineTransformMakeScale(0.9, 0.9);
     } completion:^(BOOL finished) {
         [UIView animateSpringWithDefaultDuration:^{
             self.transform = CGAffineTransformIdentity;

@@ -8,6 +8,39 @@
 
 #import "UIImage+Base.h"
 
+CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOrientation imageOrientation)
+{
+    CGImagePropertyOrientation propertyOrientation;
+    switch (imageOrientation) {
+        case UIImageOrientationUp:
+            propertyOrientation = kCGImagePropertyOrientationUp;
+            break;
+        case UIImageOrientationDown:
+            propertyOrientation = kCGImagePropertyOrientationDown;
+            break;
+        case UIImageOrientationLeft:
+            propertyOrientation = kCGImagePropertyOrientationLeft;
+            break;
+        case UIImageOrientationRight:
+            propertyOrientation = kCGImagePropertyOrientationRight;
+            break;
+        case UIImageOrientationUpMirrored:
+            propertyOrientation = kCGImagePropertyOrientationUpMirrored;
+            break;
+        case UIImageOrientationDownMirrored:
+            propertyOrientation = kCGImagePropertyOrientationDownMirrored;
+            break;
+        case UIImageOrientationLeftMirrored:
+            propertyOrientation = kCGImagePropertyOrientationLeftMirrored;
+            break;
+        case UIImageOrientationRightMirrored:
+            propertyOrientation = kCGImagePropertyOrientationRightMirrored;
+            break;
+    }
+    return propertyOrientation;
+}
+
+
 @implementation UIImage (Base)
 
 - (CGFloat)width
@@ -20,9 +53,86 @@
     return self.size.height;
 }
 
+- (CGImagePropertyOrientation)exifImageOrientation
+{
+    return KLEXIFImageOrientationFromImageOrientation(self.imageOrientation);
+}
+
 - (UIImage *)originalImage
 {
     return [self imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+- (UIImage *)rotatedImage
+{
+    if (self.imageOrientation == UIImageOrientationUp) return self;
+    
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    switch (self.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, self.width, self.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, self.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, self.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+            
+        default:
+            break;
+    }
+    
+    switch (self.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, self.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, self.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        default:
+            break;
+    }
+    
+    CGContextRef context = CGBitmapContextCreate(NULL, self.width, self.height,
+                                                 CGImageGetBitsPerComponent(self.CGImage), 0,
+                                                 CGImageGetColorSpace(self.CGImage),
+                                                 CGImageGetBitmapInfo(self.CGImage));
+    CGContextConcatCTM(context, transform);
+    
+    switch (self.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            CGContextDrawImage(context, CGRectMake(0, 0, self.height, self.width), self.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(context, CGRectMake(0, 0, self.width, self.height), self.CGImage);
+            break;
+    }
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *image = [UIImage imageWithCGImage:imageRef];
+    CGContextRelease(context);
+    CGImageRelease(imageRef);
+    
+    return image;
 }
 
 - (UIImage *)resizableCroppedImage

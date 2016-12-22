@@ -114,20 +114,30 @@ static CGFloat SectionInset;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.item == self.dataController.itemCount) {  // Add Button
-        [KLImagePickerController checkAuthorization:^{
-            KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-            imagePicker.delegate = self;
-            [self presentViewController:imagePicker animated:YES completion:nil];
-        }];
+        [self showImagePickerControllerFromMoreVC];
     } else {
-        KLDrawBoxDataController *drawBoxDC = [self.dataController drawBoxDataControllerAtIndex:indexPath.item];
-        KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:drawBoxDC];
-        photoVC.dismissBlock = ^(KLDrawBoxDataController *drawBoxDC) {
-            [self.dataController deleteDrawBoxAtIndexPath:indexPath];
-        };
-//        TODO: self.navigationController.delegate = photoVC.transition;
-        [self.navigationController pushViewController:photoVC animated:YES];
+        [self showPhotoViewControllerAtIndexPath:indexPath];
     }
+}
+
+- (void)showImagePickerControllerFromMoreVC
+{
+    [KLImagePickerController checkAuthorization:^{
+        KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        imagePicker.delegate = self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }];
+}
+
+- (void)showPhotoViewControllerAtIndexPath:(NSIndexPath *)indexPath
+{
+    KLDrawBoxDataController *drawBoxDC = [self.dataController drawBoxDataControllerAtIndex:indexPath.item];
+    KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:drawBoxDC];
+    photoVC.dismissBlock = ^(KLDrawBoxDataController *drawBoxDC) {
+        [self.dataController deleteDrawBoxAtIndexPath:indexPath];
+    };
+//  TODO: self.navigationController.delegate = photoVC.transition;
+    [self.navigationController pushViewController:photoVC animated:YES];
 }
 
 #pragma mark - Data controller delegate

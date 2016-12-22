@@ -287,4 +287,15 @@
     } completion:completion];
 }
 
+#pragma mark - Scroll delegate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self scrollSegmentControl];
+}
+
+- (void)scrollSegmentControl
+{
+    // For analytics
+}
+
 @end

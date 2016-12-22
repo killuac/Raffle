@@ -25,8 +25,8 @@
 @property (nonatomic, strong) AVCaptureMetadataOutput *metadataOutput;
 @property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
 
+@property (nonatomic, strong) NSArray<AVMetadataFaceObject *> *metadataObjects;
 @property (nonatomic, assign, getter=isSessionRunning) BOOL sessionRunning;
-@property (nonatomic, assign, getter=isFaceDetectionOn) BOOL faceDetectionOn;
 
 @end
 
@@ -126,7 +126,8 @@ static void *SessionRunningContext = &SessionRunningContext;
     UIBarButtonItem *flashButtonItem = [UIBarButtonItem barButtonItemWithOnImageName:@"icon_flash_on" offImageName:@"icon_flash_off" target:self action:@selector(switchFlashMode:)];
     UIBarButtonItem *faceButtonItem = [UIBarButtonItem barButtonItemWithOnImageName:@"icon_face_on" offImageName:@"icon_face_off" target:self action:@selector(switchFaceDetection:)];
     UIBarButtonItem *switchCameraItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_camera_switcher" target:self action:@selector(switchCamera:)];
-    faceButtonItem.on = YES;
+    flashButtonItem.on = (NSUserDefaults.flashMode == AVCaptureFlashModeOn);
+    faceButtonItem.on = NSUserDefaults.isFaceDetectionOn;
     NSArray *items = @[flashButtonItem, faceButtonItem, switchCameraItem];
     UIToolbar *topToolbar = [UIToolbar toolbarWithItems:items];
     [self.view addSubview:topToolbar];
@@ -220,7 +221,33 @@ static void *SessionRunningContext = &SessionRunningContext;
     
     [self.session commitConfiguration];
     
-    [self addMetadataOutput];
+    [self configureFlashMode];
+    [self configureFaceDetection];
+}
+
+- (void)configureFlashMode
+{
+    AVCaptureDevice *device = self.videoDeviceInput.device;
+    NSError *error = nil;
+    if ([device lockForConfiguration:&error] ) {
+        if (NSUserDefaults.flashMode == AVCaptureFlashModeOn && [device isFlashModeSupported:AVCaptureFlashModeOn] ) {
+            device.flashMode = AVCaptureFlashModeOn;
+        } else {
+            device.flashMode = AVCaptureFlashModeOff;
+        }
+        [device unlockForConfiguration];
+    } else {
+        KLLog(@"Could not lock device for configuration: %@", error);
+    }
+}
+
+- (void)configureFaceDetection
+{
+    if (NSUserDefaults.isFaceDetectionOn) {
+        [self addMetadataOutput];
+    } else {
+        [self removeMetadataOutput];
+    }
 }
 
 - (void)addMetadataOutput
@@ -324,51 +351,87 @@ static void *SessionRunningContext = &SessionRunningContext;
 #pragma mark - Output delegates
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
 {
+    self.metadataObjects = metadataObjects;
+    [self removeAllFaceBoxes];
+    
     if (metadataObjects.count > 0) {
         KLDispatchMainAsync(^{
-            [self drawRectangleWithMetadataObjects:metadataObjects];
+            [self drawFaceBoxWithMetadataObjects:metadataObjects];
         });
     }
 }
 
-- (void)drawRectangleWithMetadataObjects:(NSArray<AVMetadataFaceObject *> *)metadataObjects
+- (void)drawFaceBoxWithMetadataObjects:(NSArray<AVMetadataFaceObject *> *)metadataObjects
 {
-    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
     [metadataObjects enumerateObjectsUsingBlock:^(AVMetadataFaceObject *  _Nonnull faceObject, NSUInteger idx, BOOL * _Nonnull stop) {
         CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
-        UIView *faceRectangle = [[UIView alloc] initWithFrame:faceViewBounds];
-        faceRectangle.layer.borderWidth = 1.0;
-        faceRectangle.layer.borderColor = [UIColor orangeColor].CGColor;
-        [self.previewView addSubview:faceRectangle];
+        UIView *faceBox = [[UIView alloc] initWithFrame:faceViewBounds];
+        faceBox.layer.borderWidth = 1.0;
+        faceBox.layer.borderColor = [UIColor orangeColor].CGColor;
+        [self.previewView addSubview:faceBox];
     }];
 }
+
+- (void)removeAllFaceBoxes
+{
+    KLDispatchMainAsync(^{
+        [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    });
+}
+
+//- (void)drawFaceBoxWithImage:(CIImage *)image features:(NSArray<CIFaceFeature *> *)features
+//{
+//    CGSize viewSize = self.previewView.size;
+//    CGSize imageSize = image.extent.size;
+//
+//    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
+//
+//    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
+//        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
+//        CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
+//        CGFloat offsetX = (viewSize.width - imageSize.width * scale) / 2;
+//        CGFloat offsetY = (viewSize.height - imageSize.height * scale) / 2;
+//        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scale, scale));
+//        faceViewBounds.origin.x += offsetX;
+//        faceViewBounds.origin.y += offsetY;
+//
+//        UIView *faceBox = [[UIView alloc] initWithFrame:faceViewBounds];
+//        faceBox.layer.borderWidth = 1.0;
+//        faceBox.layer.borderColor = [UIColor orangeColor].CGColor;
+//        [self.previewView addSubview:faceBox];
+//    }];
+//}
 
 #pragma mark - Event handling
 - (void)switchFlashMode:(UIBarButtonItem *)barButton
 {
     barButton.on = !barButton.isOn;
-    BOOL isFlashOn = barButton.isOn;
+    NSUserDefaults.flashMode = barButton.isOn ? AVCaptureFlashModeOn : AVCaptureFlashModeOff;
     
     dispatch_async(self.sessionQueue, ^{
-        AVCaptureDevice *device = self.videoDeviceInput.device;
-        NSError *error = nil;
-        if ([device lockForConfiguration:&error] ) {
-            if (isFlashOn && [device isFlashModeSupported:AVCaptureFlashModeOn] ) {
-                device.flashMode = AVCaptureFlashModeOn;
-            } else {
-                device.flashMode = AVCaptureFlashModeOff;
-            }
-            [device unlockForConfiguration];
-        } else {
-            KLLog(@"Could not lock device for configuration: %@", error);
-        }
+        [self configureFlashMode];
+    });
+}
+
+- (void)switchFaceDetection:(UIBarButtonItem *)barButton
+{
+    barButton.on = !barButton.isOn;
+    NSUserDefaults.faceDetectionOn = barButton.on;
+    
+    [self removeAllFaceBoxes];
+    dispatch_async(self.sessionQueue, ^{
+        [self configureFaceDetection];
+        KLDispatchMainAsync(^{
+            [self.previewView removeBlurBackground];
+        });
     });
 }
 
 - (void)switchCamera:(id)sender
 {
     self.takePhotoButton.enabled = NO;
+    [self removeAllFaceBoxes];
     [self.previewView addBlurBackground];
     [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
     [UIView animateWithDuration:0.4 animations:^{
@@ -422,25 +485,6 @@ static void *SessionRunningContext = &SessionRunningContext;
     });
 }
 
-- (void)switchFaceDetection:(UIBarButtonItem *)barButton
-{
-    barButton.on = !barButton.isOn;
-    self.faceDetectionOn = barButton.on;
-    
-    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    dispatch_async(self.sessionQueue, ^{
-        if (self.faceDetectionOn) {
-            [self addMetadataOutput];
-        } else {
-            [self removeMetadataOutput];
-        }
-        
-        KLDispatchMainAsync(^{
-            [self.previewView removeBlurBackground];
-        });
-    });
-}
-
 - (void)takePhoto:(id)sender
 {
     [KLSoundPlayer playCameraShutterSound];
@@ -449,18 +493,43 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)captureStillImage
 {
+    [self removeAllFaceBoxes];
+    
     UIView *blackView = [[UIView alloc] initWithFrame:self.previewView.bounds];
     blackView.backgroundColor = [UIColor darkBackgroundColor];
     [self.previewView addSubview:blackView];
     
+    NSMutableArray *images = [NSMutableArray array];
     dispatch_async(self.sessionQueue, ^{
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if (connection.isVideoOrientationSupported && orientation != UIInterfaceOrientationUnknown) {
+            [connection setVideoOrientation:(AVCaptureVideoOrientation)orientation];
+        }
+        
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-            CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(imageDataSampleBuffer);
-            CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, imageDataSampleBuffer, kCMAttachmentMode_ShouldPropagate);
-            CIImage *image = [[CIImage alloc] initWithCVPixelBuffer:pixelBuffer options:(__bridge NSDictionary *)attachments];
-            if (attachments) CFRelease(attachments);
+            NSData *data = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+            UIImage *image = [UIImage imageWithData:data];
             
+            [self.metadataObjects enumerateObjectsUsingBlock:^(AVMetadataFaceObject *  _Nonnull faceObject, NSUInteger idx, BOOL * _Nonnull stop) {
+//                CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
+//                faceViewBounds = CGRectOffset(faceViewBounds, 20, 20);
+                CGRect faceViewBounds = faceObject.bounds;
+                faceViewBounds.origin.x *= image.width;
+                faceViewBounds.origin.y *= image.height;
+                faceViewBounds.size.width *= image.width;
+                faceViewBounds.size.height *= image.height;
+                
+                CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceViewBounds);
+                [images addObject:[UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation]];
+                UIImage *croppedImage = images.firstObject;
+                CGImageRelease(imageRef);
+                
+                UIImageView *imageView = [[UIImageView alloc] initWithImage:croppedImage];
+                imageView.contentMode = UIViewContentModeScaleAspectFit;
+                imageView.frame = self.view.bounds;
+                [self.view addSubview:imageView];
+            }];
         }];
     });
     

@@ -144,9 +144,7 @@
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
         _addPhotoButton.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
-        
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTakePhoto:)];
-        [self.addPhotoButton addGestureRecognizer:longPress];
+        [self.addPhotoButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToShowCameraViewController:)]];
         _addPhotoButton;
     })];
     
@@ -402,7 +400,7 @@
     [self presentViewController:navController animated:YES completion:nil];
 }
 
-- (void)longPressTakePhoto:(UILongPressGestureRecognizer *)recognizer
+- (void)longPressToShowCameraViewController:(UILongPressGestureRecognizer *)recognizer
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
