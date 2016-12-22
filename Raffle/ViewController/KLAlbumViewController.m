@@ -11,6 +11,9 @@
 #import "KLCameraPreviewView.h"
 #import "KLImagePickerController.h"
 #import "KLCameraViewController.h"
+#import "KLFaceViewController.h"
+#import "KLScaleTransition.h"
+#import "CIDetector+Base.h"
 
 @interface KLAlbumViewController ()
 
@@ -26,18 +29,17 @@
 
 @implementation KLAlbumViewController
 
-static CGSize CellItemSize;
-static CGFloat LineSpacing;
-static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
+static CGSize cellItemSize;
+static CGFloat lineSpacing;
 
 + (void)load
 {
     CGFloat width, height;
-    LineSpacing = IS_PAD ? 12 : 3;
+    lineSpacing = IS_PAD ? 12 : 3;
     NSUInteger columnCount = IS_PAD ? 5 : 4;
     NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
-    width = height = (SCREEN_WIDTH - LineSpacing * spacingCount) / columnCount;
-    CellItemSize = CGSizeMake(width, height);
+    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
+    cellItemSize = CGSizeMake(width, height);
 }
 
 #pragma mark - Lifecycle
@@ -94,16 +96,16 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 - (void)prepareForUI
 {
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
-    flowLayout.itemSize = CellItemSize;
-    flowLayout.minimumLineSpacing = LineSpacing;
-    flowLayout.minimumInteritemSpacing = LineSpacing;
+    flowLayout.itemSize = cellItemSize;
+    flowLayout.minimumLineSpacing = lineSpacing;
+    flowLayout.minimumInteritemSpacing = lineSpacing;
     
     self.collectionView.allowsMultipleSelection = YES;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(LineSpacing, LineSpacing, LineSpacing, LineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CameraPreviewCellIdentifier];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([KLCameraPreviewView class])];
     
     if (!self.isShowCameraPreview) return;
     
@@ -181,7 +183,7 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isShowCameraPreview && indexPath.item == 0) {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CameraPreviewCellIdentifier forIndexPath:indexPath];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([KLCameraPreviewView class]) forIndexPath:indexPath];
         [cell.contentView addSubview:self.cameraPreviewView];
         [self.cameraPreviewView constraintsEqualWithSuperView];
         return cell;
@@ -290,8 +292,39 @@ static NSString *CameraPreviewCellIdentifier = @"CameraPreviewCellIdentifier";
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(id)recognizer.view];
     PHAsset *asset = [self assetAtIndexPath:indexPath];
     [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
-        
+        KLDispatchGlobalAsync(^{
+            [self faceDetectionWithImage:image];
+        });
     }];
+}
+
+- (void)faceDetectionWithImage:(UIImage *)image
+{
+    NSMutableArray *images = [NSMutableArray array];
+    CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
+    NSArray *features = [detector featuresInUIImage:image];
+    
+    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.height);
+    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
+        faceViewBounds = CGRectInset(faceViewBounds, -20, -20);
+        CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceViewBounds);
+        [images addObject:[UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation]];
+        CGImageRelease(imageRef);
+    }];
+    
+    KLDispatchMainAsync(^{
+        [self showFaceViewControllerWithImages:images];
+    });
+}
+
+- (void)showFaceViewControllerWithImages:(NSArray *)images
+{
+    KLFaceViewController *faceVC = [[KLFaceViewController alloc] initWithCollectionViewLayout:[UICollectionViewFlowLayout new]];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:faceVC];
+    navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
+    navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 @end

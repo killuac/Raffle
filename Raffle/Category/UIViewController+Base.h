@@ -24,11 +24,14 @@
 @end
 
 
+@class KLBaseTransition;
+
 @interface UIViewController (Base) <KLViewControllerProtocol, UITextFieldDelegate>
 
 + (instancetype)viewController;
 + (instancetype)viewControllerWithDataController:(id)dataController;
 
+@property (nonatomic, strong) KLBaseTransition *transition;
 @property (nonatomic, copy) KLDismissBlockType dismissBlock;
 
 @property (nonatomic, readonly) UITabBar *tabBar;

@@ -65,33 +65,27 @@ CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOri
 
 - (UIImage *)rotatedImage
 {
-    if (self.imageOrientation == UIImageOrientationUp) return self;
-    
-    CGAffineTransform transform = CGAffineTransformIdentity;
+    CGAffineTransform transform;
     switch (self.imageOrientation) {
+        case UIImageOrientationUp:
+            return self;
+            break;
+            
         case UIImageOrientationDown:
-        case UIImageOrientationDownMirrored:
             transform = CGAffineTransformTranslate(transform, self.width, self.height);
             transform = CGAffineTransformRotate(transform, M_PI);
             break;
             
         case UIImageOrientationLeft:
-        case UIImageOrientationLeftMirrored:
             transform = CGAffineTransformTranslate(transform, self.width, 0);
             transform = CGAffineTransformRotate(transform, M_PI_2);
             break;
             
         case UIImageOrientationRight:
-        case UIImageOrientationRightMirrored:
             transform = CGAffineTransformTranslate(transform, 0, self.height);
             transform = CGAffineTransformRotate(transform, -M_PI_2);
             break;
             
-        default:
-            break;
-    }
-    
-    switch (self.imageOrientation) {
         case UIImageOrientationUpMirrored:
         case UIImageOrientationDownMirrored:
             transform = CGAffineTransformTranslate(transform, self.width, 0);
@@ -103,13 +97,11 @@ CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOri
             transform = CGAffineTransformTranslate(transform, self.height, 0);
             transform = CGAffineTransformScale(transform, -1, 1);
             break;
-            
-        default:
-            break;
     }
     
     CGContextRef context = CGBitmapContextCreate(NULL, self.width, self.height,
-                                                 CGImageGetBitsPerComponent(self.CGImage), 0,
+                                                 CGImageGetBitsPerComponent(self.CGImage),
+                                                 CGImageGetBytesPerRow(self.CGImage),
                                                  CGImageGetColorSpace(self.CGImage),
                                                  CGImageGetBitmapInfo(self.CGImage));
     CGContextConcatCTM(context, transform);

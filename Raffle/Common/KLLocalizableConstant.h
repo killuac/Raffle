@@ -30,6 +30,7 @@
 
 #define TITLE_DRAW_BOX                          NSLocalizedString(@"DrawBox", "")
 #define TITLE_DRAW_BOXES                        NSLocalizedString(@"DrawBoxes", "")
+#define TITLE_FACE_PHOTOS                       NSLocalizedString(@"FacePhotos", "")
 #define TITLE_PHOTOS                            NSLocalizedString(@"Photos", "")
 #define TITLE_CAMERA                            NSLocalizedString(@"Camera", "")
 #define TITLE_SELECTED_PHOTO_COUNT              NSLocalizedString(@"SelectedPhotoCount", "")

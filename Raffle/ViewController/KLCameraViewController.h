@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "KLPhotoLibrary.h"
 
-@class KLCameraViewController, KLBaseTransition;
+@class KLCameraViewController;
 
 @protocol KLCameraViewControllerDelegate <NSObject>
 
@@ -27,6 +27,5 @@
 + (instancetype)cameraViewControllerWithAlbumImage:(UIImage *)image;
 
 @property (nonatomic, weak) id <KLCameraViewControllerDelegate> delegate;
-@property (nonatomic, strong) KLBaseTransition *transition;
 
 @end

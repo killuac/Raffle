@@ -7,8 +7,8 @@
 //
 
 #import "UIViewController+Base.h"
-//#import "KLInitialViewController.h"
 #import "KLMainViewController.h"
+#import "KLBaseTransition.h"
 
 @implementation UIViewController (Base)
 
@@ -36,7 +36,22 @@
     return [[self alloc] initWithDataController:(id)dataController];
 }
 
-#pragma mark - Block
+#pragma mark - Properties
+- (void)setTransition:(KLBaseTransition *)transition
+{
+    objc_setAssociatedObject(self, @selector(transition), transition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (self.navigationController) {
+        self.navigationController.delegate = transition;
+    } else {
+        self.transitioningDelegate = transition;
+    }
+}
+
+- (KLBaseTransition *)transition
+{
+    return objc_getAssociatedObject(self, @selector(transition));
+}
+
 - (void)setDismissBlock:(KLDismissBlockType)dismissBlock
 {
     objc_setAssociatedObject(self, @selector(dismissBlock), dismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);

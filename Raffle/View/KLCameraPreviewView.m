@@ -45,7 +45,7 @@
 {
     KLCameraPreviewView *view = [self newAutoLayoutView];
     view.session = [AVCaptureSession new];
-    view.sessionQueue = dispatch_queue_create("PreviewSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+    view.sessionQueue = dispatch_queue_create("com.raffle.PreviewSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
     
     dispatch_async(view.sessionQueue, ^{
         [view configureSession];

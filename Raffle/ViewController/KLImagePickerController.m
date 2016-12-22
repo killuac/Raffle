@@ -85,12 +85,6 @@
     return self;
 }
 
-- (void)setTransition:(KLBaseTransition *)transition
-{
-    _transition = transition;
-    self.transitioningDelegate = transition;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -299,22 +293,6 @@
         }
     }];
 }
-
-//- (void)faceDetectionProcessing:(KLVoidBlockType)completion;
-//{
-//    [self.photoLibrary.selectedAssets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-//        [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
-//            CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
-//            NSArray *features = [detector featuresInUIImage:image];
-//
-//            CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.height);
-//            [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
-//                CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
-//                
-//            }];
-//        }];
-//    }];
-//}
 
 - (void)closeAlbum:(id)sender
 {

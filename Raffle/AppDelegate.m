@@ -28,10 +28,18 @@
 
 - (void)setupApplication
 {
+    [self setupUserDefaults];
     [self setupAppearance];
     [self setupAppAnalytics];
     [MagicalRecord setupCoreDataStack];
 //    [MagicalRecord setLoggingLevel:MagicalRecordLoggingLevelOff];
+}
+
+- (void)setupUserDefaults
+{
+    if (!NSUserDefaults.isEmpty) return;
+    NSUserDefaults.flashMode = AVCaptureFlashModeOff;
+    NSUserDefaults.faceDetectionOn = YES;
 }
 
 - (void)setupAppearance

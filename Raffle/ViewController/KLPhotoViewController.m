@@ -24,17 +24,17 @@ NSNotificationName const KLPhotoViewControllerDidTouchStart = @"KLPhotoViewContr
 
 @implementation KLPhotoViewController
 
-static CGSize CellItemSize;
-static CGFloat LineSpacing;
+static CGSize cellItemSize;
+static CGFloat lineSpacing;
 
 + (void)load
 {
     CGFloat width, height;
-    LineSpacing = IS_PAD ? 12 : 3;
+    lineSpacing = IS_PAD ? 12 : 3;
     NSUInteger columnCount = IS_PAD ? 5 : 4;
     NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
-    width = height = (SCREEN_WIDTH - LineSpacing * spacingCount) / columnCount;
-    CellItemSize = CGSizeMake(width, height);
+    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
+    cellItemSize = CGSizeMake(width, height);
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -48,7 +48,7 @@ static CGFloat LineSpacing;
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _drawBoxDC = dataController;
         _drawBoxDC.delegate = self;
-        self.transitioningDelegate = [KLDrawBoxTransition transition];
+        self.transition = [KLDrawBoxTransition transition];
     }
     return self;
 }
@@ -65,14 +65,14 @@ static CGFloat LineSpacing;
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_START target:self action:@selector(tapRightNavBarButton:)];
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
-    flowLayout.itemSize = CellItemSize;
-    flowLayout.minimumLineSpacing = LineSpacing;
-    flowLayout.minimumInteritemSpacing = LineSpacing;
+    flowLayout.itemSize = cellItemSize;
+    flowLayout.minimumLineSpacing = lineSpacing;
+    flowLayout.minimumInteritemSpacing = lineSpacing;
     
     self.collectionView.allowsMultipleSelection = NO;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(LineSpacing, LineSpacing, LineSpacing, LineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
     [self.collectionView registerClass:[KLAddButtonCell class] forCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class])];
 }

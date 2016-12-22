@@ -214,6 +214,18 @@
 				<key>KLLogEventSelectorName</key>
 				<string>addFacePhotosToDrawBox:</string>
 			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>FaceVC_UseFaceDetectedImages</string>
+				<key>KLLogEventSelectorName</key>
+				<string>useFaceDetectedImages:</string>
+			</dict>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>FaceVC_BackFromFaceVC</string>
+				<key>KLLogEventSelectorName</key>
+				<string>backFromFaceVC</string>
+			</dict>
 		</array>
 	</dict>
 	<key>KLResultViewController</key>

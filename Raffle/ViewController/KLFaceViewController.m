@@ -7,6 +7,8 @@
 //
 
 #import "KLFaceViewController.h"
+#import "KLScaleTransition.h"
+#import "KLAlbumCell.h"
 
 @interface KLFaceViewController ()
 
@@ -14,50 +16,58 @@
 
 @implementation KLFaceViewController
 
-static NSString * const reuseIdentifier = @"Cell";
+static CGSize cellItemSize;
+static CGFloat lineSpacing;
 
-- (void)viewDidLoad {
++ (void)load
+{
+    CGFloat width, height;
+    lineSpacing = IS_PAD ? 12 : 3;
+    NSUInteger columnCount = IS_PAD ? 5 : 4;
+    NSUInteger spacingCount = IS_PAD ? columnCount + 1 : columnCount - 1;
+    width = height = (SCREEN_WIDTH - lineSpacing * spacingCount) / columnCount;
+    cellItemSize = CGSizeMake(width, height);
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Register cell classes
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    
-    // Do any additional setup after loading the view.
+    [self prepareForUI];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)prepareForUI
+{
+    self.title = TITLE_FACE_PHOTOS;
+    self.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_back" target:self action:@selector(backFromFaceVC:)];
+    self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemDone target:self action:@selector(useFaceDetectedImages:)];
+    
+    UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
+    flowLayout.itemSize = cellItemSize;
+    flowLayout.minimumLineSpacing = lineSpacing;
+    flowLayout.minimumInteritemSpacing = lineSpacing;
+    
+    self.collectionView.allowsMultipleSelection = NO;
+    self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
+    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
+    [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark <UICollectionViewDataSource>
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-#warning Incomplete implementation, return the number of sections
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     return 0;
 }
 
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of items
-    return 0;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
     
     // Configure the cell
     
@@ -65,34 +75,20 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 #pragma mark <UICollectionViewDelegate>
+//- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return YES;
+//}
 
-/*
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-*/
-
-/*
-// Uncomment this method to specify if the specified item should be selected
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-*/
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
+#pragma mark - Event handing
+- (void)backFromFaceVC:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
+- (void)useFaceDetectedImages:(id)sender
+{
+    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
-}
-*/
 
 @end

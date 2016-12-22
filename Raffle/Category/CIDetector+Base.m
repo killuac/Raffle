@@ -37,7 +37,7 @@
     NSMutableDictionary *options = [NSMutableDictionary new];
     options[CIDetectorImageOrientation] = @(image.exifImageOrientation);
     
-    return [self featuresInImage:image.CIImage options:options];
+    return [self featuresInImage:[CIImage imageWithCGImage:image.CGImage] options:options];
 }
 
 @end

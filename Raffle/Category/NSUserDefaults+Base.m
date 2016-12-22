@@ -10,14 +10,9 @@
 
 @implementation NSUserDefaults (Base)
 
-+ (BOOL)isFirstLaunch
++ (BOOL)isEmpty
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:NSStringFromSelector(@selector(isFirstLaunch))];
-}
-
-+ (void)setFirstLaunch:(BOOL)firstLaunch
-{
-    [[NSUserDefaults standardUserDefaults] setBool:firstLaunch forKey:NSStringFromSelector(@selector(isFirstLaunch))];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(isFirstLaunch))] == nil;
 }
 
 + (NSInteger)flashMode

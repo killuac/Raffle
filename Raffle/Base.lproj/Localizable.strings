@@ -25,8 +25,9 @@
 
 "ReloadAllPhotos" = "Reload all photos to restart";
 
-"DrawBox" = "Draw Box";
+"DrawBox" = "Draw Box Photos";
 "DrawBoxes" = "All Draw Boxes";
+"FacePhotos" = "All Face Photos";
 "Photos" = "Photos";
 "Camera" = "Camera";
 

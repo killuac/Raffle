@@ -10,7 +10,7 @@
 
 @interface NSUserDefaults (Base)
 
-@property (class, nonatomic, assign, getter=isFirstLaunch) BOOL firstLaunch;
+@property (class, nonatomic, readonly) BOOL isEmpty;
 @property (class, nonatomic, assign) NSInteger flashMode;
 @property (class, nonatomic, assign, getter=isFaceDetectionOn) BOOL faceDetectionOn;
 

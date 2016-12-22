@@ -27,6 +27,7 @@
 
 "DrawBox" = "抽奖箱";
 "DrawBoxes" = "所有抽奖箱";
+"FacePhotos" = "所有人脸照";
 "Photos" = "照片";
 "Camera" = "相机";
 "SelectedPhotoCount" = "已选择 %lu 张照片";

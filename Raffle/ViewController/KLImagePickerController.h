@@ -28,6 +28,5 @@
 + (instancetype)imagePickerController;
 
 @property (nonatomic, weak) id <KLImagePickerControllerDelegate> delegate;
-@property (nonatomic, strong) KLBaseTransition *transition;
 
 @end

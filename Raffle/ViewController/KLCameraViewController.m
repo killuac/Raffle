@@ -78,15 +78,9 @@ static void *SessionRunningContext = &SessionRunningContext;
     if (self = [super init]) {
         self.albumImage = image;
         self.session = [AVCaptureSession new];
-        self.sessionQueue = dispatch_queue_create("CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
+        self.sessionQueue = dispatch_queue_create("com.raffle.CameraSerialSessionQueue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
-}
-
-- (void)setTransition:(KLBaseTransition *)transition
-{
-    _transition = transition;
-    self.transitioningDelegate = transition;
 }
 
 - (void)viewDidLoad
@@ -351,10 +345,10 @@ static void *SessionRunningContext = &SessionRunningContext;
 #pragma mark - Output delegates
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
 {
-    self.metadataObjects = metadataObjects;
     [self removeAllFaceBoxes];
     
     if (metadataObjects.count > 0) {
+        self.metadataObjects = metadataObjects;
         KLDispatchMainAsync(^{
             [self drawFaceBoxWithMetadataObjects:metadataObjects];
         });
@@ -499,43 +493,63 @@ static void *SessionRunningContext = &SessionRunningContext;
     blackView.backgroundColor = [UIColor darkBackgroundColor];
     [self.previewView addSubview:blackView];
     
-    NSMutableArray *images = [NSMutableArray array];
     dispatch_async(self.sessionQueue, ^{
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
-        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-        if (connection.isVideoOrientationSupported && orientation != UIInterfaceOrientationUnknown) {
-            [connection setVideoOrientation:(AVCaptureVideoOrientation)orientation];
+        UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+        if (connection.isVideoOrientationSupported) {
+            if (UIDeviceOrientationIsPortrait(orientation) || UIDeviceOrientationIsLandscape(orientation)) {
+                [connection setVideoOrientation:(AVCaptureVideoOrientation)orientation];
+            }
         }
         
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-            NSData *data = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-            UIImage *image = [UIImage imageWithData:data];
-            
-            [self.metadataObjects enumerateObjectsUsingBlock:^(AVMetadataFaceObject *  _Nonnull faceObject, NSUInteger idx, BOOL * _Nonnull stop) {
-//                CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
-//                faceViewBounds = CGRectOffset(faceViewBounds, 20, 20);
-                CGRect faceViewBounds = faceObject.bounds;
-                faceViewBounds.origin.x *= image.width;
-                faceViewBounds.origin.y *= image.height;
-                faceViewBounds.size.width *= image.width;
-                faceViewBounds.size.height *= image.height;
-                
-                CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceViewBounds);
-                [images addObject:[UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation]];
-                UIImage *croppedImage = images.firstObject;
-                CGImageRelease(imageRef);
-                
-                UIImageView *imageView = [[UIImageView alloc] initWithImage:croppedImage];
-                imageView.contentMode = UIViewContentModeScaleAspectFit;
-                imageView.frame = self.view.bounds;
-                [self.view addSubview:imageView];
-            }];
+            CFRetain(imageDataSampleBuffer);
+            dispatch_async(self.sessionQueue, ^{
+                [self processStillImageWithSampleBuffer:imageDataSampleBuffer];
+                CFRelease(imageDataSampleBuffer);
+            });
         }];
     });
     
     KLDispatchMainAfter(6.0/60, ^{
         [blackView removeFromSuperview];
     });
+}
+
+- (void)processStillImageWithSampleBuffer:(CMSampleBufferRef)dataSampleBuffer
+{
+    NSMutableArray *images = [NSMutableArray array];
+    
+    NSData *data = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:dataSampleBuffer];
+    UIImage *image = [UIImage imageWithData:data];
+    
+    CGFloat scaleX = image.width / self.previewView.width;
+    CGFloat scaleY = image.height / self.previewView.height;
+    
+    [self.metadataObjects enumerateObjectsUsingBlock:^(AVMetadataFaceObject *  _Nonnull faceObject, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
+//        CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, faceViewBounds.size.height);
+//        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, transform);
+//        faceViewBounds = CGRectOffset(faceViewBounds, 20, 20);
+        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scaleX, scaleY));
+        
+        CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceViewBounds);
+        [images addObject:[UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation]];
+        UIImage *croppedImage = images.firstObject;
+        CGImageRelease(imageRef);
+        
+        KLDispatchMainAsync(^{
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:croppedImage];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+            imageView.frame = self.previewView.bounds;
+            [self.view addSubview:imageView];
+            
+//            UIView *boxView = [[UIView alloc] initWithFrame:faceViewBounds];
+//            boxView.layer.borderWidth = 1;
+//            boxView.layer.borderColor = [UIColor orangeColor].CGColor;
+//            [self.view addSubview:boxView];
+        });
+    }];
 }
 
 - (void)switchToAlbum:(id)sender
