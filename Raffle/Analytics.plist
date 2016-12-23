@@ -206,19 +206,13 @@
 				<key>KLLogEventName</key>
 				<string>FaceVC_DeleteSelectedFacePhotos</string>
 				<key>KLLogEventSelectorName</key>
-				<string>deleteSelectedFacePhotos</string>
+				<string>deleteSelectedFacePhotos:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>FaceVC_AddFacePhotosToDrawBox</string>
 				<key>KLLogEventSelectorName</key>
 				<string>addFacePhotosToDrawBox:</string>
-			</dict>
-			<dict>
-				<key>KLLogEventName</key>
-				<string>FaceVC_UseFaceDetectedImages</string>
-				<key>KLLogEventSelectorName</key>
-				<string>useFaceDetectedImages:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>

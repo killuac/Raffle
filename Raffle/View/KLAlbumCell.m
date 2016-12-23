@@ -97,7 +97,7 @@
 - (void)animateSpringScale
 {
     [UIView animateWithDefaultDuration:^{
-        self.transform = CGAffineTransformMakeScale(0.9, 0.9);
+        self.transform = CGAffineTransformMakeScale(1.1, 1.1);
     } completion:^(BOOL finished) {
         [UIView animateSpringWithDefaultDuration:^{
             self.transform = CGAffineTransformIdentity;

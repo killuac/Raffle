@@ -71,7 +71,7 @@ KLStatusBar *sharedStatusBar = nil;
     [self.statusBarWindow addSubview:self];
     [self.statusBarWindow addSubview:self.notificationView];
     
-    self.snapshotView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:YES];
+    self.snapshotView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
     [self addSubview:self.snapshotView];
     
     [self addContraints];
@@ -176,11 +176,11 @@ KLStatusBar *sharedStatusBar = nil;
 }
 
 #pragma mark - Notification message
-+ (void)showNotificationWithMessage:(NSString *)message
++ (void)showWithText:(NSString *)text
 {
     if (sharedStatusBar.isShowing) return;
     sharedStatusBar = [KLStatusBar new];
-    [sharedStatusBar showWithMessage:message];
+    [sharedStatusBar showWithMessage:text];
 }
 
 + (void)dismiss

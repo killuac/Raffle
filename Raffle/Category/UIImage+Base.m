@@ -43,6 +43,16 @@ CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOri
 
 @implementation UIImage (Base)
 
+- (BOOL)isSelected
+{
+    return [objc_getAssociatedObject(self, @selector(isSelected)) boolValue];
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    objc_setAssociatedObject(self, @selector(isSelected), @(selected), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (CGFloat)width
 {
     return self.size.width;

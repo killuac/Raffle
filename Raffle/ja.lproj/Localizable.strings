@@ -6,34 +6,37 @@
   Copyright © 2016 Syzygy. All rights reserved.
 */
 
-"Okay" = "はい";
-"Cancel" = "キャンセル";
-"Settings" = "設定";
-"Start" = "開始";
-"Stop" = "停止";
-"Unselect" = "選択を解除";
-"SelectAll" = "すべて選択";
-"TakePhoto" = "写真を撮る";
-"ChoosePhoto" = "写真を選択";
-"DeleteDrawBox" = "削除抽選箱";
-"DeletePhotoCountOne" = "写真を削除";
-"DeletePhotoCountOther" = "%lu枚の写真を削除";
+"TitleOkay" = "はい";
+"TitleCancel" = "キャンセル";
+"TitleSettings" = "設定";
+"TitleStart" = "開始";
+"TitleStop" = "停止";
+"TitleUnselect" = "選択を解除";
+"TitleSelectAll" = "すべて選択";
+"TitleTakePhoto" = "写真を撮る";
+"TitleChoosePhoto" = "写真を選択";
+"TitleDeleteDrawBox" = "削除抽選箱";
+"TitleDeletePhotoCountOne" = "写真を削除";
+"TitleDeletePhotoCountOther" = "%lu枚の写真を削除";
 
-"PrizeMode" = "プライズモード：プライズ写真を取り除かない";
-"ParticipantMode" = "参加者モード：当選者写真を取り除く";
-"ShakeToStart" = "携帯をシェイクして、抽選を開始する";
+"TitleDrawBox" = "抽選箱";
+"TitleDrawBoxes" = "全て抽選箱";
+"TitleFacePhotos" = "";
+"TitlePhotos" = "写真";
+"TitleCamera" = "カメラ";
+"TitleSelectedPhotoCount" = "%lu枚の写真選択中";
 
-"ReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始する";
+"HUDPrizeMode" = "プライズモード：プライズ写真を取り除かない";
+"HUDParticipantMode" = "参加者モード：当選者写真を取り除く";
+"HUDNotRecognizeFace" = "沒有識別到人臉";
 
-"DrawBox" = "抽選箱";
-"DrawBoxes" = "全て抽選箱";
-"FacePhotos" = "すべての顔の写真";
-"Photos" = "写真";
-"Camera" = "カメラ";
-"SelectedPhotoCount" = "%lu枚の写真選択中";
+"TipShakeToStart" = "携帯をシェイクして、抽選を開始する";
+"TipReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始する";
+"TipLongPressToDeletePhoto" = "";
+"TipLongPressToFaceDetection" = "";
 
-"AccessPhotosSetting" = "システムオプション%2$@から、%1$@よりあなたの写真をアクセスすることを許可します。";
-"AccessCameraSetting" = "システムオプション%2$@から、%1$@よりあなたのカメラをアクセルすることを許可します。";
+"AlertAccessPhotosSetting" = "システムオプション%2$@から、%1$@よりあなたの写真をアクセスすることを許可します。";
+"AlertAccessCameraSetting" = "システムオプション%2$@から、%1$@よりあなたのカメラをアクセルすることを許可します。";
 
-"PhotosSettingPath" = "設定 - プライバシー - 写真";
-"CameraSettingPath" = "設定 - プライバシー - カメラ";
+"PathPhotosSettingPath" = "設定 - プライバシー - 写真";
+"PathCameraSettingPath" = "設定 - プライバシー - カメラ";

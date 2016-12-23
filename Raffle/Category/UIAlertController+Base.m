@@ -12,7 +12,7 @@
 
 + (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message
 {
-    UIAlertAction *okay = [UIAlertAction actionWithTitle:BUTTON_TITLE_OKAY style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *okay = [UIAlertAction actionWithTitle:TITLE_OKAY style:UIAlertActionStyleCancel handler:nil];
     return [self alertControllerWithTitle:title message:message actions:@[okay]];
 }
 

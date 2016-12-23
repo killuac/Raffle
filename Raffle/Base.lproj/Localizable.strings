@@ -6,33 +6,36 @@
   Copyright © 2016 Syzygy. All rights reserved.
 */
 
-"Okay" = "OK";
-"Cancel" = "Cancel";
-"Settings" = "Settings";
-"Start" = "Start";
-"Stop" = "Stop";
-"Unselect" = "Unselect";
-"SelectAll" = "SelectAll";
-"TakePhoto" = "Take Photo";
-"ChoosePhoto" = "Choose Photo";
-"DeleteDrawBox" = "Delete Draw Box";
-"DeletePhotoCountOne" = "Delete Photo";
-"DeletePhotoCountOther" = "Delete %lu Photos";
+"TitleOkay" = "OK";
+"TitleCancel" = "Cancel";
+"TitleSettings" = "Settings";
+"TitleStart" = "Start";
+"TitleStop" = "Stop";
+"TitleUnselect" = "Unselect";
+"TitleSelectAll" = "SelectAll";
+"TitleTakePhoto" = "Take Photo";
+"TitleChoosePhoto" = "Choose Photo";
+"TitleDeleteDrawBox" = "Delete Draw Box";
+"TitleDeletePhotoCountOne" = "Delete Photo";
+"TitleDeletePhotoCountOther" = "Delete %lu Photos";
 
-"PrizeMode" = "Prize Mode: The prize photo won't be removed";
-"ParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";
-"ShakeToStart" = "Shake phone to start";
+"TitleDrawBox" = "Draw Box Photos";
+"TitleDrawBoxes" = "All Draw Boxes";
+"TitleFacePhotos" = "All Face Photos";
+"TitlePhotos" = "Photos";
+"TitleCamera" = "Camera";
 
-"ReloadAllPhotos" = "Reload all photos to restart";
+"HUDPrizeMode" = "Prize Mode: The prize photo won't be removed";
+"HUDParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";
+"HUDNotRecognizeFace" = "Not recognize face";
 
-"DrawBox" = "Draw Box Photos";
-"DrawBoxes" = "All Draw Boxes";
-"FacePhotos" = "All Face Photos";
-"Photos" = "Photos";
-"Camera" = "Camera";
+"TipShakeToStart" = "Shake phone to start";
+"TipReloadAllPhotos" = "Reload all photos to restart";
+"TipLongPressToDeletePhoto" = "Long press to delete photo";
+"TipLongPressToFaceDetection" = "Long press to face detection";
 
-"AccessPhotosSetting" = "Please allow %1$@ access your photos in your system %2$@";
-"AccessCameraSetting" = "Please allow %1$@ access your camera in your system %2$@";
+"AlertAccessPhotosSetting" = "Please allow %1$@ access your photos in your system %2$@";
+"AlertAccessCameraSetting" = "Please allow %1$@ access your camera in your system %2$@";
 
-"PhotosSettingPath" = "Settings-Privacy-Photos";
-"CameraSettingPath" = "Settings-Privacy-Camera";
+"PathPhotosSettingPath" = "Settings-Privacy-Photos";
+"PathCameraSettingPath" = "Settings-Privacy-Camera";

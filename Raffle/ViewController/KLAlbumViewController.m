@@ -191,11 +191,7 @@ static CGFloat lineSpacing;
     
     KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
     cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToFaceDetection:)];
-    PHAsset *asset = [self assetAtIndexPath:indexPath];
-    [cell configWithAsset:asset];
-    if (asset.isSelected) {
-        [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-    }
+    [cell configWithAsset:[self assetAtIndexPath:indexPath]];
     return cell;
 }
 
@@ -314,13 +310,17 @@ static CGFloat lineSpacing;
     }];
     
     KLDispatchMainAsync(^{
-        [self showFaceViewControllerWithImages:images];
+        if (features.count > 0) {
+            [self showFaceViewControllerWithImages:images];
+        } else {
+            [KLStatusBar showWithText:HUD_NOT_RECOGNIZE_FACE];
+        }
     });
 }
 
 - (void)showFaceViewControllerWithImages:(NSArray *)images
 {
-    KLFaceViewController *faceVC = [[KLFaceViewController alloc] initWithCollectionViewLayout:[UICollectionViewFlowLayout new]];
+    KLFaceViewController *faceVC = [KLFaceViewController viewControllerWithImages:images];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:faceVC];
     navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;

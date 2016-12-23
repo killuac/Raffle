@@ -207,8 +207,8 @@ static CGFloat SectionInset;
 
 - (void)deleteDrawBox:(UIButton *)sender
 {
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *delete = [UIAlertAction actionWithTitle:BUTTON_TITLE_DELETE_DRAW_BOX style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *delete = [UIAlertAction actionWithTitle:TITLE_DELETE_DRAW_BOX style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
         KLDrawBoxCell *cell = (id)[sender superCollectionViewCell];
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
         [self.dataController deleteDrawBoxAtIndexPath:indexPath];

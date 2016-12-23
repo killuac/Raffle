@@ -58,12 +58,12 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 + (void)showAlert
 {
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
-    UIAlertAction *setting = [UIAlertAction actionWithTitle:BUTTON_TITLE_SETTING style:UIAlertActionStyleCancel handler:^(id action) {
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *setting = [UIAlertAction actionWithTitle:TITLE_SETTINGS style:UIAlertActionStyleCancel handler:^(id action) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }];
     
-    NSString *message = [NSString localizedStringWithFormat:MSG_ACCESS_CAMERA_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_CAMERA_SETTING quotedString]];
+    NSString *message = [NSString localizedStringWithFormat:ALERT_ACCESS_CAMERA_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_CAMERA_SETTING quotedString]];
     [[UIAlertController alertControllerWithTitle:TITLE_CAMERA message:message actions:@[setting, cancel]] show];
 }
 
@@ -120,7 +120,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     UIBarButtonItem *flashButtonItem = [UIBarButtonItem barButtonItemWithOnImageName:@"icon_flash_on" offImageName:@"icon_flash_off" target:self action:@selector(switchFlashMode:)];
     UIBarButtonItem *faceButtonItem = [UIBarButtonItem barButtonItemWithOnImageName:@"icon_face_on" offImageName:@"icon_face_off" target:self action:@selector(switchFaceDetection:)];
     UIBarButtonItem *switchCameraItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_camera_switcher" target:self action:@selector(switchCamera:)];
-    flashButtonItem.on = (NSUserDefaults.flashMode == AVCaptureFlashModeOn);
+    flashButtonItem.on = (NSUserDefaults.flashMode == AVCaptureFlashModeAuto);
     faceButtonItem.on = NSUserDefaults.isFaceDetectionOn;
     NSArray *items = @[flashButtonItem, faceButtonItem, switchCameraItem];
     UIToolbar *topToolbar = [UIToolbar toolbarWithItems:items];
@@ -224,10 +224,10 @@ static void *SessionRunningContext = &SessionRunningContext;
     AVCaptureDevice *device = self.videoDeviceInput.device;
     NSError *error = nil;
     if ([device lockForConfiguration:&error] ) {
-        if (NSUserDefaults.flashMode == AVCaptureFlashModeOn && [device isFlashModeSupported:AVCaptureFlashModeOn] ) {
-            device.flashMode = AVCaptureFlashModeOn;
-        } else {
+        if (NSUserDefaults.flashMode == AVCaptureFlashModeOff && [device isFlashModeSupported:AVCaptureFlashModeOn] ) {
             device.flashMode = AVCaptureFlashModeOff;
+        } else {
+            device.flashMode = AVCaptureFlashModeAuto;
         }
         [device unlockForConfiguration];
     } else {
@@ -401,7 +401,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 - (void)switchFlashMode:(UIBarButtonItem *)barButton
 {
     barButton.on = !barButton.isOn;
-    NSUserDefaults.flashMode = barButton.isOn ? AVCaptureFlashModeOn : AVCaptureFlashModeOff;
+    NSUserDefaults.flashMode = barButton.isOn ? AVCaptureFlashModeAuto : AVCaptureFlashModeOff;
     
     dispatch_async(self.sessionQueue, ^{
         [self configureFlashMode];

@@ -14,7 +14,7 @@
 
 @interface KLStatusBar : UIView
 
-+ (void)showNotificationWithMessage:(NSString *)message;
++ (void)showWithText:(NSString *)text;
 + (void)dismiss;
 
 @end

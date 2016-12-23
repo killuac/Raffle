@@ -10,4 +10,6 @@
 
 @interface KLFaceViewController : UICollectionViewController
 
++ (instancetype)viewControllerWithImages:(NSArray<UIImage *> *)images;
+
 @end

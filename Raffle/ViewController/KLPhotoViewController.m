@@ -62,7 +62,7 @@ static CGFloat lineSpacing;
 - (void)prepareForUI
 {
     self.title = TITLE_DRAW_BOX;
-    self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:BUTTON_TITLE_START target:self action:@selector(tapRightNavBarButton:)];
+    self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:TITLE_START target:self action:@selector(tapRightNavBarButton:)];
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
@@ -106,11 +106,7 @@ static CGFloat lineSpacing;
     } else {
         KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
         cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
-        PHAsset *asset = [self.drawBoxDC objectAtIndexPath:indexPath];
-        [cell configWithAsset:asset];
-        if (asset.isSelected) {
-            [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-        }
+        [cell configWithAsset:[self.drawBoxDC objectAtIndexPath:indexPath]];
         return cell;
     }
 }
@@ -203,21 +199,14 @@ static CGFloat lineSpacing;
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
-    if (!self.deleteMode) {
-        self.deleteMode = YES;
-    }
+    self.deleteMode = YES;
     
     KLAlbumCell *cell = (id)recognizer.view;
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    PHAsset *asset = [self.drawBoxDC objectAtIndexPath:indexPath];
-    if (asset.isSelected) {
-        [self.collectionView deselectItemAtIndexPath:indexPath animated:YES];
-        [self collectionView:self.collectionView didDeselectItemAtIndexPath:indexPath];
-    } else {
-        [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
-        [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
-    }
-    [self reloadData];
+    [[self.drawBoxDC objectAtIndexPath:indexPath] setSelected:YES];
+    
+    [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+    [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
 
 - (void)tapRightNavBarButton:(UIBarButtonItem *)sender
@@ -237,9 +226,9 @@ static CGFloat lineSpacing;
 
 - (void)deleteSelectedDrawBoxPhotos:(id)sender
 {
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:BUTTON_TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
     NSUInteger count = self.drawBoxDC.selectedAssetCount;
-    NSString *title = count > 1 ? [NSString stringWithFormat:BUTTON_TITLE_DELETE_PHOTO_COUNT_OTHER, count] : BUTTON_TITLE_DELETE_PHOTO_COUNT_ONE;
+    NSString *title = count > 1 ? [NSString stringWithFormat:TITLE_DELETE_PHOTO_COUNT_OTHER, count] : TITLE_DELETE_PHOTO_COUNT_ONE;
     UIAlertAction *delete = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
         [self.drawBoxDC deleteSelectedAssets];
     }];
@@ -273,7 +262,7 @@ static CGFloat lineSpacing;
         }];
     } else {
         self.navigationItem.leftBarButtonItem = nil;
-        self.navigationItem.rightBarButtonItem.title = BUTTON_TITLE_START;
+        self.navigationItem.rightBarButtonItem.title = TITLE_START;
         self.navigationItem.rightBarButtonItem.image = nil;
     }
 }

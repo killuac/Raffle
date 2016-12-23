@@ -12,7 +12,7 @@
 
 + (BOOL)isEmpty
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(isFirstLaunch))] == nil;
+    return [[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(flashMode))] == nil;
 }
 
 + (NSInteger)flashMode

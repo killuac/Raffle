@@ -6,34 +6,37 @@
   Copyright © 2016 Syzygy. All rights reserved.
 */
 
-"Okay" = "确定";
-"Cancel" = "取消";
-"Settings" = "设置";
-"Start" = "开始";
-"Stop" = "停止";
-"Unselect" = "取消选择";
-"SelectAll" = "全部选中";
-"TakePhoto" = "拍摄照片";
-"ChoosePhoto" = "选取照片";
-"DeleteDrawBox" = "删除抽奖箱";
-"DeletePhotoCountOne" = "删除照片";
-"DeletePhotoCountOther" = "删除 %lu 张照片";
+"TitleOkay" = "确定";
+"TitleCancel" = "取消";
+"TitleSettings" = "设置";
+"TitleStart" = "开始";
+"TitleStop" = "停止";
+"TitleUnselect" = "取消选择";
+"TitleSelectAll" = "全部选中";
+"TitleTakePhoto" = "拍摄照片";
+"TitleChoosePhoto" = "选取照片";
+"TitleDeleteDrawBox" = "删除抽奖箱";
+"TitleDeletePhotoCountOne" = "删除照片";
+"TitleDeletePhotoCountOther" = "删除 %lu 张照片";
 
-"PrizeMode" = "奖品模式：奖品照片不会被移除";
-"ParticipantMode" = "参与者模式：中奖者照片会被移除";
-"ShakeToStart" = "手机摇一摇即可开始抽奖";
+"TitleDrawBox" = "抽奖箱";
+"TitleDrawBoxes" = "所有抽奖箱";
+"TitleFacePhotos" = "所有人脸照";
+"TitlePhotos" = "照片";
+"TitleCamera" = "相机";
+"TitleSelectedPhotoCount" = "已选择 %lu 张照片";
 
-"ReloadAllPhotos" = "重新加载所有照片，开始新一轮抽奖。";
+"HUDPrizeMode" = "奖品模式：奖品照片不会被移除";
+"HUDParticipantMode" = "参与者模式：中奖者照片会被移除";
+"HUDNotRecognizeFace" = "没有识别到人脸";
 
-"DrawBox" = "抽奖箱";
-"DrawBoxes" = "所有抽奖箱";
-"FacePhotos" = "所有人脸照";
-"Photos" = "照片";
-"Camera" = "相机";
-"SelectedPhotoCount" = "已选择 %lu 张照片";
+"TipShakeToStart" = "手机摇一摇即可开始抽奖";
+"TipReloadAllPhotos" = "重新加载所有照片，开始新一轮抽奖。";
+"TipLongPressToDeletePhoto" = "长按可以删除照片";
+"TipLongPressToFaceDetection" = "长按可以识别人脸";
 
-"AccessPhotosSetting" = "请在系统的%2$@选项中，允许%1$@访问你的照片。";
-"AccessCameraSetting" = "请在系统的%2$@选项中，允许%1$@访问你的相机。";
+"AlertAccessPhotosSetting" = "请在系统的%2$@选项中，允许%1$@访问你的照片。";
+"AlertAccessCameraSetting" = "请在系统的%2$@选项中，允许%1$@访问你的相机。";
 
-"PhotosSettingPath" = "设置-隐私-照片";
-"CameraSettingPath" = "设置-隐私-相机";
+"PathPhotosSettingPath" = "设置-隐私-照片";
+"PathCameraSettingPath" = "设置-隐私-相机";

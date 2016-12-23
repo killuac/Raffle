@@ -35,6 +35,8 @@ UIKIT_EXTERN CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientati
 
 @interface UIImage (Base)
 
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
+
 @property (nonatomic, readonly) CGFloat width;
 @property (nonatomic, readonly) CGFloat height;
 @property (nonatomic, readonly) CGImagePropertyOrientation exifImageOrientation;
