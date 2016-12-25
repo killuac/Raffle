@@ -8,6 +8,12 @@
 
 #import "UIImage+Base.h"
 
+BOOL KLImageOrientationIsPortrait(UIImageOrientation imageOrientation)
+{
+    return (imageOrientation == UIImageOrientationUp || imageOrientation == UIImageOrientationDown ||
+            imageOrientation == UIImageOrientationUpMirrored || imageOrientation == UIImageOrientationDownMirrored);
+}
+
 CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOrientation imageOrientation)
 {
     CGImagePropertyOrientation propertyOrientation;
@@ -68,12 +74,13 @@ CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOri
     return KLEXIFImageOrientationFromImageOrientation(self.imageOrientation);
 }
 
+#pragma mark - Generate new image
 - (UIImage *)originalImage
 {
     return [self imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
-- (UIImage *)rotatedImage
+- (UIImage *)orientationImage
 {
     CGAffineTransform transform;
     switch (self.imageOrientation) {

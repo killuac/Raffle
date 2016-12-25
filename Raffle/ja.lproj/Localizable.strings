@@ -21,19 +21,20 @@
 
 "TitleDrawBox" = "抽選箱";
 "TitleDrawBoxes" = "全て抽選箱";
-"TitleFacePhotos" = "";
+"TitleFacePhotos" = "全ての顔写真";
 "TitlePhotos" = "写真";
 "TitleCamera" = "カメラ";
 "TitleSelectedPhotoCount" = "%lu枚の写真選択中";
 
 "HUDPrizeMode" = "プライズモード：プライズ写真を取り除かない";
 "HUDParticipantMode" = "参加者モード：当選者写真を取り除く";
-"HUDNotRecognizeFace" = "沒有識別到人臉";
+"HUDNotRecognizedFace" = "顔が見当たらない";
 
 "TipShakeToStart" = "携帯をシェイクして、抽選を開始する";
 "TipReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始する";
-"TipLongPressToDeletePhoto" = "";
-"TipLongPressToFaceDetection" = "";
+"TipFaceDetectionSwitcher" = "顔認識機能オン/オフ";
+"TipLongPressToDeletePhoto" = "長押しで写真を削除する";
+"TipLongPressToFaceDetection" = "長押しで顔を認識する";
 
 "AlertAccessPhotosSetting" = "システムオプション%2$@から、%1$@よりあなたの写真をアクセスすることを許可します。";
 "AlertAccessCameraSetting" = "システムオプション%2$@から、%1$@よりあなたのカメラをアクセルすることを許可します。";

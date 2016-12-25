@@ -11,7 +11,7 @@
 @interface CAAnimation (Base)
 
 // Need use weak self if exists retain cycle
-@property (nonatomic, copy) KLVoidBlockType startBlock;
-@property (nonatomic, copy) KLBOOLBlockType completionBlock;
+@property (nonatomic, copy) KLVoidBlockType startBlock;         // Weak self
+@property (nonatomic, copy) KLBOOLBlockType completionBlock;    // Weak self
 
 @end

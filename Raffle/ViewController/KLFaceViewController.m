@@ -12,8 +12,12 @@
 
 @interface KLFaceViewController ()
 
-@property (nonatomic, strong) NSArray<UIImage *> *images;
+@property (nonatomic, strong) NSMutableArray<UIImage *> *images;
+@property (nonatomic, strong) NSMutableArray<NSIndexPath *> *selectedIndexPaths;
 @property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
+
+@property (nonatomic, strong) UIBarButtonItem *backButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *doneButtonItem;
 
 @end
 
@@ -40,7 +44,8 @@ static CGFloat lineSpacing;
 - (instancetype)initWithImages:(NSArray *)images
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
-        _images = images;
+        self.images = [NSMutableArray arrayWithArray:images];
+        self.selectedIndexPaths = [NSMutableArray array];
     }
     return self;
 }
@@ -56,12 +61,20 @@ static CGFloat lineSpacing;
     [self prepareForUI];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    self.navigationController.transition = nil;     // Break retain cycle
+}
+
 - (void)prepareForUI
 {
     self.title = TITLE_FACE_PHOTOS;
     self.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_back" target:self action:@selector(backFromFaceVC:)];
-    self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemDone target:self action:@selector(tapRightNavBarButton:)];
+    self.backButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_back" target:self action:@selector(backFromFaceVC:)];
+    self.doneButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemDone target:self action:@selector(addFacePhotosToDrawBox:)];
+    self.navigationItem.leftBarButtonItem = self.backButtonItem;
+    self.navigationItem.rightBarButtonItem = self.doneButtonItem;
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
@@ -108,53 +121,93 @@ static CGFloat lineSpacing;
     return (indexPath.item == self.images.count) ? YES : self.deleteMode;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    self.images[indexPath.item].selected = YES;
+    [self.selectedIndexPaths addObject:indexPath];
+    [self updateUI];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.images[indexPath.item].selected = NO;
+    [self.selectedIndexPaths removeObject:indexPath];
+    [self updateUI];
+}
+
+- (void)updateUI
+{
+    // Only if right bar button is "Delete" icon, need check enablement.
+    if (self.isDeleteMode) {
+        self.navigationItem.rightBarButtonItem.enabled = self.selectedIndexPaths.count > 0;
+    }
+    
+    if (self.isDeleteMode && self.images.count == 0) {
+        [self backFromFaceVC:nil];
+    }
+}
+
 #pragma mark - Event handing
 - (void)longPressToMultiSelectFacePhotos:(UILongPressGestureRecognizer *)recognizer
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
-    if (!self.deleteMode) {
-        self.deleteMode = YES;
-    }
+    self.deleteMode = YES;
     
-    KLAlbumCell *cell = (id)recognizer.view;
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    self.images[indexPath.item].selected = YES;
-    
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(id)recognizer.view];
     [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
-    [self reloadData];
 }
 
 - (void)backFromFaceVC:(id)sender
 {
+    [self.images removeAllObjects];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)tapRightNavBarButton:(id)sender
-{
-    if (self.deleteMode) {
-        [self deleteSelectedFacePhotos:sender];
-    } else {
-        [self addFacePhotosToDrawBox:sender];
-    }
 }
 
 - (void)addFacePhotosToDrawBox:(id)sender
 {
-    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    // TODO: Add face photos
+    self.presentingViewController.view.alpha = 1.0;
+    self.presentingViewController.view.transform = CGAffineTransformIdentity;
+    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)deleteSelectedFacePhotos:(id)sender
 {
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
+    NSUInteger selCount = self.selectedIndexPaths.count;
+    NSString *title = selCount > 1 ? [NSString stringWithFormat:TITLE_DELETE_PHOTO_COUNT_OTHER, selCount] : TITLE_DELETE_PHOTO_COUNT_ONE;
+    UIAlertAction *delete = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        [self.selectedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
+            [indexSet addIndex:indexPath.item];
+        }];
+        
+        [self.images removeObjectsAtIndexes:indexSet];
+        [self.collectionView deleteItemsAtIndexPaths:self.selectedIndexPaths];
+        [self clearSelection];
+        [self updateUI];
+    }];
     
+    UIAlertController *alertController = [UIAlertController actionSheetControllerWithActions:@[delete, cancel]];
+    alertController.popoverPresentationController.sourceView = self.view;
+    alertController.popoverPresentationController.sourceRect = self.navigationBar.frame;
+    [alertController show];
 }
 
 - (void)cancelMultiPhotoSelection:(id)sender
 {
     self.deleteMode = NO;
+    [self clearSelection];
     [self reloadData];
-    self.navigationItem.rightBarButtonItem.enabled = self.images.count > 0;
+}
+
+- (void)clearSelection
+{
+    [self.images setValue:@(NO) forKey:@"selected"];
+    [self.selectedIndexPaths removeAllObjects];
 }
 
 - (void)setDeleteMode:(BOOL)deleteMode
@@ -164,18 +217,15 @@ static CGFloat lineSpacing;
     
     if (deleteMode) {
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelMultiPhotoSelection:)];
-        self.navigationItem.rightBarButtonItem.image = [UIImage imageNamed:@"icon_delete"];
-        self.navigationItem.rightBarButtonItem.title = nil;
-        
+        self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_delete" target:self action:@selector(deleteSelectedFacePhotos:)];
+
         [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(KLAlbumCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
             [cell animateSpringScale];
         }];
     } else {
-        self.navigationItem.leftBarButtonItem = nil;
-        self.navigationItem.rightBarButtonItem.title = TITLE_START;
-        self.navigationItem.rightBarButtonItem.image = nil;
+        self.navigationItem.leftBarButtonItem = self.backButtonItem;
+        self.navigationItem.rightBarButtonItem = self.doneButtonItem;
     }
 }
-
 
 @end

@@ -33,6 +33,7 @@
 
 #define TIP_SHAKE_TO_START                      NSLocalizedString(@"TipShakeToStart", "")
 #define TIP_RELOAD_ALL_PHOTOS                   NSLocalizedString(@"TipReloadAllPhotos", "")
+#define TIP_FACE_DETECTION_SWITCHER             NSLocalizedString(@"TipFaceDetectionSwitcher", "")
 #define TIP_LONG_PRESS_TO_DELETE_PHOTO          NSLocalizedString(@"TipLongPressToDeletePhoto", "")
 #define TIP_LONG_PRESS_TO_FACE_DETECTION        NSLocalizedString(@"TipLongPressToFaceDetection", "")
 

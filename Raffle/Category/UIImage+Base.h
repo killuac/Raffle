@@ -30,6 +30,7 @@ NS_INLINE UIImage *KLImageAvatarByGender(KLGenderType gender) {
     return (gender > 0) ? [UIImage imageNamed:@"image_male_avatar.png"] : [UIImage imageNamed:@"image_male_avatar.png"];
 }
 
+UIKIT_EXTERN BOOL KLImageOrientationIsPortrait(UIImageOrientation imageOrientation);
 UIKIT_EXTERN CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOrientation imageOrientation);
 
 
@@ -42,7 +43,7 @@ UIKIT_EXTERN CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientati
 @property (nonatomic, readonly) CGImagePropertyOrientation exifImageOrientation;
 
 - (UIImage *)originalImage;
-- (UIImage *)rotatedImage;
+- (UIImage *)orientationImage;
 - (UIImage *)resizableCroppedImage;             // Resize and crop in center
 - (UIImage *)brightenWithAlpha:(CGFloat)alpha;  // Value range (0, 1)
 - (UIImage *)antialiasingImage;                 // layer.allowsEdgeAntialiasing = YES

@@ -32,6 +32,7 @@
 
 "TipShakeToStart" = "手機搖一搖即可開始抽獎";
 "TipReloadAllPhotos" = "重新加載所有照片，開始新一輪抽獎。";
+"TipFaceDetectionSwitcher" = "人臉識別功能（開/關）";
 "TipLongPressToDeletePhoto" = "長按可以刪除照片";
 "TipLongPressToFaceDetection" = "長按可以識別人臉";
 

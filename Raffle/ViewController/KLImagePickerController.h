@@ -10,7 +10,7 @@
 #import "KLPhotoLibrary.h"
 #import "KLAlbumViewController.h"
 
-@class KLImagePickerController, KLBaseTransition;
+@class KLImagePickerController;
 
 @protocol KLImagePickerControllerDelegate <NSObject>
 

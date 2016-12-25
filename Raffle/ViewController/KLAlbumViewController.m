@@ -300,12 +300,15 @@ static CGFloat lineSpacing;
     CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
     NSArray *features = [detector featuresInUIImage:image];
     
-    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.height);
-    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
+    CGFloat yOffset = KLImageOrientationIsPortrait(image.imageOrientation) ? image.height : image.width;
+    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -yOffset);
+    
+    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull faceFeature, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGRect faceViewBounds = CGRectApplyAffineTransform(faceFeature.bounds, transform);
         faceViewBounds = CGRectInset(faceViewBounds, -20, -20);
         CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceViewBounds);
-        [images addObject:[UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation]];
+        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
+        if (croppedImage) [images addObject:croppedImage];
         CGImageRelease(imageRef);
     }];
     

@@ -37,11 +37,12 @@
         pathAnimation.toValue = (__bridge id)startPath;
     }
     
+    DECLARE_WEAK_SELF;
     [maskLayer addAnimation:pathAnimation forKey:@"pathAnimation"];
     [pathAnimation setCompletionBlock:^(BOOL isFinished) {
         fromView.layer.mask = nil;
         toView.layer.mask = nil;
-        [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
+        [welf.transitionContext completeTransition:!welf.transitionContext.transitionWasCancelled];
     }];
 }
 

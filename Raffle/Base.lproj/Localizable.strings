@@ -31,6 +31,7 @@
 
 "TipShakeToStart" = "Shake phone to start";
 "TipReloadAllPhotos" = "Reload all photos to restart";
+"TipFaceDetectionSwitcher" = "Face Detection (On/Off)";
 "TipLongPressToDeletePhoto" = "Long press to delete photo";
 "TipLongPressToFaceDetection" = "Long press to face detection";
 

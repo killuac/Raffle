@@ -12,12 +12,14 @@
 #import "KLDrawBoxTransition.h"
 #import "KLDrawBoxDataController.h"
 #import "KLImagePickerController.h"
+#import "KLScaleTransition.h"
 
 NSNotificationName const KLPhotoViewControllerDidTouchStart = @"KLPhotoViewControllerDidTouchStart";
 
 @interface KLPhotoViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
+@property (nonatomic, strong) KLScaleTransition *scaleTransition;
 @property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
 
 @end
@@ -48,7 +50,6 @@ static CGFloat lineSpacing;
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         _drawBoxDC = dataController;
         _drawBoxDC.delegate = self;
-        self.transition = [KLDrawBoxTransition transition];
     }
     return self;
 }
@@ -57,6 +58,12 @@ static CGFloat lineSpacing;
 {
     [super viewDidLoad];
     [self prepareForUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.scaleTransition = nil;     // Break retain cycle
 }
 
 - (void)prepareForUI
@@ -140,7 +147,9 @@ static CGFloat lineSpacing;
 {
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        self.scaleTransition = [KLScaleTransition transition];
         imagePicker.delegate = self;
+        imagePicker.transitioningDelegate = self.scaleTransition;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }];
 }
@@ -148,10 +157,7 @@ static CGFloat lineSpacing;
 #pragma mark - Data controller delegate
 - (void)controllerDidChangeSelection:(KLDataController *)controller
 {
-    // Only if right bar button is "Delete" icon, need check enablement.
-    if (self.isDeleteMode) {
-        self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.selectedAssetCount > 0;
-    }
+    [self updateUI];
 }
 
 - (void)controllerDidChangeContent:(KLDataController *)controller
@@ -180,7 +186,12 @@ static CGFloat lineSpacing;
 
 - (void)updateUI
 {
-    if (self.deleteMode && self.drawBoxDC.itemCount == 0) {
+    // Only if right bar button is "Delete" icon, need check enablement.
+    if (self.isDeleteMode) {
+        self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.selectedAssetCount > 0;
+    }
+    
+    if (self.isDeleteMode && self.drawBoxDC.itemCount == 0) {
         [self cancelMultiPhotoSelection:nil];
         KLDispatchMainAfter(0.5, ^{
             [self.collectionView reloadData];   // Delay for display "Add Button"
@@ -201,12 +212,12 @@ static CGFloat lineSpacing;
     
     self.deleteMode = YES;
     
-    KLAlbumCell *cell = (id)recognizer.view;
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    [[self.drawBoxDC objectAtIndexPath:indexPath] setSelected:YES];
-    
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(id)recognizer.view];
     [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
+    
+    KLAddButtonCell *cell = (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.drawBoxDC.itemCount inSection:0]];
+    [cell setHidden:YES animated:YES];
 }
 
 - (void)tapRightNavBarButton:(UIBarButtonItem *)sender
@@ -242,9 +253,9 @@ static CGFloat lineSpacing;
 - (void)cancelMultiPhotoSelection:(id)sender
 {
     self.deleteMode = NO;
+    self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.itemCount > 0;
     [self.drawBoxDC clearSelection];
     [self reloadData];
-    self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.itemCount > 0;
 }
 
 - (void)setDeleteMode:(BOOL)deleteMode

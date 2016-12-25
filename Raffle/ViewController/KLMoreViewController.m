@@ -13,11 +13,14 @@
 #import "KLAddButtonCell.h"
 #import "KLPhotoViewController.h"
 #import "KLImagePickerController.h"
+#import "KLScaleTransition.h"
 
 @interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, readonly) KLMainViewController *mainViewContoller;
 @property (nonatomic, strong) KLMainDataController *dataController;
+@property (nonatomic, strong) KLScaleTransition *scaleTransition;
+
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, assign) BOOL editMode;
 
@@ -56,6 +59,12 @@ static CGFloat SectionInset;
 {
     [super viewDidLoad];
     [self prepareForUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.scaleTransition = nil;     // Break retain cycle
 }
 
 - (void)prepareForUI
@@ -124,7 +133,9 @@ static CGFloat SectionInset;
 {
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
+        self.scaleTransition = [KLScaleTransition transition];
         imagePicker.delegate = self;
+        imagePicker.transitioningDelegate = self.scaleTransition;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }];
 }
@@ -136,6 +147,7 @@ static CGFloat SectionInset;
     photoVC.dismissBlock = ^(KLDrawBoxDataController *drawBoxDC) {
         [self.dataController deleteDrawBoxAtIndexPath:indexPath];
     };
+    
 //  TODO: self.navigationController.delegate = photoVC.transition;
     [self.navigationController pushViewController:photoVC animated:YES];
 }
