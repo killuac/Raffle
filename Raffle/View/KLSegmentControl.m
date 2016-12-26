@@ -16,7 +16,7 @@
 #pragma mark -
 @interface KLSegmentCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, readonly) UILabel *titleLabel;
+@property (nonatomic, strong, readonly) UILabel *titleLabel;
 
 @end
 

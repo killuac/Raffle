@@ -12,14 +12,12 @@
 #import "KLDrawBoxTransition.h"
 #import "KLDrawBoxDataController.h"
 #import "KLImagePickerController.h"
-#import "KLScaleTransition.h"
 
 NSNotificationName const KLPhotoViewControllerDidTouchStart = @"KLPhotoViewControllerDidTouchStart";
 
 @interface KLPhotoViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
-@property (nonatomic, strong) KLScaleTransition *scaleTransition;
 @property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
 
 @end
@@ -58,12 +56,6 @@ static CGFloat lineSpacing;
 {
     [super viewDidLoad];
     [self prepareForUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    self.scaleTransition = nil;     // Break retain cycle
 }
 
 - (void)prepareForUI
@@ -147,9 +139,7 @@ static CGFloat lineSpacing;
 {
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        self.scaleTransition = [KLScaleTransition transition];
         imagePicker.delegate = self;
-        imagePicker.transitioningDelegate = self.scaleTransition;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }];
 }

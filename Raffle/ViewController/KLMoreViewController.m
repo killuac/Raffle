@@ -13,13 +13,11 @@
 #import "KLAddButtonCell.h"
 #import "KLPhotoViewController.h"
 #import "KLImagePickerController.h"
-#import "KLScaleTransition.h"
 
 @interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
 
-@property (nonatomic, readonly) KLMainViewController *mainViewContoller;
+@property (nonatomic, weak, readonly) KLMainViewController *mainViewContoller;
 @property (nonatomic, strong) KLMainDataController *dataController;
-@property (nonatomic, strong) KLScaleTransition *scaleTransition;
 
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, assign) BOOL editMode;
@@ -59,12 +57,6 @@ static CGFloat SectionInset;
 {
     [super viewDidLoad];
     [self prepareForUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    self.scaleTransition = nil;     // Break retain cycle
 }
 
 - (void)prepareForUI
@@ -133,9 +125,7 @@ static CGFloat SectionInset;
 {
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        self.scaleTransition = [KLScaleTransition transition];
         imagePicker.delegate = self;
-        imagePicker.transitioningDelegate = self.scaleTransition;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }];
 }

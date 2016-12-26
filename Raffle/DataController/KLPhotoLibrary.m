@@ -10,7 +10,7 @@
 
 @interface KLPhotoLibrary () <PHPhotoLibraryChangeObserver>
 
-@property (nonatomic, readonly) PHPhotoLibrary *photoLibrary;
+@property (nonatomic, strong, readonly) PHPhotoLibrary *photoLibrary;
 @property (nonatomic, strong) NSMutableArray *assetCollectionArray;
 @property (nonatomic, strong) NSMutableArray *selectedAssetArray;
 

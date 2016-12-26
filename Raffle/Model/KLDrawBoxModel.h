@@ -22,8 +22,8 @@ typedef NS_ENUM(short, KLDrawMode) {
 @property (nonatomic, assign) KLDrawMode drawMode;
 @property (nonatomic, strong) NSOrderedSet<KLPhotoModel *> *photos;
 
-@property (nonatomic, readonly) NSArray<PHAsset *> *assets;
-@property (nonatomic, readonly) NSUInteger photoCount;
+@property (nonatomic, strong, readonly) NSArray<PHAsset *> *assets;
+@property (nonatomic, assign, readonly) NSUInteger photoCount;
 
 @end
 

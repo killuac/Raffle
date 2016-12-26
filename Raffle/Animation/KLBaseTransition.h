@@ -38,8 +38,8 @@ typedef NS_ENUM(NSUInteger, KLTransitionOrientation) {
 @property (nonatomic, weak) id <KLBaseTransitionPresentationDelegate> presentationDelegate;
 
 @property (nonatomic, readonly) NSTimeInterval animationDuration;
-@property (nonatomic, readonly) id <UIViewControllerContextTransitioning> transitionContext;
-@property (nonatomic, readonly) UINavigationController *navigationController;
+@property (nonatomic, weak, readonly) id <UIViewControllerContextTransitioning> transitionContext;  // Break retain cycle
+@property (nonatomic, weak, readonly) UINavigationController *navigationController;
 
 // Below methods need overwrite by subclass if needed
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView;

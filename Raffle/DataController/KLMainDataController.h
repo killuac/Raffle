@@ -11,7 +11,7 @@
 
 @interface KLMainDataController : KLDataController
 
-@property (nonatomic, readonly) KLDrawBoxDataController *currentDrawBoxDC;
+@property (nonatomic, strong, readonly) KLDrawBoxDataController *currentDrawBoxDC;
 @property (nonatomic, readonly) BOOL isAttendeeMode;
 @property (nonatomic, readonly) BOOL isReloadButtonHidden;
 

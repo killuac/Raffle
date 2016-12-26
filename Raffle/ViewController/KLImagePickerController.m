@@ -8,6 +8,7 @@
 
 #import "KLImagePickerController.h"
 #import "KLSegmentControl.h"
+#import "KLScaleTransition.h"
 
 @interface KLImagePickerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate, KLSegmentControlDelegate>
 
@@ -20,8 +21,6 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *scHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *barHeightConstraint;
-
-@property (nonatomic, assign) BOOL isCircleTransition;
 
 @end
 
@@ -80,6 +79,7 @@
 {
     if (self = [super init]) {
         _photoLibrary = photoLibrary;
+        self.transition = [KLScaleTransition transition];
     }
     return self;
 }
@@ -296,7 +296,6 @@
 - (void)closeAlbum:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:^{
-//        self.transition = nil;
         if ([self.delegate respondsToSelector:@selector(imagePickerControllerDidClose:)]) {
             [self.delegate imagePickerControllerDidClose:self];
         }

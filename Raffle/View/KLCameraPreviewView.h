@@ -15,7 +15,7 @@
 + (instancetype)newViewWithSession;
 
 @property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, readonly) AVCaptureVideoPreviewLayer *previewLayer;
+@property (nonatomic, strong, readonly) AVCaptureVideoPreviewLayer *previewLayer;
 
 - (void)startRunning:(KLVoidBlockType)completion;
 - (void)stopRunning:(KLVoidBlockType)completion;

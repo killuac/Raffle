@@ -9,7 +9,8 @@
 #import "KLCameraViewController.h"
 #import "KLCameraPreviewView.h"
 #import "KLMainViewController.h"
-#import "KLCircleTransition.h"
+#import "KLScaleTransition.h"
+#import "KLFaceViewController.h"
 @import AVFoundation;
 
 @interface KLCameraViewController () <AVCaptureMetadataOutputObjectsDelegate>
@@ -279,6 +280,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)stopSessionRunning
 {
+    [self removeAllFaceBoxes];
     dispatch_async(self.sessionQueue, ^{
         [self.session stopRunning];
     });
@@ -378,14 +380,15 @@ static void *SessionRunningContext = &SessionRunningContext;
 //    CGSize viewSize = self.previewView.size;
 //    CGSize imageSize = image.extent.size;
 //
+//    CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
+//    CGFloat offsetX = (viewSize.width - imageSize.width * scale) / 2;
+//    CGFloat offsetY = (viewSize.height - imageSize.height * scale) / 2;
+//
 //    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 //    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
 //
-//    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull face, NSUInteger idx, BOOL * _Nonnull stop) {
-//        CGRect faceViewBounds = CGRectApplyAffineTransform(face.bounds, transform);
-//        CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
-//        CGFloat offsetX = (viewSize.width - imageSize.width * scale) / 2;
-//        CGFloat offsetY = (viewSize.height - imageSize.height * scale) / 2;
+//    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull faceFeature, NSUInteger idx, BOOL * _Nonnull stop) {
+//        CGRect faceViewBounds = CGRectApplyAffineTransform(faceFeature, transform);
 //        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scale, scale));
 //        faceViewBounds.origin.x += offsetX;
 //        faceViewBounds.origin.y += offsetY;
@@ -487,8 +490,6 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)captureStillImage
 {
-    [self removeAllFaceBoxes];
-    
     UIView *blackView = [[UIView alloc] initWithFrame:self.previewView.bounds];
     blackView.backgroundColor = [UIColor darkBackgroundColor];
     [self.previewView addSubview:blackView];
@@ -508,6 +509,8 @@ static void *SessionRunningContext = &SessionRunningContext;
                 [self processStillImageWithSampleBuffer:imageDataSampleBuffer];
                 CFRelease(imageDataSampleBuffer);
             });
+            
+            [self stopSessionRunning];
         }];
     });
     
@@ -519,37 +522,37 @@ static void *SessionRunningContext = &SessionRunningContext;
 - (void)processStillImageWithSampleBuffer:(CMSampleBufferRef)dataSampleBuffer
 {
     NSMutableArray *images = [NSMutableArray array];
-    
     NSData *data = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:dataSampleBuffer];
     UIImage *image = [UIImage imageWithData:data];
     
-    CGFloat scaleX = image.width / self.previewView.width;
-    CGFloat scaleY = image.height / self.previewView.height;
+    CGAffineTransform transform = KLImageOrientationIsPortrait(image.imageOrientation) ?
+        CGAffineTransformMakeScale(image.width, image.height) : CGAffineTransformMakeScale(image.height, image.width);
     
     [self.metadataObjects enumerateObjectsUsingBlock:^(AVMetadataFaceObject *  _Nonnull faceObject, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
-//        CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, faceViewBounds.size.height);
-//        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, transform);
-//        faceViewBounds = CGRectOffset(faceViewBounds, 20, 20);
-        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scaleX, scaleY));
+        CGRect faceImageBounds = CGRectApplyAffineTransform(faceObject.bounds, transform);
+        faceImageBounds = CGRectInset(faceImageBounds, -20, -20);
         
-        CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceViewBounds);
-        [images addObject:[UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation]];
-        UIImage *croppedImage = images.firstObject;
+        CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceImageBounds);
+        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
+        if (croppedImage) [images addObject:croppedImage];
         CGImageRelease(imageRef);
-        
-        KLDispatchMainAsync(^{
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:croppedImage];
-            imageView.contentMode = UIViewContentModeScaleAspectFit;
-            imageView.frame = self.previewView.bounds;
-            [self.view addSubview:imageView];
-            
-//            UIView *boxView = [[UIView alloc] initWithFrame:faceViewBounds];
-//            boxView.layer.borderWidth = 1;
-//            boxView.layer.borderColor = [UIColor orangeColor].CGColor;
-//            [self.view addSubview:boxView];
-        });
     }];
+    
+    KLDispatchMainAsync(^{
+        if (images.count == 0) {
+            [images addObject:image];
+        }
+        [self showFaceViewControllerWithImages:images];
+    });
+}
+
+- (void)showFaceViewControllerWithImages:(NSArray *)images
+{
+    KLFaceViewController *faceVC = [KLFaceViewController viewControllerWithImages:images];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:faceVC];
+    navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
+    navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (void)switchToAlbum:(id)sender

@@ -46,6 +46,7 @@ static CGFloat lineSpacing;
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         self.images = [NSMutableArray arrayWithArray:images];
         self.selectedIndexPaths = [NSMutableArray array];
+        self.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     }
     return self;
 }
@@ -59,12 +60,6 @@ static CGFloat lineSpacing;
 {
     [super viewDidLoad];
     [self prepareForUI];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    self.navigationController.transition = nil;     // Break retain cycle
 }
 
 - (void)prepareForUI

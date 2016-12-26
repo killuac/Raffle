@@ -22,7 +22,6 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
-@property (nonatomic, strong) KLCircleTransition *circleTransition;
 
 @property (nonatomic, strong) KLBubbleButton *addPhotoButton;
 @property (nonatomic, strong) KLBubbleButton *switchModeButton;
@@ -61,12 +60,6 @@
 {
     [super viewWillAppear:animated];
     [self becomeFirstResponder];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    self.circleTransition = nil;    // Break retain cycle
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -367,8 +360,7 @@
 {
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
-        self.circleTransition = [KLCircleTransition transition];
-        imagePicker.transitioningDelegate = self.circleTransition;
+        imagePicker.transition = [KLCircleTransition transition];
         imagePicker.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }];

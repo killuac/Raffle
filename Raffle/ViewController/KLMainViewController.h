@@ -13,8 +13,8 @@
 
 @interface KLMainViewController : UIViewController <KLDataControllerDelegate>
 
-@property (nonatomic, readonly) KLMainDataController *dataController;
-@property (nonatomic, readonly) KLDrawBoxViewController *drawBoxViewController;
+@property (nonatomic, strong, readonly) KLMainDataController *dataController;
+@property (nonatomic, weak, readonly) KLDrawBoxViewController *drawBoxViewController;
 
 @end
 

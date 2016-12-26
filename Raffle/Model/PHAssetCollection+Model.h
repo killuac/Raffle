@@ -11,9 +11,9 @@
 
 @interface PHAssetCollection (Model)
 
-@property (nonatomic, readonly) PHFetchResult *fetchResult;
-@property (nonatomic, readonly) NSUInteger assetCount;
-@property (nonatomic, readonly) NSArray<PHAsset *> *assets;
+@property (nonatomic, strong, readonly) PHFetchResult *fetchResult;
+@property (nonatomic, weak, readonly) NSArray<PHAsset *> *assets;
+@property (nonatomic, assign, readonly) NSUInteger assetCount;
 
 @property (nonatomic, assign) CGPoint contentOffset;  // Remember scrolled content offset
 

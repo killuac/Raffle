@@ -11,7 +11,7 @@
 
 @interface KLAlbumCell : UICollectionViewCell
 
-@property (nonatomic, readonly) UIImageView *imageView;
+@property (nonatomic, strong, readonly) UIImageView *imageView;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPress;
 
 - (void)configWithAsset:(PHAsset *)asset;

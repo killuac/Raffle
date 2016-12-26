@@ -34,10 +34,10 @@
 @property (nonatomic, strong) KLBaseTransition *transition;
 @property (nonatomic, copy) KLDismissBlockType dismissBlock;
 
-@property (nonatomic, readonly) UITabBar *tabBar;
-@property (nonatomic, readonly) UINavigationBar *navigationBar;
-@property (nonatomic, readonly) UIViewController *rootViewController;
-@property (nonatomic, readonly) UIViewController *visibleViewController;
+@property (nonatomic, weak, readonly) UITabBar *tabBar;
+@property (nonatomic, weak, readonly) UINavigationBar *navigationBar;
+@property (nonatomic, weak, readonly) UIViewController *rootViewController;
+@property (nonatomic, weak, readonly) UIViewController *visibleViewController;
 
 @property (nonatomic, readonly) CGFloat statusBarHeight;
 @property (nonatomic, readonly) CGFloat navigationBarHeight;

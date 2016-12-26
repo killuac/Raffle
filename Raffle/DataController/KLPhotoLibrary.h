@@ -11,8 +11,8 @@
 
 @interface KLPhotoLibrary : KLDataController
 
-@property (nonatomic, readonly) NSArray<PHAssetCollection *> *assetCollections;
-@property (nonatomic, readonly) NSArray<PHAsset *> *selectedAssets;
+@property (nonatomic, strong, readonly) NSArray<PHAssetCollection *> *assetCollections;
+@property (nonatomic, strong, readonly) NSArray<PHAsset *> *selectedAssets;
 
 - (PHAssetCollection *)assetCollectionAtIndex:(NSUInteger)index;
 

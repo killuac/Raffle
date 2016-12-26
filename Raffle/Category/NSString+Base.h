@@ -12,13 +12,13 @@ NS_INLINE BOOL KLStringIsEmpty(NSString *string) { return ([string stringByTrimm
 
 @interface NSString (Base)
 
-@property (nonatomic, readonly) NSString *MD5String;
-@property (nonatomic, readonly) NSString *SHA1String;
+@property (nonatomic, copy, readonly) NSString *MD5String;
+@property (nonatomic, copy, readonly) NSString *SHA1String;
 
-@property (nonatomic, readonly) NSString *base62String;
-@property (nonatomic, readonly) NSString *stringFromBase62;
+@property (nonatomic, copy, readonly) NSString *base62String;
+@property (nonatomic, copy, readonly) NSString *stringFromBase62;
 
-@property (nonatomic, readonly) NSString *quotedString;
+@property (nonatomic, copy, readonly) NSString *quotedString;
 
 @property (nonatomic, readonly) BOOL isValidMobile;
 @property (nonatomic, readonly) BOOL isValidEmail;
