@@ -12,6 +12,7 @@
 #import "KLScaleTransition.h"
 #import "KLFaceViewController.h"
 @import AVFoundation;
+@import CoreMotion;
 
 @interface KLCameraViewController () <AVCaptureMetadataOutputObjectsDelegate>
 
@@ -28,6 +29,9 @@
 
 @property (nonatomic, strong) NSArray<AVMetadataFaceObject *> *metadataObjects;
 @property (nonatomic, assign, getter=isSessionRunning) BOOL sessionRunning;
+
+@property (nonatomic, strong) CMMotionManager *motionManager;
+@property (nonatomic, assign) AVCaptureVideoOrientation videoOrientation;
 
 @end
 
@@ -98,15 +102,17 @@ static void *SessionRunningContext = &SessionRunningContext;
 {
     [super viewWillAppear:animated];
     [self addObservers];
+    [self startAccelerometerUpdates];
     [self startSessionRunning];
     
     self.albumButton.enabled = ![self.presentingViewController isKindOfClass:[KLMainViewController class]];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewDidDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+    [super viewDidDisappear:animated];
     [self removeObservers];
+    [self stopAccelerometerUpdates];
     [self stopSessionRunning];
 }
 
@@ -176,6 +182,29 @@ static void *SessionRunningContext = &SessionRunningContext;
 //        [CATransaction commit];
 //    }];
 //}
+
+// Get autual orientation even if device is locked
+- (void)startAccelerometerUpdates
+{
+    self.motionManager = [CMMotionManager new];
+    self.motionManager.accelerometerUpdateInterval = 0.2;
+    [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue new] withHandler:^(CMAccelerometerData * _Nullable data, NSError * _Nullable error) {
+        if (error) {
+            KLLog(@"Could not update accelerometer: %@", error.localizedDescription);
+        } else {
+            if (ABS(data.acceleration.x) < ABS(data.acceleration.y)) {
+                self.videoOrientation = data.acceleration.y > 0 ? AVCaptureVideoOrientationPortraitUpsideDown : AVCaptureVideoOrientationPortrait;
+            } else {
+                self.videoOrientation = data.acceleration.x > 0 ? AVCaptureVideoOrientationLandscapeLeft : AVCaptureVideoOrientationLandscapeRight;
+            }
+        }
+    }];
+}
+
+- (void)stopAccelerometerUpdates
+{
+    [self.motionManager stopAccelerometerUpdates];
+}
 
 #pragma mark - Configure session
 - (void)configureSession
@@ -375,31 +404,6 @@ static void *SessionRunningContext = &SessionRunningContext;
     });
 }
 
-//- (void)drawFaceBoxWithImage:(CIImage *)image features:(NSArray<CIFaceFeature *> *)features
-//{
-//    CGSize viewSize = self.previewView.size;
-//    CGSize imageSize = image.extent.size;
-//
-//    CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
-//    CGFloat offsetX = (viewSize.width - imageSize.width * scale) / 2;
-//    CGFloat offsetY = (viewSize.height - imageSize.height * scale) / 2;
-//
-//    [self.previewView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-//    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -image.extent.size.height);
-//
-//    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull faceFeature, NSUInteger idx, BOOL * _Nonnull stop) {
-//        CGRect faceViewBounds = CGRectApplyAffineTransform(faceFeature, transform);
-//        faceViewBounds = CGRectApplyAffineTransform(faceViewBounds, CGAffineTransformMakeScale(scale, scale));
-//        faceViewBounds.origin.x += offsetX;
-//        faceViewBounds.origin.y += offsetY;
-//
-//        UIView *faceBox = [[UIView alloc] initWithFrame:faceViewBounds];
-//        faceBox.layer.borderWidth = 1.0;
-//        faceBox.layer.borderColor = [UIColor orangeColor].CGColor;
-//        [self.previewView addSubview:faceBox];
-//    }];
-//}
-
 #pragma mark - Event handling
 - (void)switchFlashMode:(UIBarButtonItem *)barButton
 {
@@ -482,6 +486,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     });
 }
 
+#pragma mark - Capture image
 - (void)takePhoto:(id)sender
 {
     [KLSoundPlayer playCameraShutterSound];
@@ -496,12 +501,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     
     dispatch_async(self.sessionQueue, ^{
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
-        UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-        if (connection.isVideoOrientationSupported) {
-            if (UIDeviceOrientationIsPortrait(orientation) || UIDeviceOrientationIsLandscape(orientation)) {
-                [connection setVideoOrientation:(AVCaptureVideoOrientation)orientation];
-            }
-        }
+        connection.videoOrientation = self.videoOrientation;
         
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             CFRetain(imageDataSampleBuffer);
@@ -571,6 +571,11 @@ static void *SessionRunningContext = &SessionRunningContext;
     if ([self.delegate respondsToSelector:@selector(cameraViewControllerDidClose:)]) {
         [self.delegate cameraViewControllerDidClose:self];
     }
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    NSLog(@"Subtype: %zd, event: %@", motion, event);
 }
 
 @end
