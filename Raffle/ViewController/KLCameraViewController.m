@@ -206,7 +206,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     [self.motionManager stopAccelerometerUpdates];
 }
 
-#pragma mark - Configure session
+#pragma mark - Configure capture session
 - (void)configureSession
 {
     NSError *error = nil;
@@ -539,10 +539,14 @@ static void *SessionRunningContext = &SessionRunningContext;
     }];
     
     KLDispatchMainAsync(^{
-        if (images.count == 0) {
-            [images addObject:image];
+        if (images.count == 0) [images addObject:image];
+        
+        if (NSUserDefaults.isFaceDetectionOn) {
+            [self showFaceViewControllerWithImages:images];
+        } else {
+            [self saveImagesToPhotosAlbum:images];
+            [self closeCamera:nil];
         }
-        [self showFaceViewControllerWithImages:images];
     });
 }
 
@@ -553,6 +557,19 @@ static void *SessionRunningContext = &SessionRunningContext;
     navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
+    
+    faceVC.dismissBlock = ^(NSArray<UIImage *> *images) {
+        [self saveImagesToPhotosAlbum:images];
+    };
+}
+
+- (void)saveImagesToPhotosAlbum:(NSArray<UIImage *> *)images
+{
+    [KLPhotoLibrary saveImages:images completion:^(NSArray *assets) {
+        if ([self.delegate respondsToSelector:@selector(cameraViewController:didFinishSaveImageAssets:)]) {
+            [self.delegate cameraViewController:self didFinishSaveImageAssets:assets];
+        }
+    }];
 }
 
 - (void)switchToAlbum:(id)sender
@@ -571,11 +588,6 @@ static void *SessionRunningContext = &SessionRunningContext;
     if ([self.delegate respondsToSelector:@selector(cameraViewControllerDidClose:)]) {
         [self.delegate cameraViewControllerDidClose:self];
     }
-}
-
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    NSLog(@"Subtype: %zd, event: %@", motion, event);
 }
 
 @end

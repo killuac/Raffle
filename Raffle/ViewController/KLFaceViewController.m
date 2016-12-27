@@ -162,11 +162,11 @@ static CGFloat lineSpacing;
 
 - (void)addFacePhotosToDrawBox:(id)sender
 {
-    // TODO: Add face photos
     self.presentingViewController.view.alpha = 1.0;
     self.presentingViewController.view.transform = CGAffineTransformIdentity;
-    [self dismissViewControllerAnimated:NO completion:nil];
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+        if (self.dismissBlock) self.dismissBlock(self.images);
+    }];
 }
 
 - (void)deleteSelectedFacePhotos:(id)sender

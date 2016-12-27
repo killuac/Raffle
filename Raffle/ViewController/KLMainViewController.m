@@ -191,6 +191,7 @@
 - (void)addObservers
 {
     [self removeObservers];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTouchStart:) name:KLPhotoViewControllerDidTouchStart object:nil];
     
     if (!self.dataController.currentDrawBoxDC) return;
@@ -269,14 +270,6 @@
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
     [self reloadData];
-}
-
-#pragma mark - KLImagePickerController delegate
-- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
-{
-    NSUInteger pageCount = self.dataController.pageCount;
-    [self.dataController addDrawBoxWithAssets:assets];
-    if (pageCount == 0) [self addObservers];
 }
 
 #pragma mark - Motion
@@ -408,6 +401,26 @@
     cameraVC.transition = [KLCircleTransition transition];
     cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     [self presentViewController:cameraVC animated:YES completion:nil];
+}
+
+#pragma mark - KLImagePickerController delegate
+- (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self addDrawBoxWithAssets:assets];
+}
+
+- (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.dataController addDrawBoxWithAssets:assets];
+    if (self.dataController.pageCount == 0) {
+        [self addObservers];
+    }
+}
+
+#pragma mark - KLCameraViewController delegate
+- (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self addDrawBoxWithAssets:assets];
 }
 
 @end

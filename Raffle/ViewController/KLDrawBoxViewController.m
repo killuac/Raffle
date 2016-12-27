@@ -92,4 +92,10 @@
     [self.drawBoxDC addPhotos:assets completion:nil];
 }
 
+#pragma mark - KLCameraViewController delegate
+- (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.drawBoxDC addPhotos:assets completion:nil];
+}
+
 @end

@@ -52,12 +52,12 @@
     return objc_getAssociatedObject(self, @selector(transition));
 }
 
-- (void)setDismissBlock:(KLDismissBlockType)dismissBlock
+- (void)setDismissBlock:(KLObjectBlockType)dismissBlock
 {
     objc_setAssociatedObject(self, @selector(dismissBlock), dismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (KLDismissBlockType)dismissBlock
+- (KLObjectBlockType)dismissBlock
 {
     return objc_getAssociatedObject(self, @selector(dismissBlock));
 }

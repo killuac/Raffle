@@ -134,12 +134,12 @@ static CGFloat SectionInset;
 {
     KLDrawBoxDataController *drawBoxDC = [self.dataController drawBoxDataControllerAtIndex:indexPath.item];
     KLPhotoViewController *photoVC = [KLPhotoViewController viewControllerWithDataController:drawBoxDC];
+//  TODO: self.navigationController.delegate = photoVC.transition;
+    [self.navigationController pushViewController:photoVC animated:YES];
+    
     photoVC.dismissBlock = ^(KLDrawBoxDataController *drawBoxDC) {
         [self.dataController deleteDrawBoxAtIndexPath:indexPath];
     };
-    
-//  TODO: self.navigationController.delegate = photoVC.transition;
-    [self.navigationController pushViewController:photoVC animated:YES];
 }
 
 #pragma mark - Data controller delegate

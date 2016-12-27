@@ -100,6 +100,11 @@
     }
 }
 
+- (void)removeAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.assetArray removeObjectsInArray:assets];
+}
+
 - (void)removeAllAssets
 {
     self.fetchResult = nil;

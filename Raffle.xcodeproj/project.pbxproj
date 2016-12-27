@@ -25,6 +25,7 @@
 		4176C4121DC08E4B0054FF13 /* KLDrawBoxTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C4111DC08E4B0054FF13 /* KLDrawBoxTransition.m */; };
 		4176C4401DC31C660054FF13 /* KLAddButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C43F1DC31C660054FF13 /* KLAddButtonCell.m */; };
 		4176C4471DC341B30054FF13 /* KLInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C4461DC341B30054FF13 /* KLInnerShadowView.m */; };
+		41B5F9A21E12495800D4FFC2 /* KLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B5F9A11E12495800D4FFC2 /* KLProgressHUD.m */; };
 		41E163021E01395200A53B72 /* KLCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163011E01395200A53B72 /* KLCameraPreviewView.m */; };
 		41E163241E0A1EEB00A53B72 /* CIDetector+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */; };
 		41E278A21E0BA3AC001FBE68 /* KLFaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E278A11E0BA3AC001FBE68 /* KLFaceViewController.m */; };
@@ -146,6 +147,8 @@
 		4176C43F1DC31C660054FF13 /* KLAddButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLAddButtonCell.m; sourceTree = "<group>"; };
 		4176C4451DC341B30054FF13 /* KLInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLInnerShadowView.h; sourceTree = "<group>"; };
 		4176C4461DC341B30054FF13 /* KLInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLInnerShadowView.m; sourceTree = "<group>"; };
+		41B5F9A01E12495800D4FFC2 /* KLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLProgressHUD.h; sourceTree = "<group>"; };
+		41B5F9A11E12495800D4FFC2 /* KLProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLProgressHUD.m; sourceTree = "<group>"; };
 		41E163001E01395200A53B72 /* KLCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLCameraPreviewView.h; sourceTree = "<group>"; };
 		41E163011E01395200A53B72 /* KLCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLCameraPreviewView.m; sourceTree = "<group>"; };
 		41E163221E0A1EEB00A53B72 /* CIDetector+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CIDetector+Base.h"; sourceTree = "<group>"; };
@@ -353,6 +356,8 @@
 				4176C4461DC341B30054FF13 /* KLInnerShadowView.m */,
 				412DCD0C1DC04770007A3F7D /* KLPhotoView.h */,
 				412DCD0D1DC04770007A3F7D /* KLPhotoView.m */,
+				41B5F9A01E12495800D4FFC2 /* KLProgressHUD.h */,
+				41B5F9A11E12495800D4FFC2 /* KLProgressHUD.m */,
 				415BFE8C1D5B20FC002053D6 /* KLSegmentControl.h */,
 				415BFE8D1D5B20FC002053D6 /* KLSegmentControl.m */,
 				4110BAC81D62E841001BCD38 /* KLStatusBar.h */,
@@ -829,6 +834,7 @@
 				41E163021E01395200A53B72 /* KLCameraPreviewView.m in Sources */,
 				41E278A51E0BA724001FBE68 /* NSUserDefaults+Base.m in Sources */,
 				41FE17951D5B15AB00CABFCA /* UIImage+Base.m in Sources */,
+				41B5F9A21E12495800D4FFC2 /* KLProgressHUD.m in Sources */,
 				E3539C7A1D9041BD00CBE9F2 /* KLResultViewController.m in Sources */,
 				E3684C4B1D86DBFD004E4636 /* KLMainViewController.m in Sources */,
 				41FE179A1D5B15AB00CABFCA /* UIToolbar+Base.m in Sources */,

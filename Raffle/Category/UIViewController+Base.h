@@ -32,7 +32,7 @@
 + (instancetype)viewControllerWithDataController:(id)dataController;
 
 @property (nonatomic, strong) KLBaseTransition *transition;
-@property (nonatomic, copy) KLDismissBlockType dismissBlock;
+@property (nonatomic, copy) KLObjectBlockType dismissBlock;
 
 @property (nonatomic, weak, readonly) UITabBar *tabBar;
 @property (nonatomic, weak, readonly) UINavigationBar *navigationBar;

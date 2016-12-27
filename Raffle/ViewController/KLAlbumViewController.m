@@ -19,8 +19,10 @@
 
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
 @property (nonatomic, strong) PHAssetCollection *assetCollection;
+
 @property (nonatomic, assign) NSUInteger assetsCount;
 @property (nonatomic, readonly) BOOL isShowCameraPreview;
+@property (nonatomic, weak, readonly) KLImagePickerController *imagePicker;
 
 @property (nonatomic, strong) KLCameraPreviewView *cameraPreviewView;
 @property (nonatomic, strong) UIButton *cameraButton;
@@ -68,6 +70,11 @@ static CGFloat lineSpacing;
 - (BOOL)isShowCameraPreview
 {
     return (self.pageIndex == 0 && [AVCaptureDevice devices].count > 0);
+}
+
+- (KLImagePickerController *)imagePicker
+{
+    return (id)self.parentViewController.parentViewController;
 }
 
 - (void)viewDidLoad
@@ -208,7 +215,7 @@ static CGFloat lineSpacing;
             [self.cameraPreviewView stopRunning:^{
                 KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:self.albumImage];
                 cameraVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-                cameraVC.delegate = [(id)self.parentViewController delegate];
+                cameraVC.delegate = (id)self.imagePicker.delegate;
                 [self presentViewController:cameraVC animated:YES completion:nil];
             }];
         } else {
@@ -329,6 +336,19 @@ static CGFloat lineSpacing;
     navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
+    
+    faceVC.dismissBlock = ^(NSArray<UIImage *> *images) {
+        [self saveImagesToPhotosAlbum:images];
+    };
+}
+
+- (void)saveImagesToPhotosAlbum:(NSArray<UIImage *> *)images
+{
+    [KLPhotoLibrary saveImages:images completion:^(NSArray *assets) {
+        if ([self.imagePicker.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
+            [self.imagePicker.delegate imagePickerController:self.imagePicker didFinishPickingImageAssets:assets];
+        }
+    }];
 }
 
 @end

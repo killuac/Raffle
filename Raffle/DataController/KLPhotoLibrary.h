@@ -19,4 +19,6 @@
 - (void)selectAsset:(PHAsset *)asset;
 - (void)deselectAsset:(PHAsset *)asset;
 
++ (void)saveImages:(NSArray<UIImage *> *)images completion:(KLObjectBlockType)completion;
+
 @end

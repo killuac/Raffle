@@ -18,6 +18,7 @@
 @property (nonatomic, assign) CGPoint contentOffset;  // Remember scrolled content offset
 
 - (void)fetchAssets:(KLVoidBlockType)completion;
+- (void)removeAssets:(NSArray<PHAsset *> *)assets;
 - (void)updateWithAssetCollection:(PHAssetCollection *)collection;
 
 - (void)posterImage:(KLAssetBlockType)resultHandler;

@@ -14,6 +14,9 @@
 @property (nonatomic, strong) NSMutableArray *assetCollectionArray;
 @property (nonatomic, strong) NSMutableArray *selectedAssetArray;
 
+@property (nonatomic, strong) PHAssetCollection *cameraRollCollection;
+@property (nonatomic, strong) PHAssetCollection *appAssetCollection;
+
 @end
 
 @implementation KLPhotoLibrary
@@ -95,6 +98,7 @@
     
     KLDispatchGroupMainNotify(group, ^{
         [self willChangeValueForKey:NSStringFromSelector(@selector(assetCollections))];
+        [self.cameraRollCollection removeAssets:self.appAssetCollection.assets];
         [self.assetCollectionArray sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(assetCount)) ascending:NO]]];
         if (completion) completion();
         [self didChangeValueForKey:NSStringFromSelector(@selector(assetCollections))];
@@ -111,6 +115,13 @@
                     if (collection.assetCount > 0 && ![self.assetCollectionArray containsObject:collection]) {
                         [collection fetchAssets:nil];
                         [self.assetCollectionArray addObject:collection];
+                        
+                        if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
+                            self.cameraRollCollection = collection;
+                        }
+                        if ([collection.localizedTitle isEqualToString:APP_DISPLAY_NAME]) {
+                            self.appAssetCollection = collection;
+                        }
                     }
                 }
             }
@@ -132,6 +143,10 @@
 #pragma mark - Asset collections
 - (NSArray<PHAssetCollection *> *)assetCollections
 {
+    NSUInteger index = [self.assetCollectionArray indexOfObject:self.appAssetCollection];
+    if (index != NSNotFound && self.appAssetCollection.assetCount > 0) {
+        [self.assetCollectionArray exchangeObjectAtIndex:index withObjectAtIndex:1];    // Move App Album to 2nd position
+    }
     return self.assetCollectionArray;
 }
 
@@ -200,6 +215,45 @@
 - (void)didChangeValueForSelectedAssets
 {
     [self didChangeValueForKey:NSStringFromSelector(@selector(selectedAssets))];
+}
+
+#pragma mark - Save images
++ (void)saveImages:(NSArray<UIImage *> *)images completion:(KLObjectBlockType)completion
+{
+    NSMutableArray *assets = [NSMutableArray array];
+    __block PHAssetCollection *appAssetCollection;
+    
+    PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+    [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([collection.localizedTitle isEqualToString:APP_DISPLAY_NAME]) {
+            appAssetCollection = collection;
+            *stop = YES;
+        }
+    }];
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        PHAssetCollectionChangeRequest *collectionRequest;
+        if (appAssetCollection) {
+            collectionRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:appAssetCollection];
+        } else {
+            collectionRequest = [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:APP_DISPLAY_NAME];
+        }
+        
+        [images enumerateObjectsUsingBlock:^(UIImage * _Nonnull image, NSUInteger idx, BOOL * _Nonnull stop) {
+            PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+            [assets addObject:assetRequest.placeholderForCreatedAsset];
+        }];
+        
+        [collectionRequest addAssets:assets];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if (success) {
+            KLDispatchMainAsync(^{
+                if (completion) completion(assets);
+            });
+        } else {
+            KLLog(@"Save images error: %@", error.localizedDescription);
+        }
+    }];
 }
 
 @end
