@@ -22,7 +22,7 @@
 
 @property (nonatomic, assign) NSUInteger assetsCount;
 @property (nonatomic, readonly) BOOL isShowCameraPreview;
-@property (nonatomic, weak, readonly) KLImagePickerController *imagePicker;
+@property (nonatomic, strong) id <KLImagePickerControllerDelegate> imagePickerDelegate;
 
 @property (nonatomic, strong) KLCameraPreviewView *cameraPreviewView;
 @property (nonatomic, strong) UIButton *cameraButton;
@@ -102,6 +102,8 @@ static CGFloat lineSpacing;
 
 - (void)prepareForUI
 {
+    self.imagePickerDelegate = self.imagePicker.delegate;
+    
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
     flowLayout.minimumLineSpacing = lineSpacing;
@@ -295,37 +297,40 @@ static CGFloat lineSpacing;
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(id)recognizer.view];
     PHAsset *asset = [self assetAtIndexPath:indexPath];
     [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
-        KLDispatchGlobalAsync(^{
-            [self faceDetectionWithImage:image];
-        });
+        [self faceDetectionWithImage:image];
     }];
 }
 
 - (void)faceDetectionWithImage:(UIImage *)image
 {
-    NSMutableArray *images = [NSMutableArray array];
-    CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
-    NSArray *features = [detector featuresInUIImage:image];
+    [KLProgressHUD showActivity];
     
-    CGFloat offsetY = KLImageOrientationIsPortrait(image.imageOrientation) ? image.height : image.width;
-    CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -offsetY);
-    
-    [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull faceFeature, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGRect faceImageBounds = CGRectApplyAffineTransform(faceFeature.bounds, transform);
-        faceImageBounds = CGRectInset(faceImageBounds, -20, -20);
+    KLDispatchGlobalAsync(^{
+        NSMutableArray *images = [NSMutableArray array];
+        CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
+        NSArray *features = [detector featuresInUIImage:image];
         
-        CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceImageBounds);
-        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
-        if (croppedImage) [images addObject:croppedImage];
-        CGImageRelease(imageRef);
-    }];
-    
-    KLDispatchMainAsync(^{
-        if (images.count > 0) {
-            [self showFaceViewControllerWithImages:images];
-        } else {
-            [KLStatusBar showWithText:HUD_NOT_RECOGNIZE_FACE];
-        }
+        CGFloat offsetY = KLImageOrientationIsPortrait(image.imageOrientation) ? image.height : image.width;
+        CGAffineTransform transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -offsetY);
+        
+        [features enumerateObjectsUsingBlock:^(CIFaceFeature * _Nonnull faceFeature, NSUInteger idx, BOOL * _Nonnull stop) {
+            CGRect faceImageBounds = CGRectApplyAffineTransform(faceFeature.bounds, transform);
+            faceImageBounds = CGRectInset(faceImageBounds, -20, -20);
+            
+            CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, faceImageBounds);
+            UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
+            if (croppedImage) [images addObject:croppedImage];
+            CGImageRelease(imageRef);
+        }];
+        
+        KLDispatchMainAsync(^{
+            [KLProgressHUD dismiss];
+            if (images.count > 0) {
+                [self showFaceViewControllerWithImages:images];
+            } else {
+                [KLStatusBar showWithText:HUD_NOT_RECOGNIZE_FACE];
+            }
+        });
     });
 }
 
@@ -344,9 +349,12 @@ static CGFloat lineSpacing;
 
 - (void)saveImagesToPhotosAlbum:(NSArray<UIImage *> *)images
 {
-    [KLPhotoLibrary saveImages:images completion:^(NSArray *assets) {
-        if ([self.imagePicker.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
-            [self.imagePicker.delegate imagePickerController:self.imagePicker didFinishPickingImageAssets:assets];
+    [KLProgressHUD showActivity];
+    [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
+        [KLProgressHUD dismiss];
+        if ([self.imagePickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
+            NSArray *allAssets = [self.photoLibrary.selectedAssets arrayByAddingObjectsFromArray:assets];
+            [self.imagePickerDelegate imagePickerController:self.imagePicker didFinishPickingImageAssets:allAssets];
         }
     }];
 }

@@ -10,4 +10,7 @@
 
 @interface KLProgressHUD : UIView
 
++ (void)showActivity;
++ (void)dismiss;
+
 @end

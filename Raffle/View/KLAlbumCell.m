@@ -83,9 +83,11 @@
 
 - (void)configWithAsset:(PHAsset *)asset
 {
+    self.userInteractionEnabled = NO;
     [asset thumbnailImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
 //      TODO: Add load image progress
     } resultHandler:^(UIImage *image, NSDictionary *info) {
+        self.userInteractionEnabled = YES;
         self.imageView.image = image;
         self.imageView.frame = IS_PAD ? AVMakeRectWithAspectRatioInsideRect(image.size, self.imageView.frame) : self.imageView.frame;
         self.selected = asset.isSelected;

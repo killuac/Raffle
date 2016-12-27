@@ -220,7 +220,7 @@
 #pragma mark - Save images
 + (void)saveImages:(NSArray<UIImage *> *)images completion:(KLObjectBlockType)completion
 {
-    NSMutableArray *assets = [NSMutableArray array];
+    NSMutableArray<PHObjectPlaceholder *> *placeholders = [NSMutableArray array];
     __block PHAssetCollection *appAssetCollection;
     
     PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
@@ -241,19 +241,31 @@
         
         [images enumerateObjectsUsingBlock:^(UIImage * _Nonnull image, NSUInteger idx, BOOL * _Nonnull stop) {
             PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
-            [assets addObject:assetRequest.placeholderForCreatedAsset];
+            [placeholders addObject:assetRequest.placeholderForCreatedAsset];
         }];
         
-        [collectionRequest addAssets:assets];
+        [collectionRequest addAssets:placeholders];
     } completionHandler:^(BOOL success, NSError * _Nullable error) {
         if (success) {
             KLDispatchMainAsync(^{
-                if (completion) completion(assets);
+                if (completion) completion([self fetchAssetsWithPlaceholders:placeholders]);
             });
         } else {
             KLLog(@"Save images error: %@", error.localizedDescription);
         }
     }];
+}
+
++ (NSArray<PHAsset *> *)fetchAssetsWithPlaceholders:(NSArray<PHObjectPlaceholder *> *)placeholders
+{
+    NSMutableArray *assets = [NSMutableArray array];
+    NSArray *localIdentifiers = [placeholders valueForKeyPath:@"@unionOfObjects.localIdentifier"];
+    PHFetchResult *results = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
+    [results enumerateObjectsUsingBlock:^(id  _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        [assets addObject:asset];
+    }];
+    
+    return assets;
 }
 
 @end

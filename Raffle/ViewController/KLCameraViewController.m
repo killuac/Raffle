@@ -565,7 +565,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)saveImagesToPhotosAlbum:(NSArray<UIImage *> *)images
 {
-    [KLPhotoLibrary saveImages:images completion:^(NSArray *assets) {
+    [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
         if ([self.delegate respondsToSelector:@selector(cameraViewController:didFinishSaveImageAssets:)]) {
             [self.delegate cameraViewController:self didFinishSaveImageAssets:assets];
         }

@@ -45,7 +45,7 @@
 
 @implementation KLStatusBar
 
-KLStatusBar *sharedStatusBar = nil;
+static KLStatusBar *sharedStatusBar = nil;
 
 #pragma mark - Lifecycle
 - (instancetype)init

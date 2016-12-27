@@ -37,38 +37,39 @@
 
 - (void)thumbnailImageResultHandler:(KLAssetBlockType)resultHandler
 {
-    [self requestImageWithSize:CGSizeMake(180, 180) progressHandler:nil resultHandler:resultHandler];
+    [self thumbnailImageProgressHandler:nil resultHandler:resultHandler];
 }
 
 - (void)originalImageResultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);
-    [self requestImageWithSize:PHImageManagerMaximumSize progressHandler:nil resultHandler:resultHandler];
+    [self originalImageProgressHandler:nil resultHandler:resultHandler];
 }
 
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);
-    [self requestImageWithSize:CGSizeMake(180, 180) progressHandler:progressHandler resultHandler:resultHandler];
+    CGSize targetSize = CGSizeMake(SCREEN_WIDTH * SCREEN_SCALE / 4, SCREEN_HEIGHT * SCREEN_SCALE / 4);
+    [self requestImageWithTargetSize:targetSize progressHandler:progressHandler resultHandler:resultHandler];
 }
 
 - (void)originalImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);
-    [self requestImageWithSize:PHImageManagerMaximumSize progressHandler:progressHandler resultHandler:resultHandler];
+    [self requestImageWithTargetSize:PHImageManagerMaximumSize progressHandler:progressHandler resultHandler:resultHandler];
 }
 
-- (void)requestImageWithSize:(CGSize)size progressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
+- (void)requestImageWithTargetSize:(CGSize)targetSize progressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.synchronous = NO;
     options.networkAccessAllowed = YES;
     options.version = PHImageRequestOptionsVersionOriginal;
-    options.resizeMode = PHImageRequestOptionsResizeModeFast;
+    options.resizeMode = PHImageRequestOptionsResizeModeNone;   // For high quality image
     options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
     options.progressHandler = progressHandler;
     
-    [[PHImageManager defaultManager] requestImageForAsset:self targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:resultHandler];
+    [[PHImageManager defaultManager] requestImageForAsset:self targetSize:targetSize contentMode:PHImageContentModeDefault options:options resultHandler:resultHandler];
 }
 
 @end
