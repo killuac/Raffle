@@ -11,6 +11,7 @@
 #import "KLMainViewController.h"
 #import "KLScaleTransition.h"
 #import "KLFaceViewController.h"
+#import "KLAlbumViewController.h"
 @import AVFoundation;
 @import CoreMotion;
 
@@ -18,8 +19,12 @@
 
 @property (nonatomic, strong) UIImage *albumImage;
 @property (nonatomic, strong) KLCameraPreviewView *previewView;
-@property (nonatomic, strong) UIBarButtonItem *takePhotoButton;
-@property (nonatomic, strong) UIBarButtonItem *albumButton;
+@property (nonatomic, strong) UIToolbar *topToolbar;
+@property (nonatomic, strong) UIToolbar *bottomToolbar;
+@property (nonatomic, strong) UIBarButtonItem *takePhotoBarButton;
+@property (nonatomic, strong) UIBarButtonItem *albumBarButton;
+@property (nonatomic, strong) UIBarButtonItem *closeBarButton;
+@property (nonatomic, weak, readonly) UIView *albumToolbarButton;
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) AVCaptureSession *session;
@@ -58,7 +63,7 @@ static void *SessionRunningContext = &SessionRunningContext;
         if (completion) completion(granted);
     };
     
-    [NSThread isMainThread] ? block() : KLDispatchMainAsync(block);
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
 }
 
 + (void)showAlert
@@ -105,7 +110,7 @@ static void *SessionRunningContext = &SessionRunningContext;
     [self startAccelerometerUpdates];
     [self startSessionRunning];
     
-    self.albumButton.enabled = ![self.presentingViewController isKindOfClass:[KLMainViewController class]];
+    self.albumBarButton.enabled = ![self.presentingViewController isKindOfClass:[KLMainViewController class]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -130,24 +135,28 @@ static void *SessionRunningContext = &SessionRunningContext;
     flashButtonItem.on = (NSUserDefaults.flashMode == AVCaptureFlashModeAuto);
     faceButtonItem.on = NSUserDefaults.isFaceDetectionOn;
     NSArray *items = @[flashButtonItem, faceButtonItem, switchCameraItem];
-    UIToolbar *topToolbar = [UIToolbar toolbarWithItems:items];
-    [self.view addSubview:topToolbar];
+    self.topToolbar = [UIToolbar toolbarWithItems:items];
+    [self.view addSubview:self.topToolbar];
     
     // Bottom toolbar
-    UIBarButtonItem *closeButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeCamera:)];
-    UIBarButtonItem *takePhotoItem = [UIBarButtonItem barButtonItemWithImageName:@"button_camera" target:self action:@selector(takePhoto:)];
+    self.closeBarButton = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeCamera:)];
+    self.takePhotoBarButton = [UIBarButtonItem barButtonItemWithImageName:@"button_camera" target:self action:@selector(takePhoto:)];
     UIImage *image = self.albumImage ?: [UIImage imageNamed:@"button_album"];
-    UIBarButtonItem *albumButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(switchToAlbum:)];
-    self.albumButton = albumButtonItem;
-    self.takePhotoButton = takePhotoItem;
-    items = @[closeButtonItem, takePhotoItem, albumButtonItem];
-    UIToolbar *bottomToolbar = [UIToolbar toolbarWithItems:items];
-    [self.view addSubview:bottomToolbar];
+    self.albumBarButton = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(switchToAlbum:)];
+    items = @[self.closeBarButton, self.takePhotoBarButton, self.albumBarButton];
+    self.bottomToolbar = [UIToolbar toolbarWithItems:items];
+    [self.view addSubview:self.bottomToolbar];
     
     // Layout subviews
-    NSDictionary *views = NSDictionaryOfVariableBindings(topToolbar, _previewView, bottomToolbar);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_topToolbar, _previewView, _bottomToolbar);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_previewView]|" options:0 views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topToolbar(40)][_previewView][bottomToolbar(80)]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topToolbar(40)][_previewView][_bottomToolbar(80)]|" options:NSLayoutFormatAlignAllLeading|NSLayoutFormatAlignAllTrailing views:views]];
+}
+
+- (UIView *)albumToolbarButton
+{
+    UIView *toolbarButton = self.bottomToolbar.subviews.lastObject;
+    return [toolbarButton isKindOfClass:[UIView class]] ? toolbarButton : nil;
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -431,7 +440,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 
 - (void)switchCamera:(id)sender
 {
-    self.takePhotoButton.enabled = NO;
+    self.takePhotoBarButton.enabled = NO;
     [self removeAllFaceBoxes];
     [self.previewView addBlurBackground];
     [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -480,7 +489,7 @@ static void *SessionRunningContext = &SessionRunningContext;
         }
         
         KLDispatchMainAsync(^{
-            self.takePhotoButton.enabled = YES;
+            self.takePhotoBarButton.enabled = YES;
             [self.previewView removeBlurBackground];
         });
     });
@@ -489,8 +498,23 @@ static void *SessionRunningContext = &SessionRunningContext;
 #pragma mark - Capture image
 - (void)takePhoto:(id)sender
 {
+    [self disableToolbarButtons];
     [KLSoundPlayer playCameraShutterSound];
     [self captureStillImage];
+}
+
+- (void)enableToolbarButtons
+{
+    self.takePhotoBarButton.enabled = YES;
+    self.albumBarButton.enabled = YES;
+    self.closeBarButton.enabled = YES;
+}
+
+- (void)disableToolbarButtons
+{
+    self.takePhotoBarButton.enabled = NO;
+    self.albumBarButton.enabled = NO;
+    self.closeBarButton.enabled = NO;
 }
 
 - (void)captureStillImage
@@ -506,11 +530,17 @@ static void *SessionRunningContext = &SessionRunningContext;
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             CFRetain(imageDataSampleBuffer);
             dispatch_async(self.sessionQueue, ^{
-                [self processStillImageWithSampleBuffer:imageDataSampleBuffer];
+                NSData *data = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+                UIImage *image = [UIImage imageWithData:data];
                 CFRelease(imageDataSampleBuffer);
+                
+                if (NSUserDefaults.isFaceDetectionOn) {
+                    [self stopSessionRunning];
+                    [self faceDetectionWithImage:image];
+                } else {
+                    [self saveImagesToPhotoAlbum:@[image] completion:nil];
+                }
             });
-            
-            [self stopSessionRunning];
         }];
     });
     
@@ -519,12 +549,9 @@ static void *SessionRunningContext = &SessionRunningContext;
     });
 }
 
-- (void)processStillImageWithSampleBuffer:(CMSampleBufferRef)dataSampleBuffer
+- (void)faceDetectionWithImage:(UIImage *)image
 {
     NSMutableArray *images = [NSMutableArray array];
-    NSData *data = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:dataSampleBuffer];
-    UIImage *image = [UIImage imageWithData:data];
-    
     CGAffineTransform transform = KLImageOrientationIsPortrait(image.imageOrientation) ?
         CGAffineTransformMakeScale(image.width, image.height) : CGAffineTransformMakeScale(image.height, image.width);
     
@@ -540,13 +567,8 @@ static void *SessionRunningContext = &SessionRunningContext;
     
     KLDispatchMainAsync(^{
         if (images.count == 0) [images addObject:image];
-        
-        if (NSUserDefaults.isFaceDetectionOn) {
-            [self showFaceViewControllerWithImages:images];
-        } else {
-            [self saveImagesToPhotosAlbum:images];
-            [self closeCamera:nil];
-        }
+        [self showFaceViewControllerWithImages:images];
+        [self enableToolbarButtons];
     });
 }
 
@@ -557,19 +579,6 @@ static void *SessionRunningContext = &SessionRunningContext;
     navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
-    
-    faceVC.dismissBlock = ^(NSArray<UIImage *> *images) {
-        [self saveImagesToPhotosAlbum:images];
-    };
-}
-
-- (void)saveImagesToPhotosAlbum:(NSArray<UIImage *> *)images
-{
-    [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
-        if ([self.delegate respondsToSelector:@selector(cameraViewController:didFinishSaveImageAssets:)]) {
-            [self.delegate cameraViewController:self didFinishSaveImageAssets:assets];
-        }
-    }];
 }
 
 - (void)switchToAlbum:(id)sender
@@ -588,6 +597,57 @@ static void *SessionRunningContext = &SessionRunningContext;
     if ([self.delegate respondsToSelector:@selector(cameraViewControllerDidClose:)]) {
         [self.delegate cameraViewControllerDidClose:self];
     }
+}
+
+#pragma mark - Public method
+- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion
+{
+    KLDispatchMainAsync(^{
+        if (NSUserDefaults.isFaceDetectionOn) {
+            [KLProgressHUD showActivity];
+        } else {
+            [self animateCaptureStillImage:images.firstObject];
+        }
+    });
+    
+    
+    [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
+        [KLProgressHUD dismiss];
+        if ([self.delegate respondsToSelector:@selector(cameraViewController:didFinishSaveImageAssets:)]) {
+            [self.delegate cameraViewController:self didFinishSaveImageAssets:assets];
+        }
+        if (completion) completion();
+    }];
+}
+
+- (void)animateCaptureStillImage:(UIImage *)image
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.clipsToBounds = YES;
+    imageView.frame = self.previewView.frame;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:imageView];
+    
+    CGSize size = CGSizeMake(20, 20);
+    CGPoint center = [self.bottomToolbar convertPoint:self.albumToolbarButton.center toView:self.view];
+    CGRect frame = CGRectMake(center.x - size.width/2, center.y - size.height/2, size.width, size.height);
+    
+    [UIView animateWithDefaultDuration:^{
+        imageView.frame = frame;
+    } completion:^(BOOL finished) {
+        [imageView removeFromSuperview];
+        if (self.albumImage) {
+            self.albumBarButton.image = KLAlbumImageFromImage(image);
+        }
+        
+        self.albumToolbarButton.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        [UIView animateSpringWithDefaultDuration:^{
+            self.albumToolbarButton.transform = CGAffineTransformIdentity;
+        } completion:^(BOOL finished) {
+            [self enableToolbarButtons];
+        }];
+    }];
 }
 
 @end

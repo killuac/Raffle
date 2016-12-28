@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+UIKIT_EXTERN UIImage *KLAlbumImageFromImage(UIImage *image);
+
 @class KLPhotoLibrary;
 
 @interface KLAlbumViewController : UICollectionViewController
@@ -15,5 +17,7 @@
 + (instancetype)viewControllerWithPhotoLibrary:(KLPhotoLibrary *)photoLibrary atPageIndex:(NSUInteger)pageIndex;
 
 @property (nonatomic, readonly) NSUInteger pageIndex;
+
+- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion;
 
 @end

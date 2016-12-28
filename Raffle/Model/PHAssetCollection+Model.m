@@ -67,7 +67,7 @@
         });
     };
     
-    [NSThread isMainThread] ? KLDispatchGlobalAsync(block) : block();
+    NSThread.isMainThread ? KLDispatchGlobalAsync(block) : block();
 }
 
 - (void)setAssetArray:(NSMutableArray<PHAsset *> *)assetArray

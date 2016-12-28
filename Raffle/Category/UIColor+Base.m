@@ -82,7 +82,7 @@ NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 
 + (instancetype)dimmingBackgroundColor
 {
-    return [UIColor colorWithWhite:0 alpha:0.6];
+    return [UIColor colorWithWhite:0 alpha:0.4];
 }
 
 #pragma mark - Text color

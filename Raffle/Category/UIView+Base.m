@@ -11,8 +11,7 @@
 const CGFloat KLViewDefaultMargin = 16.0f;
 const CGFloat KLViewDefaultHeight = 44.0f;
 const CGFloat KLViewDefaultButtonHeight = 40.0f;
-const CGFloat KLViewDefaultCornerRadius = 6.0f;
-const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
+const CGFloat KLViewDefaultCornerRadius = 5.0f;
 
 @implementation UIView (Base)
 
@@ -401,7 +400,7 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
 
 + (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion
 {
-    [UIView animateWithDuration:KLViewDefaultAnimationDuration animations:animations completion:completion];
+    [UIView animateWithDuration:[CATransaction animationDuration] animations:animations completion:completion];
 }
 
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations
@@ -411,7 +410,7 @@ const NSTimeInterval KLViewDefaultAnimationDuration = 0.25;
 
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion
 {
-    [UIView animateWithDuration:KLViewDefaultAnimationDuration
+    [UIView animateWithDuration:[CATransaction animationDuration]
                           delay:0
          usingSpringWithDamping:0.5
           initialSpringVelocity:10

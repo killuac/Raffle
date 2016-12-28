@@ -28,4 +28,6 @@
 
 @property (nonatomic, weak) id <KLCameraViewControllerDelegate> delegate;
 
+- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion;
+
 @end

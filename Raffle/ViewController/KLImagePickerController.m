@@ -50,7 +50,7 @@
         }
     };
     
-    [NSThread isMainThread] ? block() : KLDispatchMainAsync(block);
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
 }
 
 + (void)showAlert

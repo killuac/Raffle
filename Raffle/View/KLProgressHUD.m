@@ -13,12 +13,14 @@
 @property (nonatomic, strong) UIView *dimmingView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;
 
+@property (nonatomic, assign, getter=isShowing) BOOL showing;
+
 @end
 
 @implementation KLProgressHUD
 
 static KLProgressHUD *sharedProgressHUD = nil;
-+ (instancetype)sharedProgressHUD
++ (KLProgressHUD *)sharedProgressHUD
 {
     if (!sharedProgressHUD) {
         sharedProgressHUD = [KLProgressHUD new];
@@ -28,39 +30,54 @@ static KLProgressHUD *sharedProgressHUD = nil;
 
 + (void)showActivity
 {
-    [self.sharedProgressHUD showActivity];
+    dispatch_block_t block = ^{
+        if (self.sharedProgressHUD.isShowing) {
+            [self.sharedProgressHUD dismissAnimated:NO];
+        }
+        [self.sharedProgressHUD performSelector:@selector(showActivity) withObject:nil afterDelay:[CATransaction animationDuration]];
+    };
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
 }
 
 + (void)dismiss
 {
-    [self.sharedProgressHUD dismiss];
+    dispatch_block_t block = ^{
+        [self cancelPreviousPerformRequestsWithTarget:self.sharedProgressHUD];
+        [self.sharedProgressHUD dismissAnimated:YES];
+    };
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
 }
 
 #pragma mark - Life cycle
 - (instancetype)init
 {
     if (self = [super init]) {
+        self.alpha = 0;
         self.frame = [UIApplication sharedApplication].keyWindow.bounds;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [[UIApplication sharedApplication].keyWindow addSubview:self];
+        
+        [self addSubview:self.dimmingView];
     }
     return self;
 }
 
 - (void)showActivity
 {
-    [self addSubview:self.dimmingView];
-    
-    [UIView animateWithDefaultDuration:^{
-        self.dimmingView.alpha = 1;
-    } completion:^(BOOL finished) {
-        [self addSubview:self.activityView];
-        [self.activityView constraintsCenterInSuperview];
-    }];
+    self.showing = YES;
+    [self addSubview:self.activityView];
+    [self.activityView constraintsCenterInSuperview];
+    [self setHidden:NO animated:YES];
 }
 
-- (void)dismiss
+- (void)dismissAnimated:(BOOL)animated
 {
+    if (!animated) {
+        [self removeFromSuperview];
+        [self resetAllSubviews];
+        return;
+    }
+    
     [UIView animateWithDefaultDuration:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {
@@ -74,6 +91,8 @@ static KLProgressHUD *sharedProgressHUD = nil;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.dimmingView = nil;
     self.activityView = nil;
+    
+    self.showing = NO;
     sharedProgressHUD = nil;
 }
 
@@ -82,7 +101,6 @@ static KLProgressHUD *sharedProgressHUD = nil;
     if (_dimmingView) return _dimmingView;
     
     _dimmingView = [[UIView alloc] initWithFrame:self.bounds];
-    _dimmingView.alpha = 0;
     _dimmingView.backgroundColor = [UIColor dimmingBackgroundColor];
     _dimmingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     return _dimmingView;

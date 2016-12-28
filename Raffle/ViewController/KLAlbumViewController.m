@@ -15,6 +15,23 @@
 #import "KLScaleTransition.h"
 #import "CIDetector+Base.h"
 
+UIImage *KLAlbumImageFromImage(UIImage *image)
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.size = CGSizeMake(40, 40);
+    imageView.layer.masksToBounds = YES;
+    imageView.layer.cornerRadius = 4;
+    imageView.layer.borderWidth = 2;
+    imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    UIGraphicsBeginImageContextWithOptions(imageView.size, 0.0,  0.0);
+    [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+
 @interface KLAlbumViewController ()
 
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
@@ -228,21 +245,8 @@ static CGFloat lineSpacing;
 
 - (UIImage *)albumImage
 {
-    UIImage *image = nil;
-    if (self.assetsCount > 1) {
-        KLAlbumCell *cell = (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:cell.imageView.image];
-        imageView.size = CGSizeMake(40, 40);
-        imageView.layer.masksToBounds = YES;
-        imageView.layer.cornerRadius = 4;
-        imageView.layer.borderWidth = 2;
-        imageView.layer.borderColor = [UIColor whiteColor].CGColor;
-        UIGraphicsBeginImageContextWithOptions(imageView.size, 0.0,  0.0);
-        [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
-        image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    }
-    return [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    KLAlbumCell *cell = (self.assetsCount > 1) ? (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] : nil;
+    return KLAlbumImageFromImage(cell.imageView.image);
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -304,7 +308,6 @@ static CGFloat lineSpacing;
 - (void)faceDetectionWithImage:(UIImage *)image
 {
     [KLProgressHUD showActivity];
-    
     KLDispatchGlobalAsync(^{
         NSMutableArray *images = [NSMutableArray array];
         CIDetector *detector = [CIDetector faceDetectorWithAccuracy:KLDetectorAccuracyHigh];
@@ -341,13 +344,10 @@ static CGFloat lineSpacing;
     navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
-    
-    faceVC.dismissBlock = ^(NSArray<UIImage *> *images) {
-        [self saveImagesToPhotosAlbum:images];
-    };
 }
 
-- (void)saveImagesToPhotosAlbum:(NSArray<UIImage *> *)images
+#pragma mark - Public method
+- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion
 {
     [KLProgressHUD showActivity];
     [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
@@ -356,6 +356,7 @@ static CGFloat lineSpacing;
             NSArray *allAssets = [self.photoLibrary.selectedAssets arrayByAddingObjectsFromArray:assets];
             [self.imagePickerDelegate imagePickerController:self.imagePicker didFinishPickingImageAssets:allAssets];
         }
+        if (completion) completion();
     }];
 }
 

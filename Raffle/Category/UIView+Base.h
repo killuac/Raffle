@@ -12,7 +12,6 @@ UIKIT_EXTERN const CGFloat KLViewDefaultMargin;
 UIKIT_EXTERN const CGFloat KLViewDefaultHeight;
 UIKIT_EXTERN const CGFloat KLViewDefaultButtonHeight;
 UIKIT_EXTERN const CGFloat KLViewDefaultCornerRadius;
-UIKIT_EXTERN const NSTimeInterval KLViewDefaultAnimationDuration;
 
 
 @protocol KLViewProtocol <NSObject>

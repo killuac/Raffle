@@ -9,6 +9,8 @@
 #import "KLFaceViewController.h"
 #import "KLScaleTransition.h"
 #import "KLAlbumCell.h"
+#import "KLAlbumViewController.h"
+#import "KLCameraViewController.h"
 
 @interface KLFaceViewController ()
 
@@ -162,11 +164,17 @@ static CGFloat lineSpacing;
 
 - (void)addFacePhotosToDrawBox:(id)sender
 {
-    self.presentingViewController.view.alpha = 1.0;
-    self.presentingViewController.view.transform = CGAffineTransformIdentity;
-    [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
-        if (self.dismissBlock) self.dismissBlock(self.images);
-    }];
+    KLVoidBlockType completionBlock = ^{
+        self.presentingViewController.view.alpha = 1.0;
+        self.presentingViewController.view.transform = CGAffineTransformIdentity;
+        [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
+    };
+    
+    if ([self.parentViewController respondsToSelector:@selector(saveImagesToPhotoAlbum:completion:)]) {
+        [(id)self.parentViewController saveImagesToPhotoAlbum:self.images completion:completionBlock];
+    } else {
+        completionBlock();
+    }
 }
 
 - (void)deleteSelectedFacePhotos:(id)sender

@@ -9,6 +9,7 @@
 #import "KLMainViewController.h"
 #import "KLBubbleButton.h"
 #import "KLCircleTransition.h"
+#import "KLCameraHollowTransition.h"
 #import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
 #import "KLCameraViewController.h"
@@ -370,7 +371,7 @@
         UIViewAnimationTransition transition = self.dataController.isAttendeeMode ? UIViewAnimationTransitionFlipFromRight : UIViewAnimationTransitionFlipFromLeft;
         [UIView setAnimationTransition:transition forView:self.switchModeButton cache:YES];
         
-        KLDispatchMainAfter(KLViewDefaultAnimationDuration/2, ^{
+        KLDispatchMainAfter([CATransaction animationDuration]/2, ^{
             NSString *imageName = self.dataController.isAttendeeMode ? @"icon_attendee_mode" : @"icon_prize_mode";
             [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
         });
@@ -398,7 +399,7 @@
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
     KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:nil];
-    cameraVC.transition = [KLCircleTransition transition];
+    cameraVC.transition = [KLCameraHollowTransition transition];
     cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     [self presentViewController:cameraVC animated:YES completion:nil];
 }

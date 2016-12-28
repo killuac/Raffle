@@ -46,6 +46,30 @@
 @implementation KLStatusBar
 
 static KLStatusBar *sharedStatusBar = nil;
++ (KLStatusBar *)sharedStatusBar
+{
+    if (!sharedStatusBar) {
+        sharedStatusBar = [KLStatusBar new];
+    }
+    return sharedStatusBar;
+}
+
++ (void)showWithText:(NSString *)text
+{
+    dispatch_block_t block = ^{
+        if (self.sharedStatusBar.isShowing) return;
+        [self.sharedStatusBar showWithMessage:text];
+    };
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
+}
+
++ (void)dismiss
+{
+    dispatch_block_t block = ^{
+        [self.sharedStatusBar dismissAnimated:YES];
+    };
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
+}
 
 #pragma mark - Lifecycle
 - (instancetype)init
@@ -176,21 +200,9 @@ static KLStatusBar *sharedStatusBar = nil;
 }
 
 #pragma mark - Notification message
-+ (void)showWithText:(NSString *)text
-{
-    if (sharedStatusBar.isShowing) return;
-    sharedStatusBar = [KLStatusBar new];
-    [sharedStatusBar showWithMessage:text];
-}
-
-+ (void)dismiss
-{
-    [sharedStatusBar dismissNotification];
-}
-
 - (void)showWithMessage:(NSString *)message
 {
-    sharedStatusBar.showing = YES;
+    self.showing = YES;
     
     self.messageLabel.text = message;
     [self.messageLabel scrollIfNeeded];
@@ -202,21 +214,27 @@ static KLStatusBar *sharedStatusBar = nil;
         self.notificationView.top = 0;
         self.frame = CGRectMake(0, self.statusBarHeight, self.width, 0);
     } completion:^(BOOL finished) {
-        [self performSelector:@selector(dismissNotification) withObject:nil afterDelay:delay];
+        KLDispatchMainAfter(delay, ^{
+            [self dismissAnimated:YES];
+        });
     }];
 }
 
-- (void)dismissNotification
+- (void)dismissAnimated:(BOOL)animated
 {
+    if (!animated) {
+        [self resetAllSubviews]; return;
+    }
+    
     [UIView animateWithDefaultDuration:^{
         self.notificationView.top = -self.statusBarHeight;
         self.frame = CGRectMake(0, 0, self.width, self.statusBarHeight);
     } completion:^(BOOL finished) {
-        [self resetNil];
+        [self resetAllSubviews];
     }];
 }
 
-- (void)resetNil
+- (void)resetAllSubviews
 {
     [self.statusBarWindow.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.statusBarWindow.hidden = YES;

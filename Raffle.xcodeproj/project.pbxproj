@@ -26,6 +26,7 @@
 		4176C4401DC31C660054FF13 /* KLAddButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C43F1DC31C660054FF13 /* KLAddButtonCell.m */; };
 		4176C4471DC341B30054FF13 /* KLInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4176C4461DC341B30054FF13 /* KLInnerShadowView.m */; };
 		41B5F9A21E12495800D4FFC2 /* KLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B5F9A11E12495800D4FFC2 /* KLProgressHUD.m */; };
+		41B5F9B31E13BDFE00D4FFC2 /* KLCameraHollowTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B5F9B21E13BDFE00D4FFC2 /* KLCameraHollowTransition.m */; };
 		41E163021E01395200A53B72 /* KLCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163011E01395200A53B72 /* KLCameraPreviewView.m */; };
 		41E163241E0A1EEB00A53B72 /* CIDetector+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E163231E0A1EEB00A53B72 /* CIDetector+Base.m */; };
 		41E278A21E0BA3AC001FBE68 /* KLFaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E278A11E0BA3AC001FBE68 /* KLFaceViewController.m */; };
@@ -149,6 +150,8 @@
 		4176C4461DC341B30054FF13 /* KLInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLInnerShadowView.m; sourceTree = "<group>"; };
 		41B5F9A01E12495800D4FFC2 /* KLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLProgressHUD.h; sourceTree = "<group>"; };
 		41B5F9A11E12495800D4FFC2 /* KLProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLProgressHUD.m; sourceTree = "<group>"; };
+		41B5F9B11E13BDFE00D4FFC2 /* KLCameraHollowTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLCameraHollowTransition.h; sourceTree = "<group>"; };
+		41B5F9B21E13BDFE00D4FFC2 /* KLCameraHollowTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLCameraHollowTransition.m; sourceTree = "<group>"; };
 		41E163001E01395200A53B72 /* KLCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLCameraPreviewView.h; sourceTree = "<group>"; };
 		41E163011E01395200A53B72 /* KLCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLCameraPreviewView.m; sourceTree = "<group>"; };
 		41E163221E0A1EEB00A53B72 /* CIDetector+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CIDetector+Base.h"; sourceTree = "<group>"; };
@@ -323,6 +326,8 @@
 				E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */,
 				4105A7951D70120500215D76 /* KLBaseTransition.h */,
 				4105A7961D70120500215D76 /* KLBaseTransition.m */,
+				41B5F9B11E13BDFE00D4FFC2 /* KLCameraHollowTransition.h */,
+				41B5F9B21E13BDFE00D4FFC2 /* KLCameraHollowTransition.m */,
 				4105A7921D6FDFA900215D76 /* KLCircleTransition.h */,
 				4105A7931D6FDFA900215D76 /* KLCircleTransition.m */,
 				4176C4101DC08E4B0054FF13 /* KLDrawBoxTransition.h */,
@@ -861,6 +866,7 @@
 				E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */,
 				4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */,
 				41FE17971D5B15AB00CABFCA /* UILabel+Base.m in Sources */,
+				41B5F9B31E13BDFE00D4FFC2 /* KLCameraHollowTransition.m in Sources */,
 				E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */,
 				41FE17661D5B15A300CABFCA /* KLUtilities.m in Sources */,
 				41FE17231D5B10A300CABFCA /* Raffle.xcdatamodeld in Sources */,
