@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G1004" minimumToolsVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="15G1212" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="DrawBox" representedClassName="KLDrawBoxModel" syncable="YES">
-        <attribute name="creationDate" attributeType="Date" syncable="YES"/>
-        <attribute name="drawMode" attributeType="Integer 16" minValueString="1" maxValueString="2" defaultValueString="1" syncable="YES"/>
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="drawMode" attributeType="Integer 16" minValueString="1" maxValueString="2" defaultValueString="1" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="photos" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Photo" inverseName="drawBox" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <entity name="Photo" representedClassName="KLPhotoModel" syncable="YES">

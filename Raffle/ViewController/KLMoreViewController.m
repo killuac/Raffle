@@ -7,17 +7,16 @@
 //
 
 #import "KLMoreViewController.h"
-#import "KLMainViewController.h"
 #import "KLMainDataController.h"
 #import "KLDrawBoxCell.h"
 #import "KLAddButtonCell.h"
 #import "KLPhotoViewController.h"
 #import "KLImagePickerController.h"
 
-@interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
+@interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
-@property (nonatomic, weak, readonly) KLMainViewController *mainViewContoller;
 @property (nonatomic, strong) KLMainDataController *dataController;
+@property (nonatomic, weak) id <KLDataControllerDelegate> previousDelegate;
 
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, assign) BOOL editMode;
@@ -39,18 +38,15 @@ static CGFloat SectionInset;
 }
 
 #pragma mark - Lifecycle
-- (instancetype)initWithDataController:(id)dataController
+- (instancetype)initWithDataController:(KLMainDataController *)dataController
 {
+    // Overwirte delegate, so need save previous delegate (KLMainViewController).
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
+        self.previousDelegate = dataController.delegate;
         _dataController = dataController;
         _dataController.delegate = self;
     }
     return self;
-}
-
-- (KLMainViewController *)mainViewContoller
-{
-    return (id)self.presentingViewController;
 }
 
 - (void)viewDidLoad
@@ -148,8 +144,8 @@ static CGFloat SectionInset;
     [self checkRightBarButtonEnablement];
     [self reloadData];
     
-    if ([self.mainViewContoller respondsToSelector:@selector(controllerDidChangeContent:)]) {
-        [self.mainViewContoller controllerDidChangeContent:controller];
+    if ([self.previousDelegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
+        [self.previousDelegate controllerDidChangeContent:controller];
     }
 }
 
@@ -170,8 +166,8 @@ static CGFloat SectionInset;
             break;
     }
     
-    if ([self.mainViewContoller respondsToSelector:@selector(controller:didChangeAtIndexPaths:forChangeType:)]) {
-        [self.mainViewContoller controller:controller didChangeAtIndexPaths:indexPaths forChangeType:type];
+    if ([self.previousDelegate respondsToSelector:@selector(controller:didChangeAtIndexPaths:forChangeType:)]) {
+        [self.previousDelegate controller:controller didChangeAtIndexPaths:indexPaths forChangeType:type];
     }
 }
 
@@ -188,6 +184,12 @@ static CGFloat SectionInset;
 
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.dataController addDrawBoxWithAssets:assets];
+}
+
+#pragma mark - KLCameraViewController delegate
+- (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addDrawBoxWithAssets:assets];
 }

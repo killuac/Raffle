@@ -15,9 +15,11 @@
 
 NSNotificationName const KLPhotoViewControllerDidTouchStart = @"KLPhotoViewControllerDidTouchStart";
 
-@interface KLPhotoViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate>
+@interface KLPhotoViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
 @property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
+@property (nonatomic, weak) id <KLDataControllerDelegate> previousDelegate;
+
 @property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
 
 @end
@@ -43,9 +45,10 @@ static CGFloat lineSpacing;
 }
 
 #pragma mark - Lifecycle
-- (instancetype)initWithDataController:(id)dataController
+- (instancetype)initWithDataController:(KLDrawBoxDataController *)dataController
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
+        self.previousDelegate = dataController.delegate;
         _drawBoxDC = dataController;
         _drawBoxDC.delegate = self;
     }
@@ -154,6 +157,10 @@ static CGFloat lineSpacing;
 {
     [self updateUI];
     [self reloadData];
+    
+    if ([self.previousDelegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
+        [self.previousDelegate controllerDidChangeContent:controller];
+    }
 }
 
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
@@ -171,6 +178,10 @@ static CGFloat lineSpacing;
             
         default:
             break;
+    }
+    
+    if ([self.previousDelegate respondsToSelector:@selector(controller:didChangeAtIndexPaths:forChangeType:)]) {
+        [self.previousDelegate controller:controller didChangeAtIndexPaths:indexPaths forChangeType:type];
     }
 }
 
@@ -191,6 +202,12 @@ static CGFloat lineSpacing;
 
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
+{
+    [self.drawBoxDC addPhotos:assets completion:nil];
+}
+
+#pragma mark - KLCameraViewController delegate
+- (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.drawBoxDC addPhotos:assets completion:nil];
 }

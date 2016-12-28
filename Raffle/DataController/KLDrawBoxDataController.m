@@ -26,6 +26,8 @@
         _allAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _remainingAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _selectedAssets = [NSMutableArray array];
+        
+        [self addObservers];
     }
     return self;
 }
@@ -201,11 +203,23 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
-    // TODO: Remove assets that don't exist in photo library
-    // TODO: Also need remove retaining assets that don't exist
     [self.allAssets removeAllObjects];
     [self.allAssets addObjectsFromArray:self.drawBox.assets];
-//    [self didChangeAtIndexPaths:@[] forChangeType:KLDataChangeTypeDelete];
+    
+    NSMutableSet *remainingAssetSet = [NSMutableSet setWithArray:self.remainingAssets];
+    [remainingAssetSet intersectSet:[NSSet setWithArray:self.allAssets]];
+    [self.remainingAssets removeAllObjects];
+    [self.remainingAssets addObjectsFromArray:remainingAssetSet.allObjects];
+    
+    NSMutableSet *selectedAssetSet = [NSMutableSet setWithArray:self.selectedAssets];
+    [selectedAssetSet intersectSet:[NSSet setWithArray:self.allAssets]];
+    [self.selectedAssets removeAllObjects];
+    [self.selectedAssets addObjectsFromArray:selectedAssetSet.allObjects];
+    
+    KLDispatchMainAsync(^{
+        [self didChangeContent];
+        [self didChangeSelection];
+    });
 }
 
 @end

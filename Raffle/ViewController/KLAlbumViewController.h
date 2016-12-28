@@ -18,6 +18,4 @@ UIKIT_EXTERN UIImage *KLAlbumImageFromImage(UIImage *image);
 
 @property (nonatomic, readonly) NSUInteger pageIndex;
 
-- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion;
-
 @end

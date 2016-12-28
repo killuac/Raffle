@@ -17,7 +17,7 @@
 + (instancetype)viewControllerWithDataController:(KLMainDataController *)dataController atPageIndex:(NSUInteger)pageIndex;
 
 @property (nonatomic, readonly) NSUInteger pageIndex;
-@property (nonatomic, strong, readonly) KLDrawBoxDataController *drawBoxDC;
+@property (nonatomic, strong, readonly) KLDrawBoxDataController *dataController;
 
 - (void)reloadData;
 - (void)randomAnPhoto:(KLAssetBlockType)resultHandler;

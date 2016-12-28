@@ -164,14 +164,15 @@ static CGFloat lineSpacing;
 
 - (void)addFacePhotosToDrawBox:(id)sender
 {
+    UIViewController __kindof *presentingViewController = self.presentingViewController;
     KLVoidBlockType completionBlock = ^{
-        self.presentingViewController.view.alpha = 1.0;
-        self.presentingViewController.view.transform = CGAffineTransformIdentity;
+        presentingViewController.view.alpha = 1.0;
+        presentingViewController.view.transform = CGAffineTransformIdentity;
         [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
     };
     
-    if ([self.parentViewController respondsToSelector:@selector(saveImagesToPhotoAlbum:completion:)]) {
-        [(id)self.parentViewController saveImagesToPhotoAlbum:self.images completion:completionBlock];
+    if ([presentingViewController respondsToSelector:@selector(saveImagesToPhotoAlbum:completion:)]) {
+        [presentingViewController saveImagesToPhotoAlbum:self.images completion:completionBlock];
     } else {
         completionBlock();
     }

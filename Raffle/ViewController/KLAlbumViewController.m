@@ -8,8 +8,8 @@
 
 #import "KLAlbumViewController.h"
 #import "KLAlbumCell.h"
-#import "KLCameraPreviewView.h"
 #import "KLImagePickerController.h"
+#import "KLCameraPreviewView.h"
 #import "KLCameraViewController.h"
 #import "KLFaceViewController.h"
 #import "KLScaleTransition.h"
@@ -37,9 +37,8 @@ UIImage *KLAlbumImageFromImage(UIImage *image)
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
 @property (nonatomic, strong) PHAssetCollection *assetCollection;
 
-@property (nonatomic, assign) NSUInteger assetsCount;
+@property (nonatomic, readonly) NSUInteger assetsCount;
 @property (nonatomic, readonly) BOOL isShowCameraPreview;
-@property (nonatomic, strong) id <KLImagePickerControllerDelegate> imagePickerDelegate;
 
 @property (nonatomic, strong) KLCameraPreviewView *cameraPreviewView;
 @property (nonatomic, strong) UIButton *cameraButton;
@@ -73,12 +72,9 @@ static CGFloat lineSpacing;
         _photoLibrary = photoLibrary;
         _pageIndex = pageIndex;
         _assetCollection = [photoLibrary assetCollectionAtIndex:pageIndex];
-        _assetsCount = _assetCollection.assets.count;
         
         if (self.isShowCameraPreview) {
-            [KLCameraViewController checkAuthorization:^(BOOL granted) {
-                self.assetsCount += 1;  // The first cell for camera preview display
-            }];
+            [KLCameraViewController checkAuthorization:nil];
         }
     }
     return self;
@@ -119,8 +115,6 @@ static CGFloat lineSpacing;
 
 - (void)prepareForUI
 {
-    self.imagePickerDelegate = self.imagePicker.delegate;
-    
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;
     flowLayout.minimumLineSpacing = lineSpacing;
@@ -201,6 +195,11 @@ static CGFloat lineSpacing;
 }
 
 #pragma mark - UICollectionViewDataSource
+- (NSUInteger)assetsCount
+{
+    return self.isShowCameraPreview ? _assetCollection.assets.count + 1 : _assetCollection.assets.count;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.assetsCount;
@@ -344,20 +343,6 @@ static CGFloat lineSpacing;
     navController.transition = [KLScaleTransition transitionWithGestureEnabled:YES];
     navController.transition.transitionOrientation = KLTransitionOrientationHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
-}
-
-#pragma mark - Public method
-- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion
-{
-    [KLProgressHUD showActivity];
-    [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
-        [KLProgressHUD dismiss];
-        if ([self.imagePickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
-            NSArray *allAssets = [self.photoLibrary.selectedAssets arrayByAddingObjectsFromArray:assets];
-            [self.imagePickerDelegate imagePickerController:self.imagePicker didFinishPickingImageAssets:allAssets];
-        }
-        if (completion) completion();
-    }];
 }
 
 @end

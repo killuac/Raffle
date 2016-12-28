@@ -11,10 +11,12 @@
 
 @class KLDrawBoxViewController;
 
-@interface KLMainViewController : UIViewController <KLDataControllerDelegate>
+@interface KLMainViewController : UIViewController
 
 @property (nonatomic, strong, readonly) KLMainDataController *dataController;
 @property (nonatomic, weak, readonly) KLDrawBoxViewController *drawBoxViewController;
+
+- (void)updateAddPhotoButtonTitle;
 
 @end
 

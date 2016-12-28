@@ -15,6 +15,7 @@
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
+@property (nonatomic, strong) KLAlbumViewController *currentViewController;
 @property (nonatomic, strong) KLSegmentControl *segmentControl;
 @property (nonatomic, strong) UINavigationBar *bottomBar;
 @property (nonatomic, strong) UINavigationItem *bottomBarItem;
@@ -111,13 +112,15 @@
 {
     self.pageScrollView.scrollEnabled = self.photoLibrary.pageCount > 0;
     
-    UIViewController *viewController = [self viewControllerAtPageIndex:self.photoLibrary.currentPageIndex];
-    if (viewController) {
-        [self.pageViewController setViewControllers:@[viewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    } else if (self.pageViewController.childViewControllers.count) {
-        [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(willMoveToParentViewController:) withObject:nil];
-        [self.pageViewController.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
+    if (![self.pageViewController.viewControllers containsObject:self.currentViewController]) {
+        self.currentViewController = [self viewControllerAtPageIndex:self.photoLibrary.currentPageIndex];
+        if (self.currentViewController) {
+            [self.pageViewController setViewControllers:@[self.currentViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+        } else if (self.pageViewController.childViewControllers.count) {
+            [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(willMoveToParentViewController:) withObject:nil];
+            [self.pageViewController.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+            [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
+        }
     }
     
     self.segmentControl.items = self.photoLibrary.segmentTitles;
@@ -258,6 +261,7 @@
 {
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
     self.photoLibrary.currentPageIndex = albumVC.pageIndex;
+    self.currentViewController = albumVC;
     [self.segmentControl selectSegmentAtIndex:albumVC.pageIndex];
 }
 
@@ -299,6 +303,20 @@
         if ([self.delegate respondsToSelector:@selector(imagePickerControllerDidClose:)]) {
             [self.delegate imagePickerControllerDidClose:self];
         }
+    }];
+}
+
+#pragma mark - Public method
+- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion
+{
+    [KLProgressHUD showActivity];
+    [KLPhotoLibrary saveImages:images completion:^(NSArray<PHAsset *> *assets) {
+        [KLProgressHUD dismiss];
+        if ([self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageAssets:)]) {
+            NSArray *allAssets = [self.photoLibrary.selectedAssets arrayByAddingObjectsFromArray:assets];
+            [self.delegate imagePickerController:self didFinishPickingImageAssets:allAssets];
+        }
+        if (completion) completion();
     }];
 }
 

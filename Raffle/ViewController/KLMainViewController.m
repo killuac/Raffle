@@ -9,17 +9,15 @@
 #import "KLMainViewController.h"
 #import "KLBubbleButton.h"
 #import "KLCircleTransition.h"
-#import "KLCameraHollowTransition.h"
 #import "KLDrawBoxViewController.h"
 #import "KLImagePickerController.h"
-#import "KLCameraViewController.h"
 #import "KLMoreViewController.h"
 #import "KLResultViewController.h"
 #import "KLPhotoViewController.h"
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
-@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
+@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
@@ -50,6 +48,7 @@
     [super viewDidLoad];
     [self prepareForUI];
     [self reloadData];
+    [self addObservers];
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -99,7 +98,6 @@
     }
     
     [self becomeFirstResponder];    // For motion detection
-    [self addObservers];
     [self updateAddPhotoButtonTitle];
 }
 
@@ -191,13 +189,7 @@
 #pragma mark - Observers
 - (void)addObservers
 {
-    [self removeObservers];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTouchStart:) name:KLPhotoViewControllerDidTouchStart object:nil];
-    
-    if (!self.dataController.currentDrawBoxDC) return;
-    self.KVOController = [FBKVOController controllerWithObserver:self];
-    [self.KVOController observe:self.dataController.currentDrawBoxDC keyPath:NSStringFromSelector(@selector(remainingAssetCount)) options:0 action:@selector(updateAddPhotoButtonTitle)];
 }
 
 - (void)removeObservers
@@ -399,7 +391,7 @@
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
     KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:nil];
-    cameraVC.transition = [KLCameraHollowTransition transition];
+    cameraVC.transition = [KLCircleTransition transition];
     cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     [self presentViewController:cameraVC animated:YES completion:nil];
 }
@@ -407,21 +399,13 @@
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
-    [self addDrawBoxWithAssets:assets];
-}
-
-- (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets
-{
     [self.dataController addDrawBoxWithAssets:assets];
-    if (self.dataController.pageCount == 0) {
-        [self addObservers];
-    }
 }
 
 #pragma mark - KLCameraViewController delegate
 - (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
-    [self addDrawBoxWithAssets:assets];
+    [self.dataController addDrawBoxWithAssets:assets];
 }
 
 @end

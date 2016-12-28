@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "KLPhotoLibrary.h"
 #import "KLAlbumViewController.h"
+#import "KLCameraViewController.h"
 
 @class KLImagePickerController;
 
@@ -24,9 +25,10 @@
 @interface KLImagePickerController : UIViewController
 
 + (void)checkAuthorization:(KLVoidBlockType)completion;
-
 + (instancetype)imagePickerController;
 
 @property (nonatomic, weak) id <KLImagePickerControllerDelegate> delegate;
+
+- (void)saveImagesToPhotoAlbum:(NSArray<UIImage *> *)images completion:(KLVoidBlockType)completion;
 
 @end

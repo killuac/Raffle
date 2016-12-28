@@ -21,12 +21,15 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _drawBoxes = [NSMutableArray arrayWithArray:[KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]]];
+        NSArray *array = [KLDrawBoxModel MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"photos.@count > 0"] inContext:[NSManagedObjectContext MR_rootSavingContext]];
+        _drawBoxes = [NSMutableArray arrayWithArray:array];
         _drawBoxDCs = [NSMutableArray array];
         
         [self.drawBoxes enumerateObjectsUsingBlock:^(KLDrawBoxModel * _Nonnull drawBoxModel, NSUInteger idx, BOOL * _Nonnull stop) {
             [self.drawBoxDCs addObject:[self createDrawBoxDataControllerWithPageIndex:idx]];
         }];
+        
+        [self addObservers];
     }
     return self;
 }
@@ -119,9 +122,10 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
-    [self.drawBoxes removeAllObjects];
-    [self.drawBoxes addObjectsFromArray:[KLDrawBoxModel MR_findAllInContext:[NSManagedObjectContext MR_rootSavingContext]]];
-    [self didChangeContent];
+    [self.drawBoxes filterUsingPredicate:[NSPredicate predicateWithFormat:@"photos.@count > 0"]];
+    KLDispatchMainAsync(^{
+        [self didChangeContent];
+    });
 }
 
 @end
