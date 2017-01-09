@@ -7,12 +7,14 @@
 //
 
 #import "NSTimer+Base.h"
+#import "KLWeakTarget.h"
 
 @implementation NSTimer (Base)
 
 + (NSTimer *)repeatTimerWithTimeInterval:(NSTimeInterval)timeInterval target:(id)target selector:(SEL)selector
 {
-    NSTimer *timer = [NSTimer timerWithTimeInterval:timeInterval target:target selector:selector userInfo:nil repeats:YES];
+    KLWeakTarget *weakTarget = [KLWeakTarget weakTargetWithTarget:target selector:selector];
+    NSTimer *timer = [NSTimer timerWithTimeInterval:timeInterval target:weakTarget selector:@selector(actionDidFire:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];   // Make timer contine while draggning or scrolling
     
     return timer;
@@ -20,7 +22,8 @@
 
 + (NSTimer *)scheduledRepeatTimerWithTimeInterval:(NSTimeInterval)timeInterval target:(id)target selector:(SEL)selector
 {
-    NSTimer *timer = [NSTimer repeatTimerWithTimeInterval:timeInterval target:target selector:selector];
+    KLWeakTarget *weakTarget = [KLWeakTarget weakTargetWithTarget:target selector:selector];
+    NSTimer *timer = [NSTimer repeatTimerWithTimeInterval:timeInterval target:weakTarget selector:@selector(actionDidFire:)];
     timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
     
     return timer;

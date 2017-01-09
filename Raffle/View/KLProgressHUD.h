@@ -11,6 +11,7 @@
 @interface KLProgressHUD : UIView
 
 + (void)showActivity;
++ (void)showProgress:(CGFloat)progress;
 + (void)dismiss;
 
 @end

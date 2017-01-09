@@ -7,11 +7,13 @@
 //
 
 #import "KLProgressHUD.h"
+#import "KLPieProgressView.h"
 
 @interface KLProgressHUD ()
 
 @property (nonatomic, strong) UIView *dimmingView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;
+@property (nonatomic, strong) KLPieProgressView *progressView;
 
 @property (nonatomic, assign, getter=isShowing) BOOL showing;
 
@@ -24,6 +26,9 @@ static KLProgressHUD *sharedProgressHUD = nil;
 {
     if (!sharedProgressHUD) {
         sharedProgressHUD = [KLProgressHUD new];
+        sharedProgressHUD.frame = [UIApplication sharedApplication].keyWindow.bounds;
+        sharedProgressHUD.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [[UIApplication sharedApplication].keyWindow addSubview:sharedProgressHUD];
     }
     return sharedProgressHUD;
 }
@@ -35,6 +40,14 @@ static KLProgressHUD *sharedProgressHUD = nil;
             [self.sharedProgressHUD dismissAnimated:NO];
         }
         [self.sharedProgressHUD performSelector:@selector(showActivity) withObject:nil afterDelay:[CATransaction animationDuration]];
+    };
+    NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
+}
+
++ (void)showProgress:(CGFloat)progress
+{
+    dispatch_block_t block = ^{
+        [self.sharedProgressHUD showProgress:progress];
     };
     NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
 }
@@ -53,23 +66,63 @@ static KLProgressHUD *sharedProgressHUD = nil;
 {
     if (self = [super init]) {
         self.alpha = 0;
-        self.frame = [UIApplication sharedApplication].keyWindow.bounds;
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [[UIApplication sharedApplication].keyWindow addSubview:self];
-        
         [self addSubview:self.dimmingView];
     }
     return self;
+}
+
+- (UIView *)dimmingView
+{
+    if (_dimmingView) return _dimmingView;
+    
+    _dimmingView = [[UIView alloc] initWithFrame:self.bounds];
+    _dimmingView.backgroundColor = [UIColor dimmingBackgroundColor];
+    _dimmingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    return _dimmingView;
+}
+
+#pragma mark - Activity view
+- (UIActivityIndicatorView *)activityView
+{
+    if (_activityView) return _activityView;
+    
+    _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    _activityView.translatesAutoresizingMaskIntoConstraints = NO;
+    [_activityView startAnimating];
+    return _activityView;
 }
 
 - (void)showActivity
 {
     self.showing = YES;
     [self addSubview:self.activityView];
-    [self.activityView constraintsCenterInSuperview];
     [self setHidden:NO animated:YES];
+    [self.activityView constraintsCenterInSuperview];
 }
 
+#pragma mark - Progress view
+- (KLPieProgressView *)progressView
+{
+    if (!_progressView) {
+        _progressView = [KLPieProgressView newAutoLayoutView];
+    }
+    return _progressView;
+}
+
+- (void)showProgress:(CGFloat)progress
+{
+    if (self.isShowing) {
+        [self.progressView setProgress:progress animated:YES];
+        return;
+    }
+    
+    self.showing = YES;
+    [self addSubview:self.progressView];
+    [self setHidden:NO animated:YES];
+    [self.progressView constraintsCenterInSuperview];
+}
+
+#pragma mark - Dismiss
 - (void)dismissAnimated:(BOOL)animated
 {
     if (!animated) {
@@ -91,29 +144,10 @@ static KLProgressHUD *sharedProgressHUD = nil;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.dimmingView = nil;
     self.activityView = nil;
+    self.progressView = nil;
     
     self.showing = NO;
     sharedProgressHUD = nil;
-}
-
-- (UIView *)dimmingView
-{
-    if (_dimmingView) return _dimmingView;
-    
-    _dimmingView = [[UIView alloc] initWithFrame:self.bounds];
-    _dimmingView.backgroundColor = [UIColor dimmingBackgroundColor];
-    _dimmingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    return _dimmingView;
-}
-
-- (UIActivityIndicatorView *)activityView
-{
-    if (_activityView) return _activityView;
-    
-    _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    _activityView.translatesAutoresizingMaskIntoConstraints = NO;
-    [_activityView startAnimating];
-    return _activityView;
 }
 
 @end

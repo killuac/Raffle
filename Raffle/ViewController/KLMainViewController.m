@@ -331,15 +331,14 @@
 
 - (void)stopDraw:(id)sender
 {
-    [self.drawBoxViewController randomAnPhoto:^(UIImage *image, NSDictionary *info) {
-        KLResultViewController *resultVC = [KLResultViewController viewController];
-        resultVC.resultImage = image;
-        [self presentViewController:resultVC animated:YES completion:^{
-            [self setAddPhotoButtonHidden:NO];
-            [self setBottomButtonsHidden:NO];
-        }];
-    }];
     [KLSoundPlayer playStopDrawSound];
+    
+    KLResultViewController *resultVC = [KLResultViewController viewController];
+    resultVC.pickedAsset = [self.dataController.currentDrawBoxDC randomAnAsset];
+    [self presentViewController:resultVC animated:YES completion:^{
+        [self setAddPhotoButtonHidden:NO];
+        [self setBottomButtonsHidden:NO];
+    }];
 }
 
 - (void)addPhotosToDrawBox:(id)sender

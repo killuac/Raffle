@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class KLSwapTransition;
+@class KLSwapTransition, PHAsset;
 
 @interface KLResultViewController : UIViewController
 
-@property (nonatomic, strong) UIImage *resultImage;
+@property (nonatomic, strong) PHAsset *pickedAsset;
 
 @end

@@ -17,7 +17,7 @@
     CGPathRef startPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:0.01 startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
     CGPathRef endPath = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:radius startAngle:0 endAngle:2*M_PI clockwise:YES].CGPath;
     
-    CAShapeLayer *maskLayer = [CAShapeLayer layerWithPath:endPath];
+    CAShapeLayer *maskLayer = [CAShapeLayer layerWithPath:startPath];
     CABasicAnimation *pathAnimation = [CABasicAnimation animationWithDuration:self.animationDuration keyPath:@"path"];
     // Avoid screen flash
     pathAnimation.removedOnCompletion = NO;

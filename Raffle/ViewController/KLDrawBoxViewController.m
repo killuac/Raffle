@@ -100,13 +100,6 @@
     // TODO: layoutPhotos
 }
 
-- (void)randomAnPhoto:(KLAssetBlockType)resultHandler
-{
-    [[self.dataController randomAnAsset] originalImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
-        // TODO: Progress
-    } resultHandler:resultHandler];
-}
-
 #pragma mark - Data controller delegate
 - (void)controllerDidChangeContent:(KLDataController *)controller
 {

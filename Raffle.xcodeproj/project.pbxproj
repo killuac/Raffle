@@ -86,6 +86,8 @@
 		E3D72C151DAABD1000EE2620 /* libAdapterSDKMoPub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D72C131DAABD1000EE2620 /* libAdapterSDKMoPub.a */; };
 		E3D72C161DAABD1000EE2620 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E3D72C141DAABD1000EE2620 /* Readme.txt */; };
 		E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF311D88553E008F3421 /* KLPhotoModel.m */; };
+		E3FD190E1E222D7F00A82D7F /* KLPieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FD190D1E222D7F00A82D7F /* KLPieProgressView.m */; };
+		E3FD19141E23CEEB00A82D7F /* KLWeakTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FD19131E23CEEB00A82D7F /* KLWeakTarget.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -270,6 +272,10 @@
 		E3D72C141DAABD1000EE2620 /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		E3DDDF301D88553E008F3421 /* KLPhotoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoModel.h; sourceTree = "<group>"; };
 		E3DDDF311D88553E008F3421 /* KLPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPhotoModel.m; sourceTree = "<group>"; };
+		E3FD190C1E222D7F00A82D7F /* KLPieProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPieProgressView.h; sourceTree = "<group>"; };
+		E3FD190D1E222D7F00A82D7F /* KLPieProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPieProgressView.m; sourceTree = "<group>"; };
+		E3FD19121E23CEEB00A82D7F /* KLWeakTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLWeakTarget.h; sourceTree = "<group>"; };
+		E3FD19131E23CEEB00A82D7F /* KLWeakTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLWeakTarget.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,6 +362,8 @@
 				4176C4461DC341B30054FF13 /* KLInnerShadowView.m */,
 				412DCD0C1DC04770007A3F7D /* KLPhotoView.h */,
 				412DCD0D1DC04770007A3F7D /* KLPhotoView.m */,
+				E3FD190C1E222D7F00A82D7F /* KLPieProgressView.h */,
+				E3FD190D1E222D7F00A82D7F /* KLPieProgressView.m */,
 				41B5F9A01E12495800D4FFC2 /* KLProgressHUD.h */,
 				41B5F9A11E12495800D4FFC2 /* KLProgressHUD.m */,
 				415BFE8C1D5B20FC002053D6 /* KLSegmentControl.h */,
@@ -502,6 +510,8 @@
 				41FE17621D5B15A300CABFCA /* KLSoundPlayer.m */,
 				41FE17631D5B15A300CABFCA /* KLUtilities.h */,
 				41FE17641D5B15A300CABFCA /* KLUtilities.m */,
+				E3FD19121E23CEEB00A82D7F /* KLWeakTarget.h */,
+				E3FD19131E23CEEB00A82D7F /* KLWeakTarget.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -804,6 +814,7 @@
 				E30DF8A31D9827A300161EAE /* KLSwapTransition.m in Sources */,
 				E3684C4F1D86DC20004E4636 /* KLDataController.m in Sources */,
 				4176C4401DC31C660054FF13 /* KLAddButtonCell.m in Sources */,
+				E3FD19141E23CEEB00A82D7F /* KLWeakTarget.m in Sources */,
 				41FE17901D5B15AB00CABFCA /* UIAlertController+Base.m in Sources */,
 				41FE179C1D5B15AB00CABFCA /* UIViewController+Base.m in Sources */,
 				E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */,
@@ -839,6 +850,7 @@
 				E3684C4B1D86DBFD004E4636 /* KLMainViewController.m in Sources */,
 				41FE179A1D5B15AB00CABFCA /* UIToolbar+Base.m in Sources */,
 				415BFE901D5B20FC002053D6 /* KLAlbumCell.m in Sources */,
+				E3FD190E1E222D7F00A82D7F /* KLPieProgressView.m in Sources */,
 				E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */,
 				41FE179B1D5B15AB00CABFCA /* UIView+Base.m in Sources */,
 				4105A7911D6FDF8D00215D76 /* KLScaleTransition.m in Sources */,

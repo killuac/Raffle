@@ -8,13 +8,15 @@
 
 #import "KLResultViewController.h"
 #import "KLSwapTransition.h"
+#import "PHAsset+Model.h"
 @import GoogleMobileAds;
 
 @interface KLResultViewController () <GADBannerViewDelegate>
 
+@property (nonatomic, strong) UIImageView *resultImageView;
+@property (nonatomic, strong) KLPieProgressView *progressView;
 @property (nonatomic, strong) GADBannerView *topAdBannerView;
 @property (nonatomic, strong) GADBannerView *bottomAdBannerView;
-@property (nonatomic, strong) UIImageView *resultImageView;
 
 @property (nonatomic, strong) NSLayoutConstraint *topBannerHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *bottomBannerHeightConstraint;
@@ -32,9 +34,9 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        KLSwapTransition *transition = [KLSwapTransition transition];
-        transition.transitionOrientation = KLTransitionOrientationHorizontal;
-        self.transitioningDelegate = transition;
+        self.transition = [KLSwapTransition transition];
+        self.transition.transitionOrientation = KLTransitionOrientationHorizontal;
+        self.transitioningDelegate = self.transition;
     }
     return self;
 }
@@ -55,12 +57,17 @@
 {
     [self.view addSubview:({
         _resultImageView = [UIImageView newAutoLayoutView];
-        _resultImageView.image = self.resultImage;
-        _resultImageView.userInteractionEnabled = YES;
+        _resultImageView.clipsToBounds = YES;
         _resultImageView.contentMode = UIViewContentModeScaleAspectFill;
         [_resultImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapResultImage:)]];
         _resultImageView;
     })];
+    
+    [self.view addSubview:({
+        _progressView = [KLPieProgressView newAutoLayoutView];
+        _progressView;
+    })];
+    [self.progressView constraintsCenterInSuperview];
     
     [self.view addSubview:({
         _topAdBannerView = [GADBannerView newAutoLayoutView];
@@ -87,6 +94,20 @@
     _topBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_topAdBannerView constant:1]; // GADBannerViewDelegate isn't called if set 0
     _bottomBannerHeightConstraint = [NSLayoutConstraint constraintHeightWithItem:_bottomAdBannerView constant:1];
     _topBannerHeightConstraint.active = _bottomBannerHeightConstraint.active = YES;
+}
+
+- (void)setPickedAsset:(PHAsset *)pickedAsset
+{
+    _pickedAsset = pickedAsset;
+    
+    [pickedAsset originalImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        [self.progressView setProgress:progress animated:YES];
+    } resultHandler:^(UIImage *image, NSDictionary *info) {
+        [self.progressView removeFromSuperview];
+        self.resultImageView.userInteractionEnabled = YES;
+        self.resultImageView.image = image;
+        [self.resultImageView setNeedsLayout];
+    }];
 }
 
 #pragma mark - GADBannerViewDelegate

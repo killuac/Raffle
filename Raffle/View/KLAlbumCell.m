@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UIImageView *checkmark;
 @property (nonatomic, strong) UIView *overlayView;
+@property (nonatomic, strong) KLPieProgressView *progressView;
 
 @end
 
@@ -29,6 +30,7 @@
 {
     [self.contentView addSubview:({
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _imageView.contentMode = IS_PAD ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
         _imageView.clipsToBounds = YES;
         _imageView;
@@ -40,6 +42,7 @@
         _overlayView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
         _overlayView;
     })];
+    [self.overlayView constraintsEqualWithSuperView];
     
     [self.imageView addSubview:({
         _checkmark = [UIImageView newAutoLayoutView];
@@ -48,11 +51,15 @@
         _checkmark;
     })];
     
-    [self.overlayView constraintsEqualWithSuperView];
-    
     NSDictionary *views = NSDictionaryOfVariableBindings(_checkmark);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-5-|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-5-|" views:views]];
+    
+    [self.contentView addSubview:({
+        _progressView = [KLPieProgressView newAutoLayoutView];
+        _progressView;
+    })];
+    [self.progressView constraintsCenterInSuperview];
 }
 
 - (void)prepareForReuse
@@ -85,14 +92,22 @@
 {
     self.userInteractionEnabled = NO;
     [asset thumbnailImageProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
-//      TODO: Add load image progress
+        KLDispatchMainAsync(^{
+            [self.progressView setProgress:progress animated:YES];
+        });
     } resultHandler:^(UIImage *image, NSDictionary *info) {
+        [self.progressView removeFromSuperview];
         self.userInteractionEnabled = YES;
         self.imageView.image = image;
         self.imageView.frame = IS_PAD ? AVMakeRectWithAspectRatioInsideRect(image.size, self.imageView.frame) : self.imageView.frame;
         self.selected = asset.isSelected;
         [self.imageView setNeedsLayout];
     }];
+}
+
+- (void)test:(NSNumber *)progress
+{
+    [self.progressView setProgress:progress.floatValue animated:YES];
 }
 
 #pragma mark - Animation

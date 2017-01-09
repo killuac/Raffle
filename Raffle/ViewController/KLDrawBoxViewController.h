@@ -20,6 +20,5 @@
 @property (nonatomic, strong, readonly) KLDrawBoxDataController *dataController;
 
 - (void)reloadData;
-- (void)randomAnPhoto:(KLAssetBlockType)resultHandler;
 
 @end

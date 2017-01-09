@@ -18,6 +18,7 @@
 #import "KLUtilities.h"
 #import "KLSoundPlayer.h"
 #import "KLLocalizableConstant.h"
+#import "KLPieProgressView.h"
 #import "KLStatusBar.h"
 #import "KLProgressHUD.h"
 
