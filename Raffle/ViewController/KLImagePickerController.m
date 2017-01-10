@@ -275,14 +275,14 @@
 
 - (void)selectSegmentControlAtIndex:(NSUInteger)index
 {
-    DECLARE_WEAK_SELF;
+    __weak typeof(self) weakSelf = self;
     self.photoLibrary.currentPageIndex = index;
     KLAlbumViewController *albumVC = self.pageViewController.viewControllers.firstObject;
     UIPageViewControllerNavigationDirection direction = (albumVC.pageIndex < index) ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse;
     
     self.pageScrollView.delegate = nil;
     [self.pageViewController setViewControllers:@[[self viewControllerAtPageIndex:index]] direction:direction animated:YES completion:^(BOOL finished) {
-        welf.pageScrollView.delegate = welf;
+        weakSelf.pageScrollView.delegate = weakSelf;
     }];
 }
 

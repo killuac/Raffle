@@ -42,7 +42,6 @@
 #import "UIAlertController+Base.h"
 
 #import "CAShapeLayer+Base.h"
-#import "CAAnimation+Base.h"
 #import "CABasicAnimation+Base.h"
 #import "CAAnimationGroup+Base.h"
 

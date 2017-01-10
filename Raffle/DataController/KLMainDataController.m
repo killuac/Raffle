@@ -78,7 +78,7 @@
 
 - (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets
 {
-    DECLARE_WEAK_SELF;
+    __weak typeof(self) weakSelf = self;
     NSUInteger itemIndex = self.itemCount;
     
     KLDrawBoxModel *drawBox = [KLDrawBoxModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]];
@@ -87,7 +87,7 @@
     KLDrawBoxDataController *drawBoxDC = [self createDrawBoxDataControllerWithPageIndex:itemIndex];
     [self.drawBoxDCs addObject:drawBoxDC];
     [drawBoxDC addPhotos:assets completion:^{
-        [welf didChangeAtIndexPaths:@[[NSIndexPath indexPathForItem:itemIndex inSection:0]] forChangeType:KLDataChangeTypeInsert];
+        [weakSelf didChangeAtIndexPaths:@[[NSIndexPath indexPathForItem:itemIndex inSection:0]] forChangeType:KLDataChangeTypeInsert];
     }];
 }
 

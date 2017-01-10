@@ -79,7 +79,6 @@
 		E3684C4C1D86DBFD004E4636 /* KLMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C431D86DBFD004E4636 /* KLMoreViewController.m */; };
 		E3684C4F1D86DC20004E4636 /* KLDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C4E1D86DC20004E4636 /* KLDataController.m */; };
 		E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */; };
-		E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */; };
 		E37880921D74925B000FFCA4 /* CABasicAnimation+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */; };
 		E37880951D74930D000FFCA4 /* CAShapeLayer+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E37880941D74930D000FFCA4 /* CAShapeLayer+Base.m */; };
 		E39E0FCF1DDA115400D73F59 /* UIDevice+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E39E0FCE1DDA115400D73F59 /* UIDevice+Base.m */; };
@@ -260,8 +259,6 @@
 		E3684C4E1D86DC20004E4636 /* KLDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLDataController.m; sourceTree = "<group>"; };
 		E378808A1D733936000FFCA4 /* CAAnimationGroup+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimationGroup+Base.h"; sourceTree = "<group>"; };
 		E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimationGroup+Base.m"; sourceTree = "<group>"; };
-		E378808D1D733AD1000FFCA4 /* CAAnimation+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+Base.h"; sourceTree = "<group>"; };
-		E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+Base.m"; sourceTree = "<group>"; };
 		E37880901D74925B000FFCA4 /* CABasicAnimation+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CABasicAnimation+Base.h"; sourceTree = "<group>"; };
 		E37880911D74925B000FFCA4 /* CABasicAnimation+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CABasicAnimation+Base.m"; sourceTree = "<group>"; };
 		E37880931D74930D000FFCA4 /* CAShapeLayer+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Base.h"; sourceTree = "<group>"; };
@@ -319,8 +316,6 @@
 		4105A78E1D6FDF6700215D76 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
-				E378808D1D733AD1000FFCA4 /* CAAnimation+Base.h */,
-				E378808E1D733AD1000FFCA4 /* CAAnimation+Base.m */,
 				E378808A1D733936000FFCA4 /* CAAnimationGroup+Base.h */,
 				E378808B1D733937000FFCA4 /* CAAnimationGroup+Base.m */,
 				E37880901D74925B000FFCA4 /* CABasicAnimation+Base.h */,
@@ -870,7 +865,6 @@
 				41E278A21E0BA3AC001FBE68 /* KLFaceViewController.m in Sources */,
 				E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */,
 				E3684C4A1D86DBFD004E4636 /* KLImagePickerController.m in Sources */,
-				E378808F1D733AD1000FFCA4 /* CAAnimation+Base.m in Sources */,
 				4110BACA1D62E841001BCD38 /* KLStatusBar.m in Sources */,
 				41FE17971D5B15AB00CABFCA /* UILabel+Base.m in Sources */,
 				E378808C1D733937000FFCA4 /* CAAnimationGroup+Base.m in Sources */,
