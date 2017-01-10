@@ -209,18 +209,21 @@ static CGFloat SectionInset;
     [self reloadData];
 }
 
-- (void)deleteDrawBox:(UIButton *)sender
+- (void)deleteDrawBox:(UIButton *)button
 {
+    KLDrawBoxCell *cell = (id)button.superCollectionViewCell;
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *delete = [UIAlertAction actionWithTitle:TITLE_DELETE_DRAW_BOX style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
-        KLDrawBoxCell *cell = (id)[sender superCollectionViewCell];
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
         [self.dataController deleteDrawBoxAtIndexPath:indexPath];
     }];
     
     UIAlertController *alertController = [UIAlertController actionSheetControllerWithActions:@[delete, cancel]];
     alertController.popoverPresentationController.sourceView = self.view;
-    alertController.popoverPresentationController.sourceRect = sender.superCollectionViewCell.frame;
+    CGPoint position = CGPointMake(button.left + button.width/2, button.bottom);
+    CGPoint sourcePosition = [cell convertPoint:position toView:self.view];
+    alertController.popoverPresentationController.sourceRect = (CGRect){sourcePosition, CGSizeZero};
+    alertController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
     [alertController show];
 }
 

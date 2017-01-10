@@ -17,12 +17,15 @@
 
 @end
 
-@implementation KLDrawBoxDataController
+@implementation KLDrawBoxDataController {
+    KLDrawMode _drawMode;
+}
 
 - (instancetype)initWithModel:(KLDrawBoxModel *)model
 {
     if (self = [self init]) {
         _drawBox = model;
+        _drawMode = model.drawMode;
         _allAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _remainingAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _selectedAssets = [NSMutableArray array];
@@ -44,7 +47,7 @@
 
 - (BOOL)isAttendeeMode
 {
-    return (self.drawBox.drawMode == KLDrawModeAttendee);
+    return (_drawMode == KLDrawModeAttendee);
 }
 
 - (BOOL)isReloadButtonHidden
@@ -64,8 +67,9 @@
 
 - (void)switchDrawMode
 {
+    _drawMode = self.isAttendeeMode ? KLDrawModePrize : KLDrawModeAttendee;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        self.drawBox.drawMode = (self.drawBox.drawMode == KLDrawModeAttendee) ? KLDrawModePrize : KLDrawModeAttendee;
+        self.drawBox.drawMode = _drawMode;
     }];
 }
 
@@ -79,7 +83,7 @@
 
 - (PHAsset *)randomAnAsset
 {
-    NSUInteger index = KLRandomNumber(0, self.remainingAssetCount);
+    NSUInteger index = KLRandomInteger(0, self.remainingAssetCount);
     return self.remainingAssets[index];
 }
 

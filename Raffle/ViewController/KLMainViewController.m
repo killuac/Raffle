@@ -21,6 +21,8 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong) UIImageView *bgImageView;
+@property (nonatomic, readonly) UIScrollView *pageScrollView;
 
 @property (nonatomic, strong) KLBubbleButton *addPhotoButton;
 @property (nonatomic, strong) KLBubbleButton *switchModeButton;
@@ -41,6 +43,11 @@
         _dataController.delegate = self;
     }
     return self;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)viewDidLoad
@@ -76,6 +83,8 @@
 #pragma mark - Prepare UI
 - (void)prepareForUI
 {
+    self.view.backgroundColor = [UIColor backgroundColor];
+    
     [self addPageViewController];
     [self addSubviews];
     [self addTapGesture];
@@ -98,6 +107,7 @@
     }
     
     [self becomeFirstResponder];    // For motion detection
+    [self updateBackgroundImage];
     [self updateAddPhotoButtonTitle];
 }
 
@@ -108,8 +118,6 @@
                                                                         options:nil];
     _pageViewController.delegate = self;
     _pageViewController.dataSource = self;
-    _pageViewController.view.backgroundColor = [UIColor backgroundColor];
-    [self.pageViewController.view addBlurBackground];
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
@@ -127,13 +135,22 @@
 
 - (void)addSubviews
 {
+//  Background image view
+    [self.view insertSubview:({
+        _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        _bgImageView.alpha = 0.8;
+        _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _bgImageView;
+    }) belowSubview:self.pageViewController.view];
+    
 //  Page control
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
         _pageControl.enabled = NO;
         _pageControl.numberOfPages = self.dataController.pageCount;
-        _pageControl.pageIndicatorTintColor = [UIColor whiteColor];
-        _pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+        _pageControl.pageIndicatorTintColor = [UIColor grayColor];
+        _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
         _pageControl;
     })];
     
@@ -177,7 +194,8 @@
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _switchModeButton, _reloadButton, _menuButton);
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[_switchModeButton(40)]->=0-[_reloadButton(40)]->=0-[_menuButton(40)]-8-|" options:NSLayoutFormatAlignAllCenterY views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl][_reloadButton]-8-|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_reloadButton]-8-|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl]|" views:views]];
     
     [self.pageControl constraintsCenterXWithView:self.view];
     [self.reloadButton constraintsCenterXWithView:self.view];
@@ -207,6 +225,12 @@
     KLDrawBoxDataController *drawboxDC = notification.object;
     self.dataController.currentPageIndex = drawboxDC.pageIndex;
     [self reloadData];
+}
+
+- (void)updateBackgroundImage
+{
+    NSString *imageName = self.dataController.currentDrawBoxDC.isAttendeeMode ? @"bg_attendee_mode.jpg" : @"bg_prize_mode.jpg";
+    self.bgImageView.image = [UIImage imageNamed:imageName];
 }
 
 - (void)updateAddPhotoButtonTitle
@@ -310,14 +334,22 @@
     }];
 }
 
+- (void)setPageControlHidden:(BOOL)hidden
+{
+    self.pageScrollView.scrollEnabled = !hidden;
+    [self.pageControl setHidden:hidden animated:YES];
+}
+
 #pragma mark - Event handling
 - (void)startDraw:(id)sender
 {
+    [KLSoundPlayer playStartDrawSound];
+    
     self.isDrawing = YES;
     [self resignFirstResponder];
     [self setAddPhotoButtonHidden:YES];
     [self setBottomButtonsHidden:YES];
-    [KLSoundPlayer playStartDrawSound];
+    [self setPageControlHidden:YES];
 }
 
 - (void)singleTap:(UITapGestureRecognizer *)recognizer
@@ -338,6 +370,7 @@
     [self presentViewController:resultVC animated:YES completion:^{
         [self setAddPhotoButtonHidden:NO];
         [self setBottomButtonsHidden:NO];
+        [self setPageControlHidden:NO];
     }];
 }
 
@@ -367,12 +400,13 @@
             [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
         });
     } completion:^(BOOL finished) {
-//      TODO: Swich animation
+        [self startSwitchDrawModeAnimation];
     }];
 }
 
 - (void)reloadDrawBox:(id)sender
 {
+    [self setReloadButtonHidden:YES];
     [self.dataController.currentDrawBoxDC reloadAllAssets];
     [self.drawBoxViewController reloadData];
 }
@@ -393,6 +427,45 @@
     cameraVC.transition = [KLCircleTransition transition];
     cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     [self presentViewController:cameraVC animated:YES completion:nil];
+}
+
+#pragma mark - Switch draw mode animation
+- (void)startSwitchDrawModeAnimation
+{
+    // TODO: Switch background image
+    [self updateBackgroundImage];
+}
+
+- (NSArray *)createSliceViews
+{
+    CGFloat sliceWidth = 5.0;
+    UIView *view = [self.view snapshotViewAfterScreenUpdates:NO];
+    NSMutableArray *sliceViews = [NSMutableArray array];
+    
+    for (NSUInteger x = 0; x < self.view.width; x += sliceWidth) {
+        CGRect rect = CGRectMake(x, 0, sliceWidth, view.height);
+        UIView *sliceView = [view resizableSnapshotViewFromRect:rect afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
+        sliceView.frame = rect;
+        [sliceViews addObject:sliceView];
+    }
+    
+    return sliceViews;
+}
+
+- (void)randomPositionOfViewSlices:(NSArray *)sliceViews fromUp:(BOOL)fromUp
+{
+    CGFloat height;
+    BOOL isFromUp = fromUp;
+    for (UIView *sliceView in sliceViews) {
+        height = sliceView.height * KLRandomFloat(1.0, 4.0);
+        sliceView.top += fromUp ? -height : height;
+        isFromUp = !isFromUp;
+    }
+}
+
+- (void)resetYForSliceViews:(NSArray *)sliceViews
+{
+    [sliceViews setValue:@(self.view.top) forKey:@"top"];
 }
 
 #pragma mark - KLImagePickerController delegate

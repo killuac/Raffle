@@ -110,7 +110,7 @@
     pathAnimation.removedOnCompletion = false;
     pathAnimation.repeatCount = INFINITY;
     pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    pathAnimation.duration = KLRandomNumber(5, 8);
+    pathAnimation.duration = KLRandomInteger(5, 8);
     
 //  The circle to follow will be inside the circleContainer frame.
 //  It should be a frame around the center of your view to animate.
@@ -122,7 +122,7 @@
     pathAnimation.path = curvedPath;
     [self.layer addAnimation:pathAnimation forKey:@"circleAnimation"];
     
-    NSTimeInterval timeInterval = KLRandomNumber(1, 3);
+    NSTimeInterval timeInterval = KLRandomInteger(1, 3);
     CAKeyframeAnimation *scaleXAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale.x"];
     scaleXAnimation.duration = 2;
     scaleXAnimation.values = @[@1, @1.05, @1];  // Start from scale factor 1, scales to 1.05 and back to 1
@@ -134,7 +134,7 @@
     
 //  Create the height-scale animation just like the width one above
 //  but slightly increased duration so they will not animate synchronously
-    timeInterval = KLRandomNumber(1, 3);
+    timeInterval = KLRandomInteger(1, 3);
     CAKeyframeAnimation *scaleYAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale.y"];
     scaleYAnimation.duration = 2.5;
     scaleYAnimation.values = @[@1.0, @1.05, @1.0];
