@@ -1,5 +1,5 @@
 //
-//  KLAlbumCell.h
+//  KLPhotoCell.h
 //  Raffle
 //
 //  Created by Killua Liu on 3/18/16.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PHAsset+Model.h"
 
-@interface KLAlbumCell : UICollectionViewCell
+@interface KLPhotoCell : UICollectionViewCell
 
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPress;

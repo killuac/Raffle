@@ -24,6 +24,7 @@
 "TitleFacePhotos" = "所有人脸照";
 "TitlePhotos" = "照片";
 "TitleCamera" = "相机";
+"TitleChooseWallpaper" = "选取新的墙纸";
 "TitleSelectedPhotoCount" = "已选择 %lu 张照片";
 
 "HUDPrizeMode" = "奖品模式：奖品照片不会被移除";

@@ -21,7 +21,6 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
-@property (nonatomic, strong) UIImageView *bgImageView;
 @property (nonatomic, readonly) UIScrollView *pageScrollView;
 
 @property (nonatomic, strong) KLBubbleButton *addPhotoButton;
@@ -83,7 +82,7 @@
 #pragma mark - Prepare UI
 - (void)prepareForUI
 {
-    self.view.backgroundColor = [UIColor backgroundColor];
+    self.view.backgroundColor = [UIColor darkBackgroundColor];
     
     [self addPageViewController];
     [self addSubviews];
@@ -107,7 +106,6 @@
     }
     
     [self becomeFirstResponder];    // For motion detection
-    [self updateBackgroundImage];
     [self updateAddPhotoButtonTitle];
 }
 
@@ -135,15 +133,6 @@
 
 - (void)addSubviews
 {
-//  Background image view
-    [self.view insertSubview:({
-        _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-        _bgImageView.alpha = 0.8;
-        _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
-        _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _bgImageView;
-    }) belowSubview:self.pageViewController.view];
-    
 //  Page control
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
@@ -227,17 +216,11 @@
     [self reloadData];
 }
 
-- (void)updateBackgroundImage
-{
-    NSString *imageName = self.dataController.currentDrawBoxDC.isAttendeeMode ? @"bg_attendee_mode.jpg" : @"bg_prize_mode.jpg";
-    self.bgImageView.image = [UIImage imageNamed:imageName];
-}
-
 - (void)updateAddPhotoButtonTitle
 {
     NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
     NSString *title = assetCount > 0 ? @(assetCount).stringValue : nil;
-    if (![title isEqualToString:self.addPhotoButton.currentTitle]) {
+    if (title && ![title isEqualToString:self.addPhotoButton.currentTitle]) {
         [self.addPhotoButton setNormalTitle:title];
         self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
     }
@@ -433,7 +416,6 @@
 - (void)startSwitchDrawModeAnimation
 {
     // TODO: Switch background image
-    [self updateBackgroundImage];
 }
 
 - (NSArray *)createSliceViews

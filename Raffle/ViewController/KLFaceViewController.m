@@ -8,7 +8,7 @@
 
 #import "KLFaceViewController.h"
 #import "KLScaleTransition.h"
-#import "KLAlbumCell.h"
+#import "KLPhotoCell.h"
 #import "KLAlbumViewController.h"
 #import "KLCameraViewController.h"
 
@@ -82,7 +82,7 @@ static CGFloat lineSpacing;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
-    [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
 - (void)reloadData
@@ -100,7 +100,7 @@ static CGFloat lineSpacing;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+    KLPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
     cell.imageView.image = self.images[indexPath.item];
     cell.selected = cell.imageView.image.isSelected;
     cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectFacePhotos:)];
@@ -223,7 +223,7 @@ static CGFloat lineSpacing;
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barButtonItemWithSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelMultiPhotoSelection:)];
         self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithImageName:@"icon_delete" target:self action:@selector(deleteSelectedFacePhotos:)];
 
-        [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(KLAlbumCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(KLPhotoCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
             [cell animateSpringScale];
         }];
     } else {

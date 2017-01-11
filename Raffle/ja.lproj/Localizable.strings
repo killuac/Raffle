@@ -24,6 +24,7 @@
 "TitleFacePhotos" = "全ての顔写真";
 "TitlePhotos" = "写真";
 "TitleCamera" = "カメラ";
+"TitleChooseWallpaper" = "壁紙を選択";
 "TitleSelectedPhotoCount" = "%lu枚の写真選択中";
 
 "HUDPrizeMode" = "プライズモード：プライズ写真を取り除かない";

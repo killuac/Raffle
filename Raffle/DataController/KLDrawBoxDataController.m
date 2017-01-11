@@ -87,6 +87,44 @@
     return self.remainingAssets[index];
 }
 
+#pragma mark - Wallpaper
+- (BOOL)hasCustomWallpaper
+{
+    return self.drawBox.wallpaperName.length > 0;
+}
+
+- (NSString *)wallpaperFilePath
+{
+    return self.drawBox.wallpaperFilePath;
+}
+
+- (void)changeWallpaperWithImageName:(NSString *)imageName
+{
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        self.drawBox.wallpaperName = imageName.SHA1String;
+        
+        UIImage *image = [UIImage imageNamed:imageName];
+        NSData *imageData = UIImageJPEGRepresentation(image, 1);
+        [imageData writeToFile:[WALLPAPER_DIRECTORY stringByAppendingPathComponent:self.drawBox.wallpaperName] atomically:YES];
+    }];
+}
+
+- (void)changeWallpaperWithAsset:(PHAsset *)asset completion:(KLVoidBlockType)completion
+{
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
+            NSURL *fileURL = info[@"PHImageFileURLKey"];
+            self.drawBox.wallpaperName = fileURL.lastPathComponent;
+            
+            bool isPNGFile = [fileURL.pathExtension.lowercaseString isEqualToString:@"png"];
+            NSData *imageData = isPNGFile ? UIImagePNGRepresentation(image) : UIImageJPEGRepresentation(image, 1);
+            [imageData writeToFile:[WALLPAPER_DIRECTORY stringByAppendingPathComponent:self.drawBox.wallpaperName] atomically:YES];
+            
+            if (completion) completion();
+        }];
+    }];
+}
+
 #pragma mark - Update assets
 // New insert entry at front of the old entry
 - (void)addPhotos:(NSArray<PHAsset *> *)assets completion:(KLVoidBlockType)complition

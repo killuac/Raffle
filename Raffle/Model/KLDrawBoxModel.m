@@ -12,6 +12,7 @@
 
 @dynamic creationDate;
 @dynamic drawMode;
+@dynamic wallpaperName;
 @dynamic photos;
 @dynamic assets;
 
@@ -51,6 +52,11 @@
     }];
     
     return sortedAssets;
+}
+
+- (NSString *)wallpaperFilePath
+{
+    return [NSString stringWithFormat:@"%@/%@", WALLPAPER_DIRECTORY, self.wallpaperName];
 }
 
 @end

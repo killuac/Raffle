@@ -9,11 +9,14 @@
 #import "KLDrawBoxViewController.h"
 #import "KLMainViewController.h"
 #import "KLDrawBoxDataController.h"
+#import "KLWallpaperViewController.h"
 
-@interface KLDrawBoxViewController () <KLDataControllerDelegate>
+@interface KLDrawBoxViewController () <KLDataControllerDelegate, UIPopoverPresentationControllerDelegate, KLWallpaperViewControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *mainDC;
 @property (nonatomic, weak, readonly) KLMainViewController *mainVC;
+
+@property (nonatomic, strong) UIImageView *bgImageView;
 
 @end
 
@@ -48,6 +51,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self prepareForUI];
     [self reloadData];
     [self addObservers];
 }
@@ -62,6 +66,37 @@
 {
     [super viewDidDisappear:animated];
     [self removeObservers];
+}
+
+- (void)prepareForUI
+{
+    [self addSubviews];
+    
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeUpToChooseWallpaper:)];
+    swipe.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipe];
+}
+
+- (void)addSubviews
+{
+    [self.view addSubview:({
+        _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _bgImageView;
+    })];
+    
+    [self setWallpaper];
+    [self.view addDimBackground];
+}
+
+- (void)setWallpaper
+{
+    if (self.dataController.hasCustomWallpaper) {
+        self.bgImageView.image = [UIImage imageWithContentsOfFile:self.dataController.wallpaperFilePath];
+    } else {
+        self.bgImageView.image = [UIImage imageNamed:@"wallpaper0.jpg"];
+    }
 }
 
 #pragma mark - Observers
@@ -111,16 +146,47 @@
     [self reloadData];
 }
 
-#pragma mark - KLImagePickerController delegate
+#pragma mark - Image picker and camera delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addPhotos:assets completion:nil];
 }
 
-#pragma mark - KLCameraViewController delegate
 - (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addPhotos:assets completion:nil];
+}
+
+#pragma mark - Event handling
+- (void)swipeUpToChooseWallpaper:(UISwipeGestureRecognizer *)recognizer
+{
+    KLWallpaperViewController *wallpaperVC = [KLWallpaperViewController viewController];
+    wallpaperVC.delegate = self;
+    wallpaperVC.modalPresentationStyle = UIModalPresentationPopover;
+    wallpaperVC.preferredContentSize = CGSizeMake(self.view.width, 320);
+    wallpaperVC.popoverPresentationController.delegate = self;
+    wallpaperVC.popoverPresentationController.permittedArrowDirections = kNilOptions;
+    wallpaperVC.popoverPresentationController.popoverLayoutMargins = UIEdgeInsetsMake(0, -10, -10, -10);
+    wallpaperVC.popoverPresentationController.popoverBackgroundViewClass = [KLWallpaperPopoverBackgroundView class];
+    wallpaperVC.popoverPresentationController.sourceView = self.view;
+    wallpaperVC.popoverPresentationController.sourceRect = CGRectMake(0, self.view.bottom, 0, 0);
+    [self presentViewController:wallpaperVC animated:YES completion:nil];
+}
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return UIModalPresentationNone;
+}
+
+- (void)popoverPresentationController:(UIPopoverPresentationController *)popoverPresentationController willRepositionPopoverToRect:(inout CGRect *)rect inView:(inout UIView  * __nonnull * __nonnull)view;
+{
+    *rect = CGRectMake(0, self.view.bottom, self.view.width, 320);
+}
+
+#pragma mark - KLWallpaperViewControllerDelegate
+- (void)wallpaperViewController:(KLWallpaperViewController *)wallpaperVC didChooseWallpaperImageName:(NSString *)imageName
+{
+    // TODO: Select wallpaper
 }
 
 @end

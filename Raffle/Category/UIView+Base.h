@@ -79,6 +79,8 @@ UIKIT_EXTERN const CGFloat KLViewDefaultCornerRadius;
 
 - (void)addBlurBackground;
 - (void)removeBlurBackground;
+- (void)addDimBackground;
+- (void)removeDimBackground;
 
 + (void)animateWithDefaultDuration:(KLVoidBlockType)animations;
 + (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion;

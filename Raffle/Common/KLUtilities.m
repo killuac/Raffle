@@ -28,31 +28,31 @@ NSURL *FetchOrCreateFileURL(NSString *path)
     return (lastPathComponent.length ? [pathURL URLByAppendingPathComponent:lastPathComponent] : pathURL);
 }
 
-NSURL *KLURLDocumentFile(NSString *fileName)
+NSURL *KLURLDocumentFile(NSString *filePath)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-    NSString *path = [docDir stringByAppendingPathComponent:fileName];
+    NSString *path = [docDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLCacheFile(NSString *fileName)
+NSURL *KLURLCacheFile(NSString *filePath)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
-    NSString *path = [docDir stringByAppendingPathComponent:fileName];
+    NSString *path = [docDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLTemporaryFile(NSString *fileName)
+NSURL *KLURLTemporaryFile(NSString *filePath)
 {
     NSString *tmpDir = NSTemporaryDirectory();
-    NSString *path = [tmpDir stringByAppendingPathComponent:fileName];
+    NSString *path = [tmpDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLApplicationSupportFile(NSString *fileName)
+NSURL *KLURLApplicationSupportFile(NSString *filePath)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).firstObject;
-    NSString *path = [docDir stringByAppendingPathComponent:fileName];
+    NSString *path = [docDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 

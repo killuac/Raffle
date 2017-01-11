@@ -367,29 +367,43 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
     }
 }
 
-#pragma mark - Blur background view
+#pragma mark - Background view
 - (void)addBlurBackground
 {
     [self removeBlurBackground];
     
-//    UIGraphicsBeginImageContextWithOptions(self.size, self.alpha,  0.0f);
-//    [self.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-    
-    UIVisualEffectView *background = [UIVisualEffectView newAutoLayoutView];
-    background.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    background.tag = 100;
-    background.userInteractionEnabled = NO;
-    [self addSubview:background];
-
-    [background setHidden:NO animated:YES];
-    [background constraintsEqualWithSuperView];
+    [self addSubview:({
+        UIVisualEffectView *background = [[UIVisualEffectView alloc] initWithFrame:self.bounds];
+        background.tag = 100;
+        background.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [background setHidden:NO animated:YES];
+        background;
+    })];
 }
 
 - (void)removeBlurBackground
 {
     [[self viewWithTag:100] removeFromSuperview];
+}
+
+- (void)addDimBackground
+{
+    [self removeDimBackground];
+    
+    [self addSubview:({
+        UIView *background = [[UIView alloc] initWithFrame:self.bounds];
+        background.tag = 101;
+        background.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
+        background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [background setHidden:NO animated:YES];
+        background;
+    })];
+}
+
+- (void)removeDimBackground
+{
+    [[self viewWithTag:101] removeFromSuperview];
 }
 
 #pragma mark - Animation

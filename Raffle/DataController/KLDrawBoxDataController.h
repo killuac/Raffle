@@ -15,13 +15,18 @@
 @property (nonatomic, readonly) BOOL isAttendeeMode;
 @property (nonatomic, readonly) BOOL isReloadButtonHidden;
 @property (nonatomic, readonly) BOOL isShakeEnabled;
+@property (nonatomic, readonly) BOOL hasCustomWallpaper;
 
 @property (nonatomic, readonly) NSUInteger remainingAssetCount;
 @property (nonatomic, readonly) NSUInteger selectedAssetCount;
+@property (nonatomic, readonly) NSString *wallpaperFilePath;
 
 - (void)switchDrawMode;
 - (void)reloadAllAssets;
 - (PHAsset *)randomAnAsset;
+
+- (void)changeWallpaperWithImageName:(NSString *)imageName;
+- (void)changeWallpaperWithAsset:(PHAsset *)asset completion:(KLVoidBlockType)completion;
 
 - (void)addPhotos:(NSArray<PHAsset *> *)assets completion:(KLVoidBlockType)complition;
 - (void)deleteSelectedAssets;

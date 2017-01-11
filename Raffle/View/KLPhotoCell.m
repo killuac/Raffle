@@ -1,14 +1,14 @@
 //
-//  KLAlbumCell.m
+//  KLPhotoCell.m
 //  Raffle
 //
 //  Created by Killua Liu on 3/18/16.
 //  Copyright © 2016 Syzygy. All rights reserved.
 //
 
-#import "KLAlbumCell.h"
+#import "KLPhotoCell.h"
 
-@interface KLAlbumCell ()
+@interface KLPhotoCell ()
 
 @property (nonatomic, strong) UIImageView *checkmark;
 @property (nonatomic, strong) UIView *overlayView;
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation KLAlbumCell
+@implementation KLPhotoCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -30,9 +30,13 @@
 {
     [self.contentView addSubview:({
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView.clipsToBounds = YES;
         _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _imageView.contentMode = IS_PAD ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
-        _imageView.clipsToBounds = YES;
+        if (IS_PAD) {
+            _imageView.layer.borderWidth = 5;
+            _imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        }
         _imageView;
     })];
     
@@ -52,8 +56,9 @@
     })];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_checkmark);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-5-|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-5-|" views:views]];
+    NSDictionary *metrics = @{ @"margin": (IS_PAD ? @10 : @5) };
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_checkmark]-margin-|" options:0 metrics:metrics views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_checkmark]-margin-|" options:0 metrics:metrics views:views]];
     
     [self.contentView addSubview:({
         _progressView = [KLPieProgressView newAutoLayoutView];

@@ -67,10 +67,10 @@ NS_INLINE void KLDispatchGroupMainNotify(dispatch_group_t group, dispatch_block_
 }
 
 
-FOUNDATION_EXPORT NSURL *KLURLDocumentFile(NSString *fileName);
-FOUNDATION_EXPORT NSURL *KLURLCacheFile(NSString *fileName);
-FOUNDATION_EXPORT NSURL *KLURLTemporaryFile(NSString *fileName);
-FOUNDATION_EXPORT NSURL *KLURLApplicationSupportFile(NSString *fileName);
+FOUNDATION_EXPORT NSURL *KLURLDocumentFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLCacheFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLTemporaryFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLApplicationSupportFile(NSString *filePath);
 FOUNDATION_EXPORT NSURL *KLURLPlistFile(NSString *fileName);
 
 FOUNDATION_EXPORT NSArray *KLClassGetSubClasses(Class superClass);

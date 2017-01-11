@@ -11,7 +11,6 @@
 
 @interface KLProgressHUD ()
 
-@property (nonatomic, strong) UIView *dimmingView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;
 @property (nonatomic, strong) KLPieProgressView *progressView;
 
@@ -66,19 +65,9 @@ static KLProgressHUD *sharedProgressHUD = nil;
 {
     if (self = [super init]) {
         self.alpha = 0;
-        [self addSubview:self.dimmingView];
+        [self addDimBackground];
     }
     return self;
-}
-
-- (UIView *)dimmingView
-{
-    if (_dimmingView) return _dimmingView;
-    
-    _dimmingView = [[UIView alloc] initWithFrame:self.bounds];
-    _dimmingView.backgroundColor = [UIColor dimmingBackgroundColor];
-    _dimmingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    return _dimmingView;
 }
 
 #pragma mark - Activity view
@@ -142,7 +131,6 @@ static KLProgressHUD *sharedProgressHUD = nil;
 - (void)resetAllSubviews
 {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    self.dimmingView = nil;
     self.activityView = nil;
     self.progressView = nil;
     

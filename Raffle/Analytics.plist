@@ -60,34 +60,46 @@
 			</dict>
 		</array>
 	</dict>
+	<key>KLDrawBoxViewController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
+			<dict>
+				<key>KLLogEventName</key>
+				<string>DrawBoxVC_SwipeUpToChooseWallpaper</string>
+				<key>KLLogEventSelectorName</key>
+				<string>swipeUpToChooseWallpaper:</string>
+			</dict>
+		</array>
+	</dict>
 	<key>KLImagePickerController</key>
 	<dict>
 		<key>KLLogTrackedEvents</key>
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>AlbumVC_DonePhotoSelection</string>
+				<string>ImagePicker_DonePhotoSelection</string>
 				<key>KLLogEventSelectorName</key>
 				<string>donePhotoSelection:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>AlbumVC_SelectSegmentControlAtIndex</string>
+				<string>ImagePicker_SelectSegmentControlAtIndex</string>
 				<key>KLLogEventSelectorName</key>
 				<string>selectSegmentControlAtIndex:</string>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>AlbumVC_ScrollToSelectSegmentControl</string>
+				<string>ImagePicker_ScrollToSelectSegmentControl</string>
 				<key>KLLogEventSelectorName</key>
 				<string>scrollToSelectAlbum</string>
 			</dict>
-			<dict>
-				<key>KLLogEventName</key>
-				<string>AlbumVC_ScrollSegmentControl</string>
-				<key>KLLogEventSelectorName</key>
-				<string>scrollSegmentControl</string>
-			</dict>
+		</array>
+	</dict>
+	<key>KLAlbumPickerController</key>
+	<dict>
+		<key>KLLogTrackedEvents</key>
+		<array>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>AlbumVC_LongPressToFaceDetection</string>
@@ -158,7 +170,7 @@
 				<key>KLLogEventName</key>
 				<string>MoreVC_ShowPhotoViewController</string>
 				<key>KLLogEventSelectorName</key>
-				<string>showPhotoViewControllerAtIndexPath</string>
+				<string>showPhotoViewControllerAtIndexPath:</string>
 			</dict>
 		</array>
 	</dict>
@@ -218,7 +230,7 @@
 				<key>KLLogEventName</key>
 				<string>FaceVC_BackFromFaceVC</string>
 				<key>KLLogEventSelectorName</key>
-				<string>backFromFaceVC</string>
+				<string>backFromFaceVC:</string>
 			</dict>
 		</array>
 	</dict>

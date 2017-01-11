@@ -7,7 +7,7 @@
 //
 
 #import "KLPhotoViewController.h"
-#import "KLAlbumCell.h"
+#import "KLPhotoCell.h"
 #import "KLAddButtonCell.h"
 #import "KLDrawBoxTransition.h"
 #import "KLDrawBoxDataController.h"
@@ -75,7 +75,7 @@ static CGFloat lineSpacing;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
-    [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
     [self.collectionView registerClass:[KLAddButtonCell class] forCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class])];
 }
 
@@ -106,7 +106,7 @@ static CGFloat lineSpacing;
         [cell setHidden:self.deleteMode animated:YES];
         return cell;
     } else {
-        KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+        KLPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
         cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
         [cell configWithAsset:[self.drawBoxDC objectAtIndexPath:indexPath]];
         return cell;
@@ -275,7 +275,7 @@ static CGFloat lineSpacing;
         self.navigationItem.rightBarButtonItem.image = [UIImage imageNamed:@"icon_delete"];
         self.navigationItem.rightBarButtonItem.title = nil;
         
-        [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(KLAlbumCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.collectionView.visibleCells enumerateObjectsUsingBlock:^(KLPhotoCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
             [cell animateSpringScale];
         }];
     } else {

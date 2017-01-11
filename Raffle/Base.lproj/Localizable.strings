@@ -24,6 +24,7 @@
 "TitleFacePhotos" = "All Face Photos";
 "TitlePhotos" = "Photos";
 "TitleCamera" = "Camera";
+"TitleChooseWallpaper" = "Choose a New Wallpaper";
 
 "HUDPrizeMode" = "Prize Mode: The prize photo won't be removed";
 "HUDParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";

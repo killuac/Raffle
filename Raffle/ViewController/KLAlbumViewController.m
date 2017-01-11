@@ -7,7 +7,7 @@
 //
 
 #import "KLAlbumViewController.h"
-#import "KLAlbumCell.h"
+#import "KLPhotoCell.h"
 #import "KLImagePickerController.h"
 #import "KLCameraPreviewView.h"
 #import "KLCameraViewController.h"
@@ -124,7 +124,7 @@ static CGFloat lineSpacing;
     self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
-    [self.collectionView registerClass:[KLAlbumCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
+    [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([KLCameraPreviewView class])];
     
     if (!self.isShowCameraPreview) return;
@@ -214,7 +214,7 @@ static CGFloat lineSpacing;
         return cell;
     }
     
-    KLAlbumCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
+    KLPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
     cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToFaceDetection:)];
     [cell configWithAsset:[self assetAtIndexPath:indexPath]];
     return cell;
@@ -244,7 +244,7 @@ static CGFloat lineSpacing;
 
 - (UIImage *)albumImage
 {
-    KLAlbumCell *cell = (self.assetsCount > 1) ? (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] : nil;
+    KLPhotoCell *cell = (self.assetsCount > 1) ? (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] : nil;
     return KLAlbumImageFromImage(cell.imageView.image);
 }
 

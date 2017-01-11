@@ -25,6 +25,7 @@
 #define TITLE_FACE_PHOTOS                       NSLocalizedString(@"TitleFacePhotos", "")
 #define TITLE_PHOTOS                            NSLocalizedString(@"TitlePhotos", "")
 #define TITLE_CAMERA                            NSLocalizedString(@"TitleCamera", "")
+#define TITLE_CHOOSE_WALLPAPER                  NSLocalizedString(@"TitleChooseWallpaper", "")
 #define TITLE_SELECTED_PHOTO_COUNT              NSLocalizedString(@"TitleSelectedPhotoCount", "")
 
 #define HUD_PRIZE_MODE                          NSLocalizedString(@"HUDPrizeMode", "")
