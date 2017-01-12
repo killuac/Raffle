@@ -31,6 +31,7 @@
         _circleRadius = 20;
         _circleCenter = CGPointMake(_circleRadius, _circleRadius);
         
+        self.backgroundColor = [UIColor clearColor];
         self.layer.cornerRadius = self.circleRadius;
         self.layer.borderWidth = 1;
         self.layer.borderColor = [UIColor whiteColor].CGColor;

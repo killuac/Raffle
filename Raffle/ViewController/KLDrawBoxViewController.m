@@ -81,13 +81,13 @@
 {
     [self.view addSubview:({
         _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        _bgImageView.alpha = 0.8;
         _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
         _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _bgImageView;
     })];
     
     [self setWallpaper];
-    [self.view addDimBackground];
 }
 
 - (void)setWallpaper
@@ -166,7 +166,6 @@
     wallpaperVC.preferredContentSize = CGSizeMake(self.view.width, 320);
     wallpaperVC.popoverPresentationController.delegate = self;
     wallpaperVC.popoverPresentationController.permittedArrowDirections = kNilOptions;
-    wallpaperVC.popoverPresentationController.popoverLayoutMargins = UIEdgeInsetsMake(0, -10, -10, -10);
     wallpaperVC.popoverPresentationController.popoverBackgroundViewClass = [KLWallpaperPopoverBackgroundView class];
     wallpaperVC.popoverPresentationController.sourceView = self.view;
     wallpaperVC.popoverPresentationController.sourceRect = CGRectMake(0, self.view.bottom, 0, 0);

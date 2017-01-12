@@ -17,16 +17,16 @@
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
-@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
+@interface KLMainViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate, KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
 @property (nonatomic, readonly) UIScrollView *pageScrollView;
 
 @property (nonatomic, strong) KLBubbleButton *addPhotoButton;
-@property (nonatomic, strong) KLBubbleButton *switchModeButton;
-@property (nonatomic, strong) KLBubbleButton *reloadButton;
-@property (nonatomic, strong) KLBubbleButton *menuButton;
+@property (nonatomic, strong) UIButton *switchModeButton;
+@property (nonatomic, strong) UIButton *reloadButton;
+@property (nonatomic, strong) UIButton *menuButton;
 
 @property (nonatomic, assign) BOOL isDrawing;
 
@@ -116,6 +116,7 @@
                                                                         options:nil];
     _pageViewController.delegate = self;
     _pageViewController.dataSource = self;
+    self.pageScrollView.delegate = self;
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
@@ -147,47 +148,52 @@
     [self.view addSubview:({
         _addPhotoButton = [KLBubbleButton buttonWithTitle:nil imageName:@"icon_main_add"];
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
-        _addPhotoButton.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
+//        _addPhotoButton.backgroundColor = [UIColor.blueColor colorWithAlphaComponent:0.5];
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         [self.addPhotoButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToShowCameraViewController:)]];
+        
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
+        animation.duration = 10.0;
+        animation.repeatCount = HUGE_VALF;
+        animation.autoreverses = YES;
+        animation.fromValue = (__bridge id)[UIColor.greenColor colorWithAlphaComponent:0.5].CGColor;
+        animation.toValue = (__bridge id)[UIColor.blueColor colorWithAlphaComponent:0.5].CGColor;
+        [self.addPhotoButton.layer addAnimation:animation forKey:@"ColorPulse"];
+        
         _addPhotoButton;
     })];
     
 //  Bottom buttons
     [self.view addSubview:({
-        _switchModeButton = [KLBubbleButton buttonWithImageName:@"icon_attendee_mode"];
-        _switchModeButton.backgroundColor = [[UIColor cyanColor] colorWithAlphaComponent:0.5];
+        _switchModeButton = [UIButton buttonWithImageName:@"icon_attendee_mode"];
         [_switchModeButton addTarget:self action:@selector(switchDrawMode:)];
         _switchModeButton;
     })];
     
     [self.view addSubview:({
-        _reloadButton = [KLBubbleButton buttonWithImageName:@"icon_reload"];
+        _reloadButton = [UIButton buttonWithImageName:@"icon_reload"];
         _reloadButton.hidden = YES;
-        _reloadButton.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.5];
         [_reloadButton addTarget:self action:@selector(reloadDrawBox:)];
         _reloadButton;
     })];
     
     [self.view addSubview:({
-        _menuButton = [KLBubbleButton buttonWithImageName:@"icon_menu"];
-        _menuButton.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.5];
+        _menuButton = [UIButton buttonWithImageName:@"icon_menu"];
         [_menuButton addTarget:self action:@selector(showMoreDrawBoxes:)];
         _menuButton;
     })];
     
 //  Add constraints
-    [NSLayoutConstraint constraintWidthWithItem:self.addPhotoButton constant:KLViewDefaultButtonHeight*2].active = YES;
-    [self.addPhotoButton constraintsEqualWidthAndHeight];
-    [self.addPhotoButton constraintsCenterInSuperview];
-    
-    NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _switchModeButton, _reloadButton, _menuButton);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[_switchModeButton(40)]->=0-[_reloadButton(40)]->=0-[_menuButton(40)]-8-|" options:NSLayoutFormatAlignAllCenterY views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_reloadButton]-8-|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl]|" views:views]];
+    NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _addPhotoButton, _switchModeButton, _reloadButton, _menuButton);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_switchModeButton(40)]->=0-[_reloadButton(40)]->=0-[_menuButton(40)]|" options:NSLayoutFormatAlignAllCenterY views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_reloadButton]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_addPhotoButton(80)]-40-|" views:views]];
+    [NSLayoutConstraint constraintBottomWithItem:_pageControl].active = YES;
     
     [self.pageControl constraintsCenterXWithView:self.view];
+    [self.addPhotoButton constraintsCenterXWithView:self.view];
     [self.reloadButton constraintsCenterXWithView:self.view];
+    [self.addPhotoButton constraintsEqualWidthAndHeight];
     [self.reloadButton constraintsEqualWidthAndHeight];
     [self.switchModeButton constraintsEqualWidthAndHeight];
     [self.menuButton constraintsEqualWidthAndHeight];
@@ -258,6 +264,27 @@
         self.dataController.currentPageIndex = self.drawBoxViewController.pageIndex;
         self.pageControl.currentPage = self.dataController.currentPageIndex;
         [self updateAddPhotoButtonTitle];
+    }
+}
+
+#pragma mark - Scroll delegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (0 == self.pageControl.currentPage && scrollView.contentOffset.x < scrollView.width) {
+        scrollView.contentOffset = CGPointMake(scrollView.width, 0);
+    }
+    if (self.pageControl.currentPage == self.pageControl.numberOfPages-1 && scrollView.contentOffset.x > scrollView.width) {
+        scrollView.contentOffset = CGPointMake(scrollView.width, 0);
+    }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    if (0 == self.pageControl.currentPage && scrollView.contentOffset.x <= scrollView.width) {
+        *targetContentOffset = CGPointMake(scrollView.width, 0);
+    }
+    if (self.pageControl.currentPage == self.pageControl.numberOfPages-1 && scrollView.contentOffset.x >= scrollView.width) {
+        *targetContentOffset = CGPointMake(scrollView.width, 0);
     }
 }
 

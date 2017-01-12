@@ -31,6 +31,7 @@
     [self.contentView addSubview:({
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _imageView.clipsToBounds = YES;
+        _imageView.backgroundColor = [UIColor blackColor];
         _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _imageView.contentMode = IS_PAD ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
         if (IS_PAD) {
@@ -62,6 +63,7 @@
     
     [self.contentView addSubview:({
         _progressView = [KLPieProgressView newAutoLayoutView];
+        _progressView.hidden = YES;
         _progressView;
     })];
     [self.progressView constraintsCenterInSuperview];

@@ -87,6 +87,18 @@
 		E3DDDF321D88553E008F3421 /* KLPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DDDF311D88553E008F3421 /* KLPhotoModel.m */; };
 		E3FD190E1E222D7F00A82D7F /* KLPieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FD190D1E222D7F00A82D7F /* KLPieProgressView.m */; };
 		E3FD19141E23CEEB00A82D7F /* KLWeakTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FD19131E23CEEB00A82D7F /* KLWeakTarget.m */; };
+		E3FD19221E26981B00A82D7F /* wallpaper0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD191D1E26981B00A82D7F /* wallpaper0.jpg */; };
+		E3FD192F1E279F7100A82D7F /* wallpaper1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19271E279F7100A82D7F /* wallpaper1.jpg */; };
+		E3FD19301E279F7100A82D7F /* wallpaper2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19281E279F7100A82D7F /* wallpaper2.jpg */; };
+		E3FD19311E279F7100A82D7F /* wallpaper3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19291E279F7100A82D7F /* wallpaper3.jpg */; };
+		E3FD19381E27A3FC00A82D7F /* wallpaper9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19371E27A3FC00A82D7F /* wallpaper9.jpg */; };
+		E3FD193F1E27B3E500A82D7F /* wallpaper4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD193D1E27B3E500A82D7F /* wallpaper4.jpg */; };
+		E3FD19401E27B3E500A82D7F /* wallpaper10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD193E1E27B3E500A82D7F /* wallpaper10.jpg */; };
+		E3FD19421E27B48E00A82D7F /* wallpaper5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19411E27B48E00A82D7F /* wallpaper5.jpg */; };
+		E3FD19461E27C62F00A82D7F /* wallpaper6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19431E27C62F00A82D7F /* wallpaper6.jpg */; };
+		E3FD19471E27C62F00A82D7F /* wallpaper7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19441E27C62F00A82D7F /* wallpaper7.jpg */; };
+		E3FD19481E27C62F00A82D7F /* wallpaper8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19451E27C62F00A82D7F /* wallpaper8.jpg */; };
+		E3FD194A1E27D2AD00A82D7F /* wallpaper11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E3FD19491E27D2AD00A82D7F /* wallpaper11.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -273,6 +285,18 @@
 		E3FD190D1E222D7F00A82D7F /* KLPieProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLPieProgressView.m; sourceTree = "<group>"; };
 		E3FD19121E23CEEB00A82D7F /* KLWeakTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLWeakTarget.h; sourceTree = "<group>"; };
 		E3FD19131E23CEEB00A82D7F /* KLWeakTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLWeakTarget.m; sourceTree = "<group>"; };
+		E3FD191D1E26981B00A82D7F /* wallpaper0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper0.jpg; sourceTree = "<group>"; };
+		E3FD19271E279F7100A82D7F /* wallpaper1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper1.jpg; sourceTree = "<group>"; };
+		E3FD19281E279F7100A82D7F /* wallpaper2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper2.jpg; sourceTree = "<group>"; };
+		E3FD19291E279F7100A82D7F /* wallpaper3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper3.jpg; sourceTree = "<group>"; };
+		E3FD19371E27A3FC00A82D7F /* wallpaper9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper9.jpg; sourceTree = "<group>"; };
+		E3FD193D1E27B3E500A82D7F /* wallpaper4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper4.jpg; sourceTree = "<group>"; };
+		E3FD193E1E27B3E500A82D7F /* wallpaper10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper10.jpg; sourceTree = "<group>"; };
+		E3FD19411E27B48E00A82D7F /* wallpaper5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper5.jpg; sourceTree = "<group>"; };
+		E3FD19431E27C62F00A82D7F /* wallpaper6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper6.jpg; sourceTree = "<group>"; };
+		E3FD19441E27C62F00A82D7F /* wallpaper7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper7.jpg; sourceTree = "<group>"; };
+		E3FD19451E27C62F00A82D7F /* wallpaper8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper8.jpg; sourceTree = "<group>"; };
+		E3FD19491E27D2AD00A82D7F /* wallpaper11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper11.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -415,6 +439,7 @@
 		41FE17151D5B10A200CABFCA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E3FD191A1E26972800A82D7F /* Images */,
 				41FE179D1D5B160700CABFCA /* Analytics.plist */,
 				41FE17291D5B10A300CABFCA /* Info.plist */,
 				415BFE731D5B1D01002053D6 /* InfoPlist.strings */,
@@ -594,6 +619,25 @@
 			path = AdMobMediation_Adapter_MoPub;
 			sourceTree = "<group>";
 		};
+		E3FD191A1E26972800A82D7F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				E3FD191D1E26981B00A82D7F /* wallpaper0.jpg */,
+				E3FD19271E279F7100A82D7F /* wallpaper1.jpg */,
+				E3FD19281E279F7100A82D7F /* wallpaper2.jpg */,
+				E3FD19291E279F7100A82D7F /* wallpaper3.jpg */,
+				E3FD193D1E27B3E500A82D7F /* wallpaper4.jpg */,
+				E3FD19411E27B48E00A82D7F /* wallpaper5.jpg */,
+				E3FD19431E27C62F00A82D7F /* wallpaper6.jpg */,
+				E3FD19441E27C62F00A82D7F /* wallpaper7.jpg */,
+				E3FD19451E27C62F00A82D7F /* wallpaper8.jpg */,
+				E3FD19371E27A3FC00A82D7F /* wallpaper9.jpg */,
+				E3FD193E1E27B3E500A82D7F /* wallpaper10.jpg */,
+				E3FD19491E27D2AD00A82D7F /* wallpaper11.jpg */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -710,13 +754,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3FD19481E27C62F00A82D7F /* wallpaper8.jpg in Resources */,
+				E3FD19471E27C62F00A82D7F /* wallpaper7.jpg in Resources */,
 				41FE17281D5B10A300CABFCA /* LaunchScreen.storyboard in Resources */,
+				E3FD193F1E27B3E500A82D7F /* wallpaper4.jpg in Resources */,
+				E3FD194A1E27D2AD00A82D7F /* wallpaper11.jpg in Resources */,
 				415BFE7A1D5B1D01002053D6 /* Localizable.strings in Resources */,
+				E3FD192F1E279F7100A82D7F /* wallpaper1.jpg in Resources */,
 				41FE17A11D5B160700CABFCA /* Analytics.plist in Resources */,
+				E3FD19311E279F7100A82D7F /* wallpaper3.jpg in Resources */,
 				41FE17251D5B10A300CABFCA /* Assets.xcassets in Resources */,
+				E3FD19461E27C62F00A82D7F /* wallpaper6.jpg in Resources */,
+				E3FD19381E27A3FC00A82D7F /* wallpaper9.jpg in Resources */,
 				41FE17201D5B10A200CABFCA /* Main.storyboard in Resources */,
 				415BFE791D5B1D01002053D6 /* InfoPlist.strings in Resources */,
+				E3FD19421E27B48E00A82D7F /* wallpaper5.jpg in Resources */,
+				E3FD19401E27B3E500A82D7F /* wallpaper10.jpg in Resources */,
+				E3FD19221E26981B00A82D7F /* wallpaper0.jpg in Resources */,
 				E3D72C161DAABD1000EE2620 /* Readme.txt in Resources */,
+				E3FD19301E279F7100A82D7F /* wallpaper2.jpg in Resources */,
 				415BFE7B1D5B1D01002053D6 /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

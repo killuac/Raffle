@@ -15,6 +15,8 @@
 @property (nonatomic, strong) KLPhotoLibrary *photoLibrary;
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
+@property (nonatomic, readonly) UIScrollView *pageScrollView;
+
 @property (nonatomic, strong) KLAlbumViewController *currentViewController;
 @property (nonatomic, strong) KLSegmentControl *segmentControl;
 @property (nonatomic, strong) UINavigationBar *bottomBar;
@@ -88,8 +90,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self addObservers];
     [self prepareForUI];
+    [self addObservers];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self reloadData];
 }
 
 - (void)prepareForUI

@@ -86,24 +86,13 @@ static CGFloat lineSpacing;
     return NO;
 }
 
-+ (CGFloat)arrowHeight
-{
-    return 0;
-}
-
 + (UIEdgeInsets)contentViewInsets
 {
-    return UIEdgeInsetsZero;
+    return UIEdgeInsetsMake(0, -10, -10, -10);
 }
 
-- (void)setArrowOffset:(CGFloat)arrowOffset
-{
-    
-}
-
-- (UIPopoverArrowDirection)arrowDirection
-{
-    return kNilOptions;
-}
++ (CGFloat)arrowHeight { return 0; }
+- (void)setArrowOffset:(CGFloat)arrowOffset { }
+- (UIPopoverArrowDirection)arrowDirection { return kNilOptions; }
 
 @end

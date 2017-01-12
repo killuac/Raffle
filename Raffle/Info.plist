@@ -57,7 +57,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string></string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (c) 2016 Syzygy. All rights reserved.</string>
+	<string>Copyright (c) 2017 Syzygy. All rights reserved.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>
@@ -69,7 +69,7 @@
 		<string>armv7</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
-	<true/>
+	<false/>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
@@ -77,8 +77,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

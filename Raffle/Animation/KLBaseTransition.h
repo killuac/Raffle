@@ -26,23 +26,23 @@ typedef NS_ENUM(NSUInteger, KLTransitionOrientation) {
 
 + (instancetype)transition;     // Default NO
 + (instancetype)transitionWithGestureEnabled:(BOOL)gestureEnabled;  // Must retain the instance with property
-- (instancetype)initWithGestureEnabled:(BOOL)gestureEnabled;
 
 @property (nonatomic, assign) KLTransitionOrientation transitionOrientation;    // KLTransitionOrientationVertical by default
 @property (nonatomic, readonly) BOOL isVertical;
-
 @property (nonatomic, readonly, getter=isPresenting) BOOL presenting;
-@property (nonatomic, readonly, getter=isInteractive) BOOL interactive;
 @property (nonatomic, readonly, getter=isModalTransition) BOOL modalTransition;     // Modal(Present) or Navigation(Push/Pop)
 
 @property (nonatomic, weak) id <KLBaseTransitionPresentationDelegate> presentationDelegate;
 
 @property (nonatomic, readonly) NSTimeInterval animationDuration;
 @property (nonatomic, weak, readonly) id <UIViewControllerContextTransitioning> transitionContext;  // Break retain cycle
-@property (nonatomic, weak, readonly) UINavigationController *navigationController;
 
 // Below methods need overwrite by subclass if needed
 - (void)animateModalTransitionFromView:(UIView *)fromView toView:(UIView *)toView;
 - (void)animateNavigationTransitionFromView:(UIView *)fromView toView:(UIView *)toView;
+
+// Below methods for presenting view controller by pan gesture
+- (void)setPresentingVC:(UIViewController *)presentingVC presentedVC:(UIViewController *)presentedVC;
+- (void)setNavigationController:(UINavigationController *)navController presentedVC:(UIViewController *)presentedVC;
 
 @end

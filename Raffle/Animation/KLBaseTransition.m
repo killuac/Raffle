@@ -14,7 +14,12 @@
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign) CGPoint startLocation;
 
-@property (nonatomic, weak) UIViewController *viewController;   // Presented VC or Navigation Controller
+// Whether start interaction, different with gestureEnabled. Must need this flag.
+@property (nonatomic, assign, getter=isInteractive) BOOL interactive;
+
+@property (nonatomic, weak) UIViewController *presentedVC;
+@property (nonatomic, weak) UIViewController *presentingVC;
+@property (nonatomic, weak) UINavigationController *navigationController;
 
 @end
 
@@ -44,9 +49,18 @@
     return self.transitionOrientation == KLTransitionOrientationVertical;
 }
 
-- (UINavigationController *)navigationController
+- (void)setPresentingVC:(UIViewController *)presentingVC presentedVC:(UIViewController *)presentedVC
 {
-    return (self.isModalTransition) ? self.viewController.navigationController : (id)self.viewController;
+    _presenting = YES; _modalTransition = YES;
+    _presentingVC = presentingVC; _presentedVC = presentedVC;
+    [self addInteractiveGestureToViewController:presentingVC];
+}
+
+- (void)setNavigationController:(UINavigationController *)navController presentedVC:(UIViewController *)presentedVC
+{
+    _presenting = NO; _modalTransition = NO;
+    _navigationController = navController; _presentedVC = presentedVC;
+    [self addInteractiveGestureToViewController:navController];
 }
 
 - (void)dealloc
@@ -95,10 +109,15 @@
 //  Implement by subclass
 }
 
+- (void)animationEnded:(BOOL)transitionCompleted
+{
+    _presenting = NO;
+    _interactive = NO;
+}
+
 #pragma mark - Interactive gesture
 - (void)addInteractiveGestureToViewController:(UIViewController *)viewController
 {
-    self.viewController = viewController;
     if (self.isVertical) {
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     } else {
@@ -119,9 +138,21 @@
             _interactive = YES;
             _startLocation = [recognizer locationInView:recognizerView.superview];
             if (self.isModalTransition) {
-                [self.viewController dismissViewControllerAnimated:YES completion:nil];
+                if (self.isPresenting) {
+                    if (velocity.y < 0) {
+                        [self.presentingVC presentViewController:self.presentedVC animated:YES completion:nil];
+                    }
+                } else {
+                    if (velocity.y > 0) {
+                        [self.presentedVC dismissViewControllerAnimated:YES completion:nil];
+                    }
+                }
             } else {
-                [(UINavigationController *)self.viewController popViewControllerAnimated:YES];
+                if (self.isPresenting) {
+                    [self.navigationController pushViewController:self.presentedVC animated:YES];
+                } else {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
             }
             break;
             
@@ -134,8 +165,8 @@
         case UIGestureRecognizerStateEnded: {
             _interactive = NO;
             CGFloat offset = self.isVertical ? MAX(velocity.y, translation.y - self.startLocation.y/2) : MAX(velocity.x, translation.x - self.startLocation.x/2);
-            BOOL isDismiss = self.isVertical ? offset > recognizerView.height/4 : offset > recognizerView.width/2;
-            if (isDismiss) {
+            BOOL isFinish = self.isVertical ? offset > recognizerView.height/4 : offset > recognizerView.width/2;
+            if (isFinish) {
                 [self finishInteractiveTransition];
             } else {
                 [self cancelInteractiveTransition];
@@ -156,9 +187,9 @@
 
 - (void)removeInteractiveGesture
 {
-    [self.viewController.view removeGestureRecognizer:self.panGesture];
-    self.panGesture = nil;
-    self.viewController = nil;
+    [self.presentedVC.view removeGestureRecognizer:self.panGesture];
+    [self.presentingVC.view removeGestureRecognizer:self.panGesture];
+    [self.navigationController.view removeGestureRecognizer:self.panGesture];
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
@@ -167,22 +198,28 @@
                                                                        sourceController:(UIViewController *)sourceVC
 {
     _presenting = YES; _modalTransition = YES;
+    _presentedVC = presentedVC;
     if (self.gestureEnabled) {
         [self addInteractiveGestureToViewController:presentedVC];
     }
-    
     return self;
 }
 
 - (id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissedVC
 {
-    _presenting = NO; _modalTransition = YES;
     return self;
 }
 
 // Only enable interactive gesture for dismissal
-- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)transitionAnimator
+//- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id <UIViewControllerAnimatedTransitioning>)animator
+//{
+//    _presenting = YES;
+//    return self.isInteractive ? self : nil;
+//}
+
+- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)animator
 {
+    _presenting = NO;
     return self.isInteractive ? self : nil;
 }
 
@@ -202,6 +239,7 @@
 {
     if (operation == UINavigationControllerOperationNone) return nil;
     
+    _navigationController = navigationController;
     NSUInteger fromIndex = [navigationController.viewControllers indexOfObject:fromVC];
     NSUInteger toIndex = [navigationController.viewControllers indexOfObject:toVC];
     _presenting = (toIndex > fromIndex); _modalTransition = NO;
@@ -216,7 +254,7 @@
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>)transitionAnimator
 {
-    return (self.isInteractive) ? self : nil;
+    return self.isInteractive ? self : nil;
 }
 
 @end

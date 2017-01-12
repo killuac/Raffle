@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -15,32 +19,27 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="RnD-PQ-AxH">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="Raffle" translatesAutoresizingMaskIntoConstraints="NO" id="388-7a-nqB">
-                                <rect key="frame" x="275" y="150" width="50" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="2kn-Pl-gqN"/>
-                                    <constraint firstAttribute="height" constant="70" id="JtZ-Lo-5vb"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Raffle" translatesAutoresizingMaskIntoConstraints="NO" id="388-7a-nqB">
+                                <rect key="frame" x="157.5" y="170" width="60" height="60"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2016 Syzygy. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="7ii-I4-bUM">
-                                <rect key="frame" x="20" y="559" width="561" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="Aed-9f-phI"/>
-                                </constraints>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2017 Syzygy. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="7ii-I4-bUM">
+                                <rect key="frame" x="14" y="630" width="348" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.89803921568627454" green="0.8784313725490196" blue="0.85490196078431369" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="7ii-I4-bUM" secondAttribute="bottom" constant="20" symbolic="YES" id="0W6-Sb-JQ8"/>
-                            <constraint firstItem="7ii-I4-bUM" firstAttribute="centerX" secondItem="RnD-PQ-AxH" secondAttribute="centerX" id="91Q-cE-JnS"/>
-                            <constraint firstItem="7ii-I4-bUM" firstAttribute="leading" secondItem="RnD-PQ-AxH" secondAttribute="leadingMargin" id="I2s-5F-4r6"/>
-                            <constraint firstItem="7ii-I4-bUM" firstAttribute="centerX" secondItem="388-7a-nqB" secondAttribute="centerX" id="TZ6-G3-MvY"/>
+                            <constraint firstItem="388-7a-nqB" firstAttribute="centerX" secondItem="RnD-PQ-AxH" secondAttribute="centerX" id="6Ic-Qu-Stf"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="7ii-I4-bUM" secondAttribute="bottom" constant="16" id="Jmt-ZX-3Wf"/>
+                            <constraint firstItem="388-7a-nqB" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="150" id="KOW-xt-qm3"/>
+                            <constraint firstItem="7ii-I4-bUM" firstAttribute="leading" secondItem="RnD-PQ-AxH" secondAttribute="leadingMargin" constant="-2" id="cjf-Us-4RR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7ii-I4-bUM" secondAttribute="trailing" constant="-2.5" id="rKP-1o-r89"/>
+                            <constraint firstItem="7ii-I4-bUM" firstAttribute="centerX" secondItem="RnD-PQ-AxH" secondAttribute="centerX" id="rSA-4t-q1N"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -50,6 +49,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Raffle" width="50" height="70"/>
+        <image name="Raffle" width="60" height="60"/>
     </resources>
 </document>
