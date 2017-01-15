@@ -19,6 +19,7 @@
 
 @interface KLWallpaperViewController : UICollectionViewController
 
+@property (nonatomic, copy) NSString *selectedImageName;
 @property (nonatomic, weak) id <KLWallpaperViewControllerDelegate> delegate;
 
 @end

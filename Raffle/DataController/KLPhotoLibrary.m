@@ -93,8 +93,10 @@
     PHFetchOptions *options = [[PHFetchOptions alloc] init];
     options.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
     
-    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum options:options inGCDGroup:group];
-    [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:nil inGCDGroup:group];
+    KLDispatchGroupGlobalAsync(group, ^{
+        [self fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum options:options];
+        [self fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum options:nil];
+    });
     
     KLDispatchGroupMainNotify(group, ^{
         [self willChangeValueForKey:NSStringFromSelector(@selector(assetCollections))];
@@ -105,28 +107,26 @@
     });
 }
 
-- (void)fetchAssetCollectionsWithType:(PHAssetCollectionType)type options:(PHFetchOptions *)options inGCDGroup:(dispatch_group_t)group
+- (void)fetchAssetCollectionsWithType:(PHAssetCollectionType)type options:(PHFetchOptions *)options
 {
-    KLDispatchGroupGlobalAsync(group, ^{
-        PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:type subtype:PHAssetCollectionSubtypeAny options:options];
-        [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([self isFetchForSubtype:collection.assetCollectionSubtype]) {
-                @synchronized (self) {
-                    if (collection.assetCount > 0 && ![self.assetCollectionArray containsObject:collection]) {
-                        [collection fetchAssets:nil];
-                        [self.assetCollectionArray addObject:collection];
-                        
-                        if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
-                            self.cameraRollCollection = collection;
-                        }
-                        if ([collection.localizedTitle isEqualToString:APP_DISPLAY_NAME]) {
-                            self.appAssetCollection = collection;
-                        }
+    PHFetchResult *results = [PHAssetCollection fetchAssetCollectionsWithType:type subtype:PHAssetCollectionSubtypeAny options:options];
+    [results enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([self isFetchForSubtype:collection.assetCollectionSubtype]) {
+            @synchronized (self) {
+                if (collection.assetCount > 0 && ![self.assetCollectionArray containsObject:collection]) {
+                    [collection fetchAssets:nil];
+                    [self.assetCollectionArray addObject:collection];
+                    
+                    if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
+                        self.cameraRollCollection = collection;
+                    }
+                    if ([collection.localizedTitle isEqualToString:APP_DISPLAY_NAME]) {
+                        self.appAssetCollection = collection;
                     }
                 }
             }
-        }];
-    });
+        }
+    }];
 }
 
 - (BOOL)isFetchForSubtype:(PHAssetCollectionSubtype)subtype

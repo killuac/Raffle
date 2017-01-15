@@ -66,9 +66,9 @@
 		<array>
 			<dict>
 				<key>KLLogEventName</key>
-				<string>DrawBoxVC_SwipeUpToChooseWallpaper</string>
+				<string>DrawBoxVC_ChooseWallpaper</string>
 				<key>KLLogEventSelectorName</key>
-				<string>swipeUpToChooseWallpaper:</string>
+				<string>showWallpaperViewController</string>
 			</dict>
 		</array>
 	</dict>

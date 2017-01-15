@@ -71,31 +71,27 @@
 - (void)prepareForUI
 {
     [self addSubviews];
-    
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeUpToChooseWallpaper:)];
-    swipe.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.view addGestureRecognizer:swipe];
 }
 
 - (void)addSubviews
 {
     [self.view addSubview:({
         _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-        _bgImageView.alpha = 0.8;
+        _bgImageView.alpha = 0.7;
         _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
         _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _bgImageView;
     })];
     
-    [self setWallpaper];
+    [self updateWallpaper];
 }
 
-- (void)setWallpaper
+- (void)updateWallpaper
 {
     if (self.dataController.hasCustomWallpaper) {
         self.bgImageView.image = [UIImage imageWithContentsOfFile:self.dataController.wallpaperFilePath];
     } else {
-        self.bgImageView.image = [UIImage imageNamed:@"wallpaper0.jpg"];
+        self.bgImageView.image = [UIImage imageNamed:self.dataController.wallpaperName];
     }
 }
 
@@ -139,6 +135,7 @@
 - (void)controllerDidChangeContent:(KLDataController *)controller
 {
     [self reloadData];
+    [self updateWallpaper];
 }
 
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
@@ -157,19 +154,24 @@
     [self.dataController addPhotos:assets completion:nil];
 }
 
-#pragma mark - Event handling
-- (void)swipeUpToChooseWallpaper:(UISwipeGestureRecognizer *)recognizer
+#pragma mark - Choose wallpaper
+const CGFloat popoverContentHeight = 280;
+
+- (void)showWallpaperViewController
 {
     KLWallpaperViewController *wallpaperVC = [KLWallpaperViewController viewController];
     wallpaperVC.delegate = self;
-    wallpaperVC.modalPresentationStyle = UIModalPresentationPopover;
-    wallpaperVC.preferredContentSize = CGSizeMake(self.view.width, 320);
-    wallpaperVC.popoverPresentationController.delegate = self;
-    wallpaperVC.popoverPresentationController.permittedArrowDirections = kNilOptions;
-    wallpaperVC.popoverPresentationController.popoverBackgroundViewClass = [KLWallpaperPopoverBackgroundView class];
-    wallpaperVC.popoverPresentationController.sourceView = self.view;
-    wallpaperVC.popoverPresentationController.sourceRect = CGRectMake(0, self.view.bottom, 0, 0);
-    [self presentViewController:wallpaperVC animated:YES completion:nil];
+    wallpaperVC.selectedImageName = self.dataController.wallpaperName;
+    
+    UINavigationController *navController = [[UINavigationController alloc]  initWithRootViewController:wallpaperVC];
+    navController.modalPresentationStyle = UIModalPresentationPopover;
+    navController.preferredContentSize = CGSizeMake(self.view.width, popoverContentHeight);
+    navController.popoverPresentationController.delegate = self;
+    navController.popoverPresentationController.permittedArrowDirections = kNilOptions;
+    navController.popoverPresentationController.popoverBackgroundViewClass = [KLWallpaperPopoverBackgroundView class];
+    navController.popoverPresentationController.sourceView = self.view;
+    navController.popoverPresentationController.sourceRect = CGRectMake(0, self.view.bottom, 0, 0);
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
@@ -179,12 +181,34 @@
 
 - (void)popoverPresentationController:(UIPopoverPresentationController *)popoverPresentationController willRepositionPopoverToRect:(inout CGRect *)rect inView:(inout UIView  * __nonnull * __nonnull)view;
 {
-    *rect = CGRectMake(0, self.view.bottom, self.view.width, 320);
+    *rect = CGRectMake(0, self.view.bottom, self.view.width, popoverContentHeight);
+}
+
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController
+{
+    UIView *constainerView = popoverPresentationController.containerView;
+    constainerView.transform = CGAffineTransformMakeTranslation(0, constainerView.height);
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+    [UIView animateWithDuration:0.4 delay:0 options:0 animations:^{
+        constainerView.transform = CGAffineTransformIdentity;
+    } completion:nil];
+}
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+    UIView *constainerView = popoverPresentationController.containerView;
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+    [UIView animateWithDuration:0.4 delay:0 options:0 animations:^{
+        constainerView.transform = CGAffineTransformMakeTranslation(0, constainerView.height/2);
+    } completion:nil];
+    
+    return YES;
 }
 
 #pragma mark - KLWallpaperViewControllerDelegate
 - (void)wallpaperViewController:(KLWallpaperViewController *)wallpaperVC didChooseWallpaperImageName:(NSString *)imageName
 {
+    [self.dataController changeWallpaperWithImageName:imageName];
     // TODO: Select wallpaper
 }
 

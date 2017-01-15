@@ -17,15 +17,15 @@
 
 @end
 
-@implementation KLDrawBoxDataController {
-    KLDrawMode _drawMode;
-}
+@implementation KLDrawBoxDataController
+
+@synthesize isRepeatMode = _isRepeatMode;
 
 - (instancetype)initWithModel:(KLDrawBoxModel *)model
 {
     if (self = [self init]) {
         _drawBox = model;
-        _drawMode = model.drawMode;
+        _isRepeatMode = model.repeatMode;
         _allAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _remainingAssets = [NSMutableArray arrayWithArray:_drawBox.assets];
         _selectedAssets = [NSMutableArray array];
@@ -45,14 +45,9 @@
     return self.remainingAssets.count;
 }
 
-- (BOOL)isAttendeeMode
-{
-    return (_drawMode == KLDrawModeAttendee);
-}
-
 - (BOOL)isReloadButtonHidden
 {
-    return (!self.isAttendeeMode || self.itemCount == self.drawBox.assets.count);
+    return (self.isRepeatMode || self.itemCount == self.remainingAssetCount);
 }
 
 - (BOOL)isShakeEnabled
@@ -67,9 +62,9 @@
 
 - (void)switchDrawMode
 {
-    _drawMode = self.isAttendeeMode ? KLDrawModePrize : KLDrawModeAttendee;
+    _isRepeatMode = !_isRepeatMode;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        self.drawBox.drawMode = _drawMode;
+        self.drawBox.repeatMode = self.isRepeatMode;
     }];
 }
 
@@ -84,13 +79,22 @@
 - (PHAsset *)randomAnAsset
 {
     NSUInteger index = KLRandomInteger(0, self.remainingAssetCount);
-    return self.remainingAssets[index];
+    PHAsset *asset = self.remainingAssets[index];
+    if (!self.isRepeatMode) {
+        [self.remainingAssets removeObject:asset];
+    }
+    return asset;
 }
 
 #pragma mark - Wallpaper
 - (BOOL)hasCustomWallpaper
 {
-    return self.drawBox.wallpaperName.length > 0;
+    return ![self.drawBox.wallpaperName hasPrefix:@"wallpaper"];
+}
+
+- (NSString *)wallpaperName
+{
+    return self.drawBox.wallpaperName;
 }
 
 - (NSString *)wallpaperFilePath
@@ -101,11 +105,10 @@
 - (void)changeWallpaperWithImageName:(NSString *)imageName
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        self.drawBox.wallpaperName = imageName.SHA1String;
-        
-        UIImage *image = [UIImage imageNamed:imageName];
-        NSData *imageData = UIImageJPEGRepresentation(image, 1);
-        [imageData writeToFile:[WALLPAPER_DIRECTORY stringByAppendingPathComponent:self.drawBox.wallpaperName] atomically:YES];
+        KLDrawBoxModel *localDrawBox = [self.drawBox MR_inContext:localContext];
+        localDrawBox.wallpaperName = imageName;
+    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+        [self didChangeContent];
     }];
 }
 
@@ -113,15 +116,18 @@
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
         [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
-            NSURL *fileURL = info[@"PHImageFileURLKey"];
-            self.drawBox.wallpaperName = fileURL.lastPathComponent;
+            KLDrawBoxModel *localDrawBox = [self.drawBox MR_inContext:localContext];
+            localDrawBox.wallpaperName = [NSDate date].description;
             
+            NSURL *fileURL = info[@"PHImageFileURLKey"];
             bool isPNGFile = [fileURL.pathExtension.lowercaseString isEqualToString:@"png"];
-            NSData *imageData = isPNGFile ? UIImagePNGRepresentation(image) : UIImageJPEGRepresentation(image, 1);
+            NSData *imageData = isPNGFile ? UIImagePNGRepresentation(image) : UIImageJPEGRepresentation(image, 0.8);
             [imageData writeToFile:[WALLPAPER_DIRECTORY stringByAppendingPathComponent:self.drawBox.wallpaperName] atomically:YES];
             
             if (completion) completion();
         }];
+    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+        [self didChangeContent];
     }];
 }
 

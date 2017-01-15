@@ -156,6 +156,7 @@
 - (void)tapResultImage:(UITapGestureRecognizer *)recognizer
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    if (self.dismissBlock) self.dismissBlock(self);
 }
 
 @end

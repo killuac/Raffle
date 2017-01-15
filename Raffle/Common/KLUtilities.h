@@ -28,6 +28,8 @@
 #define TVC_REUSE_IDENTIFIER    @"TableViewCellReuseIdentifier"
 #define CVC_REUSE_IDENTIFIER    @"CollectionViewCellReuseIdentifier"
 
+#define DEFAULT_WALLPAPER_COUNT 12
+
 #ifdef DEBUG
 #define KLLog(format, ...)      NSLog(@"%@:%d: %@", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__, [NSString stringWithFormat:format, ##__VA_ARGS__]);
 #else

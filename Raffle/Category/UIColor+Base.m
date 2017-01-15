@@ -72,7 +72,7 @@ NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 #pragma mark - Background color
 + (instancetype)backgroundColor
 {
-    return KLColorWithRGB(240, 240, 240);
+    return KLColorWithRGB(250, 250, 250);
 }
 
 + (instancetype)darkBackgroundColor

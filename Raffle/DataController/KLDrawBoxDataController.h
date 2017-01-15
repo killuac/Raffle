@@ -12,13 +12,14 @@
 @interface KLDrawBoxDataController : KLDataController
 
 @property (nonatomic, assign) NSUInteger pageIndex;
-@property (nonatomic, readonly) BOOL isAttendeeMode;
+@property (nonatomic, readonly) BOOL isRepeatMode;
 @property (nonatomic, readonly) BOOL isReloadButtonHidden;
 @property (nonatomic, readonly) BOOL isShakeEnabled;
 @property (nonatomic, readonly) BOOL hasCustomWallpaper;
 
 @property (nonatomic, readonly) NSUInteger remainingAssetCount;
 @property (nonatomic, readonly) NSUInteger selectedAssetCount;
+@property (nonatomic, readonly) NSString *wallpaperName;
 @property (nonatomic, readonly) NSString *wallpaperFilePath;
 
 - (void)switchDrawMode;

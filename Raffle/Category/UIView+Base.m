@@ -318,20 +318,13 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
     UIBezierPath *roundedPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:corners cornerRadii:cornerRadii];
     [roundedPath closePath];
     
-    CAShapeLayer *subLayer = [CAShapeLayer layer];
-    subLayer.frame = self.bounds;
-    subLayer.path = roundedPath.CGPath;
-    subLayer.borderWidth = width;
-    subLayer.lineJoin = kCALineJoinRound;
-    subLayer.borderColor = color.CGColor;
-    
-    if ([self isKindOfClass:[UILabel class]]) {
-        self.layer.mask = subLayer;
-    } else {
-        subLayer.fillColor = self.layer.backgroundColor;
-        self.layer.backgroundColor = nil;
-        [self.layer addSublayer:subLayer];
-    }
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.frame = self.bounds;
+    maskLayer.path = roundedPath.CGPath;
+    maskLayer.borderWidth = width;
+    maskLayer.lineJoin = kCALineJoinRound;
+    maskLayer.borderColor = color.CGColor;
+    self.layer.mask = maskLayer;
 }
 
 #pragma mark - Gesture

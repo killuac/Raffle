@@ -20,5 +20,6 @@
 @property (nonatomic, strong, readonly) KLDrawBoxDataController *dataController;
 
 - (void)reloadData;
+- (void)showWallpaperViewController;
 
 @end

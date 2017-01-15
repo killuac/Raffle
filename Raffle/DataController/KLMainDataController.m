@@ -61,9 +61,9 @@
     return self.drawBoxes[indexPath.item];
 }
 
-- (BOOL)isAttendeeMode
+- (BOOL)isRepeatMode
 {
-    return self.currentDrawBoxDC.isAttendeeMode;
+    return self.currentDrawBoxDC.isRepeatMode;
 }
 
 - (BOOL)isReloadButtonHidden
@@ -82,6 +82,7 @@
     NSUInteger itemIndex = self.itemCount;
     
     KLDrawBoxModel *drawBox = [KLDrawBoxModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]];
+    drawBox.wallpaperName = [NSString stringWithFormat:@"wallpaper%tu.jpg", KLRandomInteger(0, DEFAULT_WALLPAPER_COUNT)];
     [self.drawBoxes addObject:drawBox];
     
     KLDrawBoxDataController *drawBoxDC = [self createDrawBoxDataControllerWithPageIndex:itemIndex];

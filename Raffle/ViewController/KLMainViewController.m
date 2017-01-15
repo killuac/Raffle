@@ -14,6 +14,7 @@
 #import "KLMoreViewController.h"
 #import "KLResultViewController.h"
 #import "KLPhotoViewController.h"
+#import "KLWallpaperViewController.h"
 
 #define MINIMUM_SCALE CGAffineTransformMakeScale(0.001, 0.001)
 
@@ -22,11 +23,13 @@
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) UIPageControl *pageControl;
 @property (nonatomic, readonly) UIScrollView *pageScrollView;
+@property (nonatomic, strong) UIImageView *bgImageView;
 
 @property (nonatomic, strong) KLBubbleButton *addPhotoButton;
 @property (nonatomic, strong) UIButton *switchModeButton;
 @property (nonatomic, strong) UIButton *reloadButton;
 @property (nonatomic, strong) UIButton *menuButton;
+@property (nonatomic, strong) UIButton *wallpaperButton;
 
 @property (nonatomic, assign) BOOL isDrawing;
 
@@ -91,7 +94,9 @@
 
 - (void)reloadData
 {
-    self.pageControl.hidden = (self.dataController.pageCount == 1);
+    self.bgImageView.hidden = (self.dataController.pageCount > 0);
+    
+    self.pageControl.hidden = (self.dataController.pageCount <= 1);
     self.pageControl.numberOfPages = self.dataController.pageCount;
     self.pageControl.currentPage = self.dataController.currentPageIndex;
     self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
@@ -134,6 +139,17 @@
 
 - (void)addSubviews
 {
+//  Wallpaper
+    [self.view addSubview:({
+        _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        _bgImageView.hidden = YES;
+        _bgImageView.alpha = 0.8;
+        _bgImageView.image = [UIImage imageNamed:@"wallpaper0.jpg"];
+        _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _bgImageView;
+    })];
+    
 //  Page control
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
@@ -148,24 +164,38 @@
     [self.view addSubview:({
         _addPhotoButton = [KLBubbleButton buttonWithTitle:nil imageName:@"icon_main_add"];
         _addPhotoButton.titleLabel.font = [UIFont titleFont];
-//        _addPhotoButton.backgroundColor = [UIColor.blueColor colorWithAlphaComponent:0.5];
+//        _addPhotoButton.backgroundColor = [KLColorWithRGB(199, 92, 92) colorWithAlphaComponent:0.2];
+//        _addPhotoButton.backgroundColor = [KLColorWithRGB(118, 194, 175) colorWithAlphaComponent:0.2];
+//        _addPhotoButton.backgroundColor = [KLColorWithRGB(119, 129, 212) colorWithAlphaComponent:0.2];
+//        _addPhotoButton.backgroundColor = [KLColorWithRGB(245, 207, 135) colorWithAlphaComponent:0.2];
+//        _addPhotoButton.backgroundColor = [KLColorWithRGB(224, 153, 94) colorWithAlphaComponent:0.2];
+//        _addPhotoButton.backgroundColor = [KLColorWithRGB(79, 93, 115) colorWithAlphaComponent:0.2];
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         [self.addPhotoButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToShowCameraViewController:)]];
         
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
-        animation.duration = 10.0;
+        animation.duration = 2.0;
         animation.repeatCount = HUGE_VALF;
         animation.autoreverses = YES;
-        animation.fromValue = (__bridge id)[UIColor.greenColor colorWithAlphaComponent:0.5].CGColor;
-        animation.toValue = (__bridge id)[UIColor.blueColor colorWithAlphaComponent:0.5].CGColor;
+        animation.fromValue = (__bridge id)[KLColorWithRGB(199, 92, 92) colorWithAlphaComponent:0.3].CGColor;
+        animation.toValue = (__bridge id)[KLColorWithRGB(119, 129, 212) colorWithAlphaComponent:0.3].CGColor;
         [self.addPhotoButton.layer addAnimation:animation forKey:@"ColorPulse"];
         
         _addPhotoButton;
     })];
+    [self.addPhotoButton constraintsCenterInSuperview];
+    [self.addPhotoButton constraintsEqualWidthAndHeight];
+    [NSLayoutConstraint constraintHeightWithItem:self.addPhotoButton constant:70].active = YES;
     
 //  Bottom buttons
     [self.view addSubview:({
-        _switchModeButton = [UIButton buttonWithImageName:@"icon_attendee_mode"];
+        _wallpaperButton = [UIButton buttonWithImageName:@"icon_wallpaper"];
+        [_wallpaperButton addTarget:self action:@selector(showWallpaperViewController:)];
+        _wallpaperButton;
+    })];
+    
+    [self.view addSubview:({
+        _switchModeButton = [UIButton buttonWithImageName:@"icon_repeat_off"];
         [_switchModeButton addTarget:self action:@selector(switchDrawMode:)];
         _switchModeButton;
     })];
@@ -184,19 +214,27 @@
     })];
     
 //  Add constraints
-    NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _addPhotoButton, _switchModeButton, _reloadButton, _menuButton);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_switchModeButton(40)]->=0-[_reloadButton(40)]->=0-[_menuButton(40)]|" options:NSLayoutFormatAlignAllCenterY views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_reloadButton]|" views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_addPhotoButton(80)]-40-|" views:views]];
-    [NSLayoutConstraint constraintBottomWithItem:_pageControl].active = YES;
+    NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _addPhotoButton, _wallpaperButton, _switchModeButton, _reloadButton, _menuButton);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_wallpaperButton(40)]->=0-[_switchModeButton(40)]->=0-[_menuButton(40)]|" options:NSLayoutFormatAlignAllBottom views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_switchModeButton]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl]-30-|" views:views]];
     
     [self.pageControl constraintsCenterXWithView:self.view];
-    [self.addPhotoButton constraintsCenterXWithView:self.view];
-    [self.reloadButton constraintsCenterXWithView:self.view];
-    [self.addPhotoButton constraintsEqualWidthAndHeight];
-    [self.reloadButton constraintsEqualWidthAndHeight];
+    [self.switchModeButton constraintsCenterXWithView:self.view];
     [self.switchModeButton constraintsEqualWidthAndHeight];
+    [self.reloadButton constraintsEqualWidthAndHeight];
     [self.menuButton constraintsEqualWidthAndHeight];
+    [self.wallpaperButton constraintsEqualWidthAndHeight];
+}
+
+- (void)updateAddPhotoButtonTitle
+{
+    NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
+    NSString *title = assetCount > 0 ? @(assetCount).stringValue : nil;
+    if (title && ![title isEqualToString:self.addPhotoButton.currentTitle]) {
+        [self.addPhotoButton setNormalTitle:title];
+        self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
+    }
 }
 
 #pragma mark - Observers
@@ -220,16 +258,6 @@
     KLDrawBoxDataController *drawboxDC = notification.object;
     self.dataController.currentPageIndex = drawboxDC.pageIndex;
     [self reloadData];
-}
-
-- (void)updateAddPhotoButtonTitle
-{
-    NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
-    NSString *title = assetCount > 0 ? @(assetCount).stringValue : nil;
-    if (title && ![title isEqualToString:self.addPhotoButton.currentTitle]) {
-        [self.addPhotoButton setNormalTitle:title];
-        self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
-    }
 }
 
 #pragma mark - Page view controller datasource
@@ -377,6 +405,9 @@
     
     KLResultViewController *resultVC = [KLResultViewController viewController];
     resultVC.pickedAsset = [self.dataController.currentDrawBoxDC randomAnAsset];
+    resultVC.dismissBlock = ^(id object) {
+        [self reloadData];
+    };
     [self presentViewController:resultVC animated:YES completion:^{
         [self setAddPhotoButtonHidden:NO];
         [self setBottomButtonsHidden:NO];
@@ -402,15 +433,11 @@
     [self setReloadButtonHidden:self.dataController.isReloadButtonHidden];
     
     [UIView animateWithDefaultDuration:^{
-        UIViewAnimationTransition transition = self.dataController.isAttendeeMode ? UIViewAnimationTransitionFlipFromRight : UIViewAnimationTransitionFlipFromLeft;
-        [UIView setAnimationTransition:transition forView:self.switchModeButton cache:YES];
-        
-        KLDispatchMainAfter([CATransaction animationDuration]/2, ^{
-            NSString *imageName = self.dataController.isAttendeeMode ? @"icon_attendee_mode" : @"icon_prize_mode";
-            [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        });
+        self.switchModeButton.alpha = 0;
     } completion:^(BOOL finished) {
-        [self startSwitchDrawModeAnimation];
+        NSString *imageName = self.dataController.isRepeatMode ? @"icon_repeat_on" : @"icon_repeat_off";
+        [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+        [self.switchModeButton setHidden:NO animated:YES];
     }];
 }
 
@@ -477,16 +504,21 @@
     [sliceViews setValue:@(self.view.top) forKey:@"top"];
 }
 
-#pragma mark - KLImagePickerController delegate
+#pragma mark - Image picker and camera delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addDrawBoxWithAssets:assets];
 }
 
-#pragma mark - KLCameraViewController delegate
 - (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addDrawBoxWithAssets:assets];
+}
+
+#pragma mark - Wallpaper
+- (void)showWallpaperViewController:(id)sender
+{
+    [self.drawBoxViewController showWallpaperViewController];
 }
 
 @end

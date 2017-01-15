@@ -11,7 +11,7 @@
 @implementation KLDrawBoxModel
 
 @dynamic creationDate;
-@dynamic drawMode;
+@dynamic repeatMode;
 @dynamic wallpaperName;
 @dynamic photos;
 @dynamic assets;
