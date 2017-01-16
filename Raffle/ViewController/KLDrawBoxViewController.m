@@ -184,27 +184,6 @@ const CGFloat popoverContentHeight = 280;
     *rect = CGRectMake(0, self.view.bottom, self.view.width, popoverContentHeight);
 }
 
-- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController
-{
-    UIView *constainerView = popoverPresentationController.containerView;
-    constainerView.transform = CGAffineTransformMakeTranslation(0, constainerView.height);
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
-    [UIView animateWithDuration:0.4 delay:0 options:0 animations:^{
-        constainerView.transform = CGAffineTransformIdentity;
-    } completion:nil];
-}
-
-- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
-{
-    UIView *constainerView = popoverPresentationController.containerView;
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
-    [UIView animateWithDuration:0.4 delay:0 options:0 animations:^{
-        constainerView.transform = CGAffineTransformMakeTranslation(0, constainerView.height/2);
-    } completion:nil];
-    
-    return YES;
-}
-
 #pragma mark - KLWallpaperViewControllerDelegate
 - (void)wallpaperViewController:(KLWallpaperViewController *)wallpaperVC didChooseWallpaperImageName:(NSString *)imageName
 {

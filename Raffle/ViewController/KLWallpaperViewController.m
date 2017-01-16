@@ -14,6 +14,8 @@
 @property (nonatomic, strong) NSMutableArray<NSString *> *imageNames;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *imageDict;   // All images selection state, default NO.
 
+@property (nonatomic, readonly) UIView *containerView;
+
 @end
 
 @implementation KLWallpaperViewController
@@ -54,6 +56,32 @@ static CGFloat lineSpacing;
     [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
 
+- (UIView *)containerView
+{
+    return self.navigationController.presentationController.containerView;;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.containerView.transform = CGAffineTransformMakeTranslation(0, self.containerView.height);
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+    [UIView animateWithDuration:0.4 delay:0 options:0 animations:^{
+        self.containerView.transform = CGAffineTransformIdentity;
+    } completion:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+    [UIView animateWithDuration:0.4 delay:0 options:0 animations:^{
+        self.containerView.transform = CGAffineTransformMakeTranslation(0, self.containerView.height/2);
+    } completion:nil];
+}
+
 - (void)viewDidLayoutSubviews
 {
     self.navigationController.view.superview.layer.cornerRadius = 0;
@@ -89,6 +117,7 @@ static CGFloat lineSpacing;
     NSString *imageName = self.imageNames[indexPath.item];
     cell.imageView.image = [UIImage imageNamed:imageName];
     cell.selected = self.imageDict[imageName].boolValue;
+    cell.userInteractionEnabled = !cell.isSelected;
     
     return cell;
 }

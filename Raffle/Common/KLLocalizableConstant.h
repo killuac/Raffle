@@ -28,8 +28,8 @@
 #define TITLE_CHOOSE_WALLPAPER                  NSLocalizedString(@"TitleChooseWallpaper", "")
 #define TITLE_SELECTED_PHOTO_COUNT              NSLocalizedString(@"TitleSelectedPhotoCount", "")
 
-#define HUD_PRIZE_MODE                          NSLocalizedString(@"HUDPrizeMode", "")
-#define HUD_PARTICIPANT_MODE                    NSLocalizedString(@"HUDParticipantMode", "")
+#define HUD_REPEAT_MODE_ON                      NSLocalizedString(@"HUDRepeatModeOn", "")
+#define HUD_REPEAT_MODE_OFF                     NSLocalizedString(@"HUDRepeatModeOff", "")
 #define HUD_NOT_RECOGNIZE_FACE                  NSLocalizedString(@"HUDNotRecognizeFace", "")
 
 #define TIP_SHAKE_TO_START                      NSLocalizedString(@"TipShakeToStart", "")

@@ -95,6 +95,7 @@
 - (void)reloadData
 {
     self.bgImageView.hidden = (self.dataController.pageCount > 0);
+    self.wallpaperButton.enabled = self.bgImageView.hidden;
     
     self.pageControl.hidden = (self.dataController.pageCount <= 1);
     self.pageControl.numberOfPages = self.dataController.pageCount;
@@ -231,10 +232,8 @@
 {
     NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
     NSString *title = assetCount > 0 ? @(assetCount).stringValue : nil;
-    if (title && ![title isEqualToString:self.addPhotoButton.currentTitle]) {
-        [self.addPhotoButton setNormalTitle:title];
-        self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
-    }
+    [self.addPhotoButton setNormalTitle:title];
+    self.addPhotoButton.layout = assetCount > 0 ? KLButtonLayoutImageUp : KLButtonLayoutNone;
 }
 
 #pragma mark - Observers
@@ -430,7 +429,6 @@
     if (self.dataController.itemCount == 0) return;
     
     [self.dataController switchDrawMode];
-    [self setReloadButtonHidden:self.dataController.isReloadButtonHidden];
     
     [UIView animateWithDefaultDuration:^{
         self.switchModeButton.alpha = 0;
@@ -454,6 +452,11 @@
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moreVC];
     navController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)showWallpaperViewController:(id)sender
+{
+    [self.drawBoxViewController showWallpaperViewController];
 }
 
 - (void)longPressToShowCameraViewController:(UILongPressGestureRecognizer *)recognizer
@@ -513,12 +516,6 @@
 - (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addDrawBoxWithAssets:assets];
-}
-
-#pragma mark - Wallpaper
-- (void)showWallpaperViewController:(id)sender
-{
-    [self.drawBoxViewController showWallpaperViewController];
 }
 
 @end

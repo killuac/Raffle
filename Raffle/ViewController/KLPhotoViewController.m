@@ -17,8 +17,8 @@ NSNotificationName const KLPhotoViewControllerDidTouchStart = @"KLPhotoViewContr
 
 @interface KLPhotoViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
-@property (nonatomic, strong) KLDrawBoxDataController *drawBoxDC;
-@property (nonatomic, weak) id <KLDataControllerDelegate> previousDelegate;
+@property (nonatomic, strong) KLDrawBoxDataController *dataController;
+@property (nonatomic, weak) id <KLDataControllerDelegate> previousDelegate;     // draw box view controller
 
 @property (nonatomic, assign, getter=isDeleteMode) BOOL deleteMode;
 
@@ -49,8 +49,8 @@ static CGFloat lineSpacing;
 {
     if (self = [super initWithCollectionViewLayout:[UICollectionViewFlowLayout new]]) {
         self.previousDelegate = dataController.delegate;
-        _drawBoxDC = dataController;
-        _drawBoxDC.delegate = self;
+        _dataController = dataController;
+        _dataController.delegate = self;
     }
     return self;
 }
@@ -81,14 +81,15 @@ static CGFloat lineSpacing;
 
 - (void)dealloc
 {
-    if (self.drawBoxDC.itemCount == 0 && self.dismissBlock) {
-        self.dismissBlock(self.drawBoxDC);  // Need remove draw box which in there is no photo
+    if (self.dataController.itemCount == 0 && self.dismissBlock) {
+        self.dismissBlock(self.dataController);  // Need remove draw box which in there is no photo
     }
+    self.dataController.delegate = self.previousDelegate;   // Avoid free in advance
 }
 
 - (void)reloadData
 {
-    if (self.drawBoxDC.itemCount > 0) {
+    if (self.dataController.itemCount > 0) {
         [self.collectionView reloadData];
     }
 }
@@ -96,19 +97,19 @@ static CGFloat lineSpacing;
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.drawBoxDC.itemCount + 1;    // Last cell is "Add Button"
+    return self.dataController.itemCount + 1;    // Last cell is "Add Button"
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item == self.drawBoxDC.itemCount) {  // Add Button
+    if (indexPath.item == self.dataController.itemCount) {  // Add Button
         KLAddButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class]) forIndexPath:indexPath];
         [cell setHidden:self.deleteMode animated:YES];
         return cell;
     } else {
         KLPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
         cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToMultiSelectPhotos:)];
-        [cell configWithAsset:[self.drawBoxDC objectAtIndexPath:indexPath]];
+        [cell configWithAsset:[self.dataController objectAtIndexPath:indexPath]];
         return cell;
     }
 }
@@ -116,26 +117,26 @@ static CGFloat lineSpacing;
 #pragma mark - UICollectionViewDelegate
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.item == self.drawBoxDC.itemCount) ? YES : self.deleteMode;
+    return (indexPath.item == self.dataController.itemCount) ? YES : self.deleteMode;
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.item == self.drawBoxDC.itemCount) ? YES : self.deleteMode;
+    return (indexPath.item == self.dataController.itemCount) ? YES : self.deleteMode;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    if (indexPath.item == self.drawBoxDC.itemCount) {   // Add Button
+    if (indexPath.item == self.dataController.itemCount) {   // Add Button
         [self showImagePickerControllerFromPhotoVC];
     } else if (self.deleteMode) {
-        [self.drawBoxDC selectAssetAtIndexPath:indexPath];
+        [self.dataController selectAssetAtIndexPath:indexPath];
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.drawBoxDC deselectAssetAtIndexPath:indexPath];
+    [self.dataController deselectAssetAtIndexPath:indexPath];
 }
 
 - (void)showImagePickerControllerFromPhotoVC
@@ -189,10 +190,10 @@ static CGFloat lineSpacing;
 {
     // Only if right bar button is "Delete" icon, need check enablement.
     if (self.isDeleteMode) {
-        self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.selectedAssetCount > 0;
+        self.navigationItem.rightBarButtonItem.enabled = self.dataController.selectedAssetCount > 0;
     }
     
-    if (self.isDeleteMode && self.drawBoxDC.itemCount == 0) {
+    if (self.isDeleteMode && self.dataController.itemCount == 0) {
         [self cancelMultiPhotoSelection:nil];
         KLDispatchMainAfter(0.5, ^{
             [self.collectionView reloadData];   // Delay for display "Add Button"
@@ -203,13 +204,13 @@ static CGFloat lineSpacing;
 #pragma mark - KLImagePickerController delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
-    [self.drawBoxDC addPhotos:assets completion:nil];
+    [self.dataController addPhotos:assets completion:nil];
 }
 
 #pragma mark - KLCameraViewController delegate
 - (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
-    [self.drawBoxDC addPhotos:assets completion:nil];
+    [self.dataController addPhotos:assets completion:nil];
 }
 
 #pragma mark - Event handling
@@ -223,7 +224,7 @@ static CGFloat lineSpacing;
     [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
     
-    KLAddButtonCell *cell = (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.drawBoxDC.itemCount inSection:0]];
+    KLAddButtonCell *cell = (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.dataController.itemCount inSection:0]];
     [cell setHidden:YES animated:YES];
 }
 
@@ -238,17 +239,17 @@ static CGFloat lineSpacing;
 
 - (void)startDrawFromPhotoVC:(id)sender
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:KLPhotoViewControllerDidTouchStart object:self.drawBoxDC];
+    [[NSNotificationCenter defaultCenter] postNotificationName:KLPhotoViewControllerDidTouchStart object:self.dataController];
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)deleteSelectedDrawBoxPhotos:(id)sender
 {
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleCancel handler:nil];
-    NSUInteger count = self.drawBoxDC.selectedAssetCount;
+    NSUInteger count = self.dataController.selectedAssetCount;
     NSString *title = count > 1 ? [NSString stringWithFormat:TITLE_DELETE_PHOTO_COUNT_OTHER, count] : TITLE_DELETE_PHOTO_COUNT_ONE;
     UIAlertAction *delete = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
-        [self.drawBoxDC deleteSelectedAssets];
+        [self.dataController deleteSelectedAssets];
     }];
     
     UIAlertController *alertController = [UIAlertController actionSheetControllerWithActions:@[delete, cancel]];
@@ -260,8 +261,8 @@ static CGFloat lineSpacing;
 - (void)cancelMultiPhotoSelection:(id)sender
 {
     self.deleteMode = NO;
-    self.navigationItem.rightBarButtonItem.enabled = self.drawBoxDC.itemCount > 0;
-    [self.drawBoxDC clearSelection];
+    self.navigationItem.rightBarButtonItem.enabled = self.dataController.itemCount > 0;
+    [self.dataController clearSelection];
     [self reloadData];
 }
 

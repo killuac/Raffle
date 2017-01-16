@@ -16,7 +16,7 @@
 @interface KLMoreViewController () <KLDataControllerDelegate, KLImagePickerControllerDelegate, KLCameraViewControllerDelegate>
 
 @property (nonatomic, strong) KLMainDataController *dataController;
-@property (nonatomic, weak) id <KLDataControllerDelegate> previousDelegate;
+@property (nonatomic, weak) id <KLDataControllerDelegate> previousDelegate;     // Main view controller
 
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, assign) BOOL editMode;
@@ -47,6 +47,11 @@ static CGFloat sectionInset;
         _dataController.delegate = self;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    self.dataController.delegate = self.previousDelegate;   // Avoid free in advance
 }
 
 - (void)viewDidLoad

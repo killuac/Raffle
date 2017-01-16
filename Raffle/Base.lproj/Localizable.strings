@@ -26,8 +26,8 @@
 "TitleCamera" = "Camera";
 "TitleChooseWallpaper" = "Choose a New Wallpaper";
 
-"HUDPrizeMode" = "Prize Mode: The prize photo won't be removed";
-"HUDParticipantMode" = "Participant Mode: The KLResultViewController's photo will be removed";
+"HUDRepeatModeOn" = "Repeat Mode On: The picked photo won't be removed.";
+"HUDRepeatModeOff" = "Repeat Mode Off: The picked photo will be removed.";
 "HUDNotRecognizeFace" = "Not recognize face";
 
 "TipShakeToStart" = "Shake phone to start";

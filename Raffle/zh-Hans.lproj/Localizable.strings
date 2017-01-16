@@ -27,8 +27,8 @@
 "TitleChooseWallpaper" = "选取新的墙纸";
 "TitleSelectedPhotoCount" = "已选择 %lu 张照片";
 
-"HUDPrizeMode" = "奖品模式：奖品照片不会被移除";
-"HUDParticipantMode" = "参与者模式：中奖者照片会被移除";
+"HUDRepeatModeOn" = "重复模式：一张照片可以被抽中多次，不会被移除。";
+"HUDRepeatModeOff" = "非重复模式：一张照片只能被抽中一次，然后会被移除。";
 "HUDNotRecognizeFace" = "没有识别到人脸";
 
 "TipShakeToStart" = "手机摇一摇即可开始抽奖";
