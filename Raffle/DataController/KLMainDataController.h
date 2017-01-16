@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong, readonly) KLDrawBoxDataController *currentDrawBoxDC;
 @property (nonatomic, readonly) BOOL isRepeatMode;
-@property (nonatomic, readonly) BOOL isReloadButtonHidden;
 
 - (void)switchDrawMode;
 - (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets;

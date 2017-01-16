@@ -45,14 +45,9 @@
     return self.remainingAssets.count;
 }
 
-- (BOOL)isReloadButtonHidden
+- (BOOL)canStartDraw
 {
-    return (self.isRepeatMode || self.itemCount == self.remainingAssetCount);
-}
-
-- (BOOL)isShakeEnabled
-{
-    return self.itemCount > 0;
+    return self.remainingAssetCount > 0;
 }
 
 - (PHAsset *)objectAtIndexPath:(NSIndexPath *)indexPath

@@ -62,7 +62,7 @@
 
 - (BOOL)canBecomeFirstResponder
 {
-    return (self.dataController.pageCount && self.dataController.currentDrawBoxDC.isShakeEnabled);
+    return YES;     // For shake
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -94,25 +94,32 @@
 
 - (void)reloadData
 {
-    self.bgImageView.hidden = (self.dataController.pageCount > 0);
-    self.wallpaperButton.enabled = self.bgImageView.hidden;
-    
-    self.pageControl.hidden = (self.dataController.pageCount <= 1);
-    self.pageControl.numberOfPages = self.dataController.pageCount;
-    self.pageControl.currentPage = self.dataController.currentPageIndex;
-    self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
-    
     UIViewController *viewController = [self viewControllerAtPageIndex:self.dataController.currentPageIndex];
     if (viewController) {
         [self.pageViewController setViewControllers:@[viewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     } else if (self.pageViewController.childViewControllers.count) {
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(willMoveToParentViewController:) withObject:nil];
-        [self.pageViewController.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        NSArray *subviews = [self.pageViewController.childViewControllers valueForKeyPath:@"@unionOfObjects.view"];
+        [subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
     }
     
     [self becomeFirstResponder];    // For motion detection
+    [self updateUI];
     [self updateAddPhotoButtonTitle];
+}
+
+- (void)updateUI
+{
+    BOOL isHidden = (self.dataController.pageCount > 0);
+    [self.bgImageView setHidden:isHidden animated:YES];
+    self.wallpaperButton.enabled = isHidden;
+    self.switchModeButton.enabled = isHidden;
+    
+    self.pageControl.hidden = (self.dataController.pageCount <= 1);
+    self.pageControl.numberOfPages = self.dataController.pageCount;
+    self.pageControl.currentPage = self.dataController.currentPageIndex;
+    self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
 }
 
 - (void)addPageViewController
@@ -216,14 +223,16 @@
     
 //  Add constraints
     NSDictionary *views = NSDictionaryOfVariableBindings(_pageControl, _addPhotoButton, _wallpaperButton, _switchModeButton, _reloadButton, _menuButton);
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_wallpaperButton(40)]->=0-[_switchModeButton(40)]->=0-[_menuButton(40)]|" options:NSLayoutFormatAlignAllBottom views:views]];
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_switchModeButton]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_wallpaperButton(40)]->=0-[_switchModeButton]->=0-[_menuButton(40)]|" options:NSLayoutFormatAlignAllBottom views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_reloadButton(40)]|" views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_switchModeButton(40)]|" views:views]];
     [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_pageControl]-30-|" views:views]];
     
     [self.pageControl constraintsCenterXWithView:self.view];
-    [self.switchModeButton constraintsCenterXWithView:self.view];
-    [self.switchModeButton constraintsEqualWidthAndHeight];
     [self.reloadButton constraintsEqualWidthAndHeight];
+    [self.reloadButton constraintsCenterXWithView:self.view];
+    [self.switchModeButton constraintsEqualWidthAndHeight];
+    [self.switchModeButton constraintsCenterXWithView:self.view];
     [self.menuButton constraintsEqualWidthAndHeight];
     [self.wallpaperButton constraintsEqualWidthAndHeight];
 }
@@ -330,7 +339,11 @@
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
     if (self.isFirstResponder && motion == UIEventSubtypeMotionShake) {
-        [self startDraw:event];
+        if (self.dataController.currentDrawBoxDC.canStartDraw) {
+            [self startDraw:event];
+        } else {
+            [KLStatusBar showWithText:HUD_EMPTY_DRAW_BOX];
+        }
     }
 }
 
@@ -345,19 +358,30 @@
 - (void)setBottomButtonsHidden:(BOOL)hidden
 {
     [self setReloadButtonHidden:hidden];
+    [self setSwitchModeButtonHidden:hidden];
     
-    if (!hidden) self.switchModeButton.hidden = hidden;
+    if (!hidden) self.wallpaperButton.hidden = hidden;
     [UIView animateWithDefaultDuration:^{
-        self.switchModeButton.transform = hidden ? CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.reloadButton.height), M_PI) : CGAffineTransformIdentity;
+        self.wallpaperButton.transform = hidden ? CGAffineTransformMakeTranslation(0, self.wallpaperButton.height) : CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
-        self.switchModeButton.hidden = hidden;
+        self.wallpaperButton.hidden = hidden;
     }];
     
     if (!hidden) self.menuButton.hidden = hidden;
     [UIView animateWithDefaultDuration:^{
-        self.menuButton.transform = hidden ? CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.reloadButton.height), M_PI) : CGAffineTransformIdentity;
+        self.menuButton.transform = hidden ? CGAffineTransformMakeTranslation(0, self.menuButton.height) : CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
         self.menuButton.hidden = hidden;
+    }];
+}
+
+- (void)setSwitchModeButtonHidden:(BOOL)hidden
+{
+    if (!hidden) self.switchModeButton.hidden = hidden;
+    [UIView animateWithDefaultDuration:^{
+        self.switchModeButton.transform = hidden ? CGAffineTransformMakeTranslation(0, self.switchModeButton.height) : CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        self.switchModeButton.hidden = hidden;
     }];
 }
 
@@ -365,7 +389,7 @@
 {
     if (!hidden) self.reloadButton.hidden = hidden;
     [UIView animateWithDefaultDuration:^{
-        self.reloadButton.transform = hidden ? CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.reloadButton.height), M_PI) : CGAffineTransformIdentity;
+        self.reloadButton.transform = hidden ? CGAffineTransformMakeTranslation(0, self.reloadButton.height) : CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
         self.reloadButton.hidden = hidden;
     }];
@@ -411,6 +435,11 @@
         [self setAddPhotoButtonHidden:NO];
         [self setBottomButtonsHidden:NO];
         [self setPageControlHidden:NO];
+        if (self.dataController.currentDrawBoxDC.isRepeatMode) {
+            [self setReloadButtonHidden:YES];
+        } else {
+            [self setSwitchModeButtonHidden:YES];
+        }
     }];
 }
 
@@ -426,9 +455,8 @@
 
 - (void)switchDrawMode:(id)sender
 {
-    if (self.dataController.itemCount == 0) return;
-    
     [self.dataController switchDrawMode];
+    [KLStatusBar showWithText:self.dataController.isRepeatMode ? HUD_REPEAT_MODE_ON: HUD_REPEAT_MODE_OFF];
     
     [UIView animateWithDefaultDuration:^{
         self.switchModeButton.alpha = 0;
@@ -442,6 +470,7 @@
 - (void)reloadDrawBox:(id)sender
 {
     [self setReloadButtonHidden:YES];
+    [self setSwitchModeButtonHidden:NO];
     [self.dataController.currentDrawBoxDC reloadAllAssets];
     [self.drawBoxViewController reloadData];
 }
@@ -467,44 +496,6 @@
     cameraVC.transition = [KLCircleTransition transition];
     cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
     [self presentViewController:cameraVC animated:YES completion:nil];
-}
-
-#pragma mark - Switch draw mode animation
-- (void)startSwitchDrawModeAnimation
-{
-    // TODO: Switch background image
-}
-
-- (NSArray *)createSliceViews
-{
-    CGFloat sliceWidth = 5.0;
-    UIView *view = [self.view snapshotViewAfterScreenUpdates:NO];
-    NSMutableArray *sliceViews = [NSMutableArray array];
-    
-    for (NSUInteger x = 0; x < self.view.width; x += sliceWidth) {
-        CGRect rect = CGRectMake(x, 0, sliceWidth, view.height);
-        UIView *sliceView = [view resizableSnapshotViewFromRect:rect afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
-        sliceView.frame = rect;
-        [sliceViews addObject:sliceView];
-    }
-    
-    return sliceViews;
-}
-
-- (void)randomPositionOfViewSlices:(NSArray *)sliceViews fromUp:(BOOL)fromUp
-{
-    CGFloat height;
-    BOOL isFromUp = fromUp;
-    for (UIView *sliceView in sliceViews) {
-        height = sliceView.height * KLRandomFloat(1.0, 4.0);
-        sliceView.top += fromUp ? -height : height;
-        isFromUp = !isFromUp;
-    }
-}
-
-- (void)resetYForSliceViews:(NSArray *)sliceViews
-{
-    [sliceViews setValue:@(self.view.top) forKey:@"top"];
 }
 
 #pragma mark - Image picker and camera delegate

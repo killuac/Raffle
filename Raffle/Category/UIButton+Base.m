@@ -19,8 +19,8 @@
 
 @implementation UIButton (Base)
 
-static CGFloat ImageTitleEdgeHInset = 5.0;
-static CGFloat ImageTitleEdgeVInset = 8.0;
+static CGFloat imageTitleEdgeHInset = 5.0;
+static CGFloat imageTitleEdgeVInset = 8.0;
 
 + (void)load
 {
@@ -122,20 +122,18 @@ static CGFloat ImageTitleEdgeVInset = 8.0;
     
     [self sizeToFit];   // For call setLayout multiple times
     
-    if (layout == KLButtonLayoutNone) {
-        self.imageEdgeInsets = UIEdgeInsetsZero;
-        self.titleEdgeInsets = UIEdgeInsetsZero;
-        self.contentEdgeInsets = UIEdgeInsetsZero;
-        return;
-    }
+    self.imageEdgeInsets = UIEdgeInsetsZero;
+    self.titleEdgeInsets = UIEdgeInsetsZero;
+    self.contentEdgeInsets = UIEdgeInsetsZero;
+    if (layout == KLButtonLayoutNone) return;
     
-    CGFloat hInset = ImageTitleEdgeHInset, spacing;
+    CGFloat hInset = imageTitleEdgeHInset, spacing;
     CGFloat imageWidth = self.currentImage.width;
     CGFloat titleWidth = self.titleLabelSize.width;
     
     if (self.isVerticalLayout) {
         [self contentSizeToFit];
-        spacing = MAX(self.currentImage.height, self.titleLabelSize.height) / 2 + ImageTitleEdgeVInset;
+        spacing = MAX(self.currentImage.height, self.titleLabelSize.height) / 2 + imageTitleEdgeVInset;
     } else {
         spacing = hInset * 2;
         self.size = self.contentSize = CGSizeMake(self.width+spacing, self.height);
@@ -188,7 +186,7 @@ static CGFloat ImageTitleEdgeVInset = 8.0;
 - (void)contentSizeToFit
 {
     CGFloat width = MAX(self.currentImage.width, self.titleLabelSize.width);
-    CGFloat height = self.currentImage.height + self.titleLabelSize.height + ImageTitleEdgeVInset * 2;
+    CGFloat height = self.currentImage.height + self.titleLabelSize.height + imageTitleEdgeVInset * 2;
     self.size = self.contentSize = CGSizeMake(width, height);
 }
 

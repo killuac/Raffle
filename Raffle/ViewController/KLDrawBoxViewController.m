@@ -188,7 +188,40 @@ const CGFloat popoverContentHeight = 280;
 - (void)wallpaperViewController:(KLWallpaperViewController *)wallpaperVC didChooseWallpaperImageName:(NSString *)imageName
 {
     [self.dataController changeWallpaperWithImageName:imageName];
-    // TODO: Select wallpaper
+    // TODO: Select wallpaper animation
+}
+
+#pragma mark - Change wallpaper animation
+- (NSArray *)createSliceViews
+{
+    CGFloat sliceWidth = 5.0;
+    UIView *view = [self.view snapshotViewAfterScreenUpdates:NO];
+    NSMutableArray *sliceViews = [NSMutableArray array];
+    
+    for (NSUInteger x = 0; x < self.view.width; x += sliceWidth) {
+        CGRect rect = CGRectMake(x, 0, sliceWidth, view.height);
+        UIView *sliceView = [view resizableSnapshotViewFromRect:rect afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
+        sliceView.frame = rect;
+        [sliceViews addObject:sliceView];
+    }
+    
+    return sliceViews;
+}
+
+- (void)randomPositionOfViewSlices:(NSArray *)sliceViews fromUp:(BOOL)fromUp
+{
+    CGFloat height;
+    BOOL isFromUp = fromUp;
+    for (UIView *sliceView in sliceViews) {
+        height = sliceView.height * KLRandomFloat(1.0, 4.0);
+        sliceView.top += fromUp ? -height : height;
+        isFromUp = !isFromUp;
+    }
+}
+
+- (void)resetYForSliceViews:(NSArray *)sliceViews
+{
+    [sliceViews setValue:@(self.view.top) forKey:@"top"];
 }
 
 @end

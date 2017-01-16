@@ -126,7 +126,8 @@
             [self.pageViewController setViewControllers:@[self.currentViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
         } else if (self.pageViewController.childViewControllers.count) {
             [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(willMoveToParentViewController:) withObject:nil];
-            [self.pageViewController.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+            NSArray *subviews = [self.pageViewController.childViewControllers valueForKeyPath:@"@unionOfObjects.view"];
+            [subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
             [self.pageViewController.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
         }
     }

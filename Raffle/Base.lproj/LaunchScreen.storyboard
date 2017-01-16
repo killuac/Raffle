@@ -23,10 +23,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Raffle" translatesAutoresizingMaskIntoConstraints="NO" id="388-7a-nqB">
-                                <rect key="frame" x="157.5" y="170" width="60" height="60"/>
+                                <rect key="frame" x="143.5" y="170" width="88" height="88"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2017 Syzygy. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="7ii-I4-bUM">
-                                <rect key="frame" x="14" y="630" width="348" height="21"/>
+                                <rect key="frame" x="14" y="630" width="347.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -37,7 +37,6 @@
                             <constraint firstItem="388-7a-nqB" firstAttribute="centerX" secondItem="RnD-PQ-AxH" secondAttribute="centerX" id="6Ic-Qu-Stf"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="7ii-I4-bUM" secondAttribute="bottom" constant="16" id="Jmt-ZX-3Wf"/>
                             <constraint firstItem="388-7a-nqB" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="150" id="KOW-xt-qm3"/>
-                            <constraint firstItem="7ii-I4-bUM" firstAttribute="leading" secondItem="RnD-PQ-AxH" secondAttribute="leadingMargin" constant="-2" id="cjf-Us-4RR"/>
                             <constraint firstAttribute="trailingMargin" secondItem="7ii-I4-bUM" secondAttribute="trailing" constant="-2.5" id="rKP-1o-r89"/>
                             <constraint firstItem="7ii-I4-bUM" firstAttribute="centerX" secondItem="RnD-PQ-AxH" secondAttribute="centerX" id="rSA-4t-q1N"/>
                         </constraints>
@@ -49,6 +48,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Raffle" width="60" height="60"/>
+        <image name="Raffle" width="88" height="88"/>
     </resources>
 </document>

@@ -29,6 +29,7 @@
 
 "HUDRepeatModeOn" = "重複模式：一張照片可以被抽中多次，不會被移除。";
 "HUDRepeatModeOff" = "非重复模式：一張照片只能被抽中一次，然後會被移除。";
+"HUDEmptyDrawBox" = "抽獎箱中沒有照片，請添加照片或重新加載。";
 "HUDNotRecognizeFace" = "沒有識別到人臉";
 
 "TipShakeToStart" = "手機搖一搖即可開始抽獎";

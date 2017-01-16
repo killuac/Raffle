@@ -27,8 +27,9 @@
 "TitleChooseWallpaper" = "壁紙を選択";
 "TitleSelectedPhotoCount" = "%lu枚の写真選択中";
 
-"HUDRepeatModeOn" = "重複模式：一張照片可以被抽中多次，不會被移除。";
-"HUDRepeatModeOff" = "非重复模式：一張照片只能被抽中一次，然後會被移除。";
+"HUDRepeatModeOn" = "複数回モード：同じ写真が複数回を選択でき、取り除きません。";
+"HUDRepeatModeOff" = "ワンタイムモード：一枚の写真あたり一回のみ選択できて、その後取り除きます。";
+"HUDEmptyDrawBox" = "抽選箱に写真がないため、写真を添付若しくはもう一回アップロードしてください。";
 "HUDNotRecognizedFace" = "顔が見当たらない";
 
 "TipShakeToStart" = "携帯をシェイクして、抽選を開始する";

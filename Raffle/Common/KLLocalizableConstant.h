@@ -30,6 +30,7 @@
 
 #define HUD_REPEAT_MODE_ON                      NSLocalizedString(@"HUDRepeatModeOn", "")
 #define HUD_REPEAT_MODE_OFF                     NSLocalizedString(@"HUDRepeatModeOff", "")
+#define HUD_EMPTY_DRAW_BOX                      NSLocalizedString(@"HUDEmptyDrawBox", "")
 #define HUD_NOT_RECOGNIZE_FACE                  NSLocalizedString(@"HUDNotRecognizeFace", "")
 
 #define TIP_SHAKE_TO_START                      NSLocalizedString(@"TipShakeToStart", "")

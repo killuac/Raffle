@@ -52,6 +52,7 @@ static CGFloat lineSpacing;
     flowLayout.minimumInteritemSpacing = lineSpacing;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, lineSpacing, 0, lineSpacing);
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];
 }
@@ -115,6 +116,8 @@ static CGFloat lineSpacing;
 {
     KLPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
     NSString *imageName = self.imageNames[indexPath.item];
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    cell.imageView.layer.borderWidth = 0;
     cell.imageView.image = [UIImage imageNamed:imageName];
     cell.selected = self.imageDict[imageName].boolValue;
     cell.userInteractionEnabled = !cell.isSelected;

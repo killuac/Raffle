@@ -66,11 +66,6 @@
     return self.currentDrawBoxDC.isRepeatMode;
 }
 
-- (BOOL)isReloadButtonHidden
-{
-    return self.currentDrawBoxDC.isReloadButtonHidden;
-}
-
 - (void)switchDrawMode
 {
     [self.currentDrawBoxDC switchDrawMode];
@@ -83,7 +78,6 @@
     
     KLDrawBoxModel *drawBox = [KLDrawBoxModel MR_createEntityInContext:[NSManagedObjectContext MR_rootSavingContext]];
     drawBox.wallpaperName = [NSString stringWithFormat:@"wallpaper%tu.jpg", KLRandomInteger(0, DEFAULT_WALLPAPER_COUNT)];
-    NSLog(@"KKK: %@", drawBox.wallpaperName);
     [self.drawBoxes addObject:drawBox];
     
     KLDrawBoxDataController *drawBoxDC = [self createDrawBoxDataControllerWithPageIndex:itemIndex];

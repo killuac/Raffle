@@ -57,7 +57,9 @@ static KLStatusBar *sharedStatusBar = nil;
 + (void)showWithText:(NSString *)text
 {
     dispatch_block_t block = ^{
-        if (self.sharedStatusBar.isShowing) return;
+        if (self.sharedStatusBar.isShowing) {
+            [self.sharedStatusBar dismissAnimated:NO];
+        };
         [self.sharedStatusBar showWithMessage:text];
     };
     NSThread.isMainThread ? block() : KLDispatchMainAsync(block);
@@ -255,7 +257,6 @@ static KLStatusBar *sharedStatusBar = nil;
 
 - (void)tapToDismiss:(UITapGestureRecognizer *)recognizer
 {
-    [self.class cancelPreviousPerformRequestsWithTarget:self];
     [self.class dismiss];
 }
 

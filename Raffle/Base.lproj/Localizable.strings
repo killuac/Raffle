@@ -26,8 +26,9 @@
 "TitleCamera" = "Camera";
 "TitleChooseWallpaper" = "Choose a New Wallpaper";
 
-"HUDRepeatModeOn" = "Repeat Mode On: The picked photo won't be removed.";
-"HUDRepeatModeOff" = "Repeat Mode Off: The picked photo will be removed.";
+"HUDRepeatModeOn" = "Repeat On: A photo can be picked multiple times.";
+"HUDRepeatModeOff" = "Repeat Off: A photo only can be picked one time.";
+"HUDEmptyDrawBox" = "No photo in draw box, please add photo or reload.";
 "HUDNotRecognizeFace" = "Not recognize face";
 
 "TipShakeToStart" = "Shake phone to start";
