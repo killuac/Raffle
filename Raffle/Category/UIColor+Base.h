@@ -19,23 +19,23 @@ NS_INLINE UIColor *KLColorWithHexString(NSString *hexString) {
 
 @interface UIColor (Base)
 
-+ (instancetype)tintColor;
-+ (instancetype)barTintColor;
+@property (class, nonatomic, readonly) UIColor *tintColor;
+@property (class, nonatomic, readonly) UIColor *barTintColor;
 
-+ (instancetype)backgroundColor;
-+ (instancetype)darkBackgroundColor;
-+ (instancetype)dimmingBackgroundColor;
+@property (class, nonatomic, readonly) UIColor *backgroundColor;
+@property (class, nonatomic, readonly) UIColor *darkBackgroundColor;
+@property (class, nonatomic, readonly) UIColor *dimmingBackgroundColor;
 
-+ (instancetype)titleColor;
-+ (instancetype)buttonTitleColor;
-+ (instancetype)subtitleColor;
-+ (instancetype)separatorColor;
+@property (class, nonatomic, readonly) UIColor *titleColor;
+@property (class, nonatomic, readonly) UIColor *buttonTitleColor;
+@property (class, nonatomic, readonly) UIColor *subtitleColor;
+@property (class, nonatomic, readonly) UIColor *separatorColor;
 
-+ (instancetype)defaultButtonColor;
-+ (instancetype)primaryButtonColor;
-+ (instancetype)destructiveButtonColor;
-+ (instancetype)disabledButtonColor;
-+ (instancetype)linkButtonColor;
+@property (class, nonatomic, readonly) UIColor *defaultButtonColor;
+@property (class, nonatomic, readonly) UIColor *primaryButtonColor;
+@property (class, nonatomic, readonly) UIColor *destructiveButtonColor;
+@property (class, nonatomic, readonly) UIColor *disabledButtonColor;
+@property (class, nonatomic, readonly) UIColor *linkButtonColor;
 
 - (UIColor *)lighterColor;
 - (UIColor *)darkerColor;

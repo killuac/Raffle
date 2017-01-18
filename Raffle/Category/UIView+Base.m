@@ -387,7 +387,7 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
     [self addSubview:({
         UIView *background = [[UIView alloc] initWithFrame:self.bounds];
         background.tag = 101;
-        background.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
+        background.backgroundColor = UIColor.dimmingBackgroundColor;
         background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [background setHidden:NO animated:YES];
         background;

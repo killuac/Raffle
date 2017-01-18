@@ -10,39 +10,48 @@
 
 @implementation UIFont (Base)
 
-+ (instancetype)defaultFont
+// Small font
++ (UIFont *)smallFont
 {
     return [UIFont systemFontOfSize:12.0f];
 }
 
-+ (instancetype)bigFont
++ (UIFont *)boldSmallFont
 {
-    return [UIFont systemFontOfSize:20.0f];
+    return [UIFont boldSystemFontOfSize:12.0f];
 }
 
-+ (instancetype)boldBigFont
-{
-    return [UIFont boldSystemFontOfSize:20.0f];
-}
-
-+ (instancetype)titleFont
-{
-    return [UIFont systemFontOfSize:17.0f];
-}
-
-+ (instancetype)boldTitleFont
-{
-    return [UIFont boldSystemFontOfSize:17.0f];
-}
-
-+ (instancetype)subtitleFont
+// Medium font
++ (UIFont *)mediumFont
 {
     return [UIFont systemFontOfSize:14.0f];
 }
 
-+ (instancetype)descriptionFont
++ (UIFont *)boldMediumFont
 {
-    return [UIFont systemFontOfSize:15.0f];
+    return [UIFont boldSystemFontOfSize:14.0f];
+}
+
+// Large font
++ (UIFont *)largeFont
+{
+    return [UIFont systemFontOfSize:17.0f];
+}
+
++ (UIFont *)boldLargeFont
+{
+    return [UIFont boldSystemFontOfSize:17.0f];
+}
+
+// Extra large font
++ (UIFont *)extraLargeFont
+{
+    return [UIFont systemFontOfSize:20.0f];
+}
+
++ (UIFont *)boldExtraLargeFont
+{
+    return [UIFont boldSystemFontOfSize:20.0f];
 }
 
 @end

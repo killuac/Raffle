@@ -10,12 +10,16 @@
 
 @interface UIFont (Base)
 
-+ (instancetype)defaultFont;
-+ (instancetype)bigFont;
-+ (instancetype)boldBigFont;
-+ (instancetype)titleFont;
-+ (instancetype)boldTitleFont;
-+ (instancetype)subtitleFont;
-+ (instancetype)descriptionFont;
+@property (class, nonatomic, readonly) UIFont *smallFont;
+@property (class, nonatomic, readonly) UIFont *boldSmallFont;
+
+@property (class, nonatomic, readonly) UIFont *mediumFont;
+@property (class, nonatomic, readonly) UIFont *boldMediumFont;
+
+@property (class, nonatomic, readonly) UIFont *largeFont;
+@property (class, nonatomic, readonly) UIFont *boldLargeFont;
+
+@property (class, nonatomic, readonly) UIFont *extraLargeFont;
+@property (class, nonatomic, readonly) UIFont *boldExtraLargeFont;
 
 @end

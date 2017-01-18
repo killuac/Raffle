@@ -31,12 +31,12 @@
     [self.contentView addSubview:({
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _imageView.clipsToBounds = YES;
-        _imageView.backgroundColor = [UIColor blackColor];
+        _imageView.backgroundColor = UIColor.blackColor;
         _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _imageView.contentMode = IS_PAD ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
         if (IS_PAD) {
             _imageView.layer.borderWidth = 5;
-            _imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+            _imageView.layer.borderColor = UIColor.whiteColor.CGColor;
         }
         _imageView;
     })];

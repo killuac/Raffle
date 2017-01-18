@@ -51,7 +51,7 @@
         return [UIColor colorWithHue:INTERPOLATE(a) saturation:INTERPOLATE(b) brightness:INTERPOLATE(c) alpha:INTERPOLATE(d)];
     }
     
-    return [UIColor tintColor];
+    return UIColor.tintColor;
 }
 
 NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
@@ -59,77 +59,77 @@ NS_INLINE CGFloat KLColorInterpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 }
 
 #pragma mark - Tint color
-+ (instancetype)tintColor
++ (UIColor *)tintColor
 {
-    return [UIColor whiteColor];
+    return UIColor.whiteColor;
 }
 
-+ (instancetype)barTintColor
++ (UIColor *)barTintColor
 {
     return KLColorWithRGB(55, 58, 63);
 }
 
 #pragma mark - Background color
-+ (instancetype)backgroundColor
++ (UIColor *)backgroundColor
 {
     return KLColorWithRGB(250, 250, 250);
 }
 
-+ (instancetype)darkBackgroundColor
++ (UIColor *)darkBackgroundColor
 {
     return KLColorWithRGB(40, 44, 50);
 }
 
-+ (instancetype)dimmingBackgroundColor
++ (UIColor *)dimmingBackgroundColor
 {
     return [UIColor colorWithWhite:0 alpha:0.4];
 }
 
 #pragma mark - Text color
-+ (instancetype)titleColor
++ (UIColor *)titleColor
 {
     return KLColorWithRGB(49, 49, 49);
 }
 
-+ (instancetype)buttonTitleColor
++ (UIColor *)buttonTitleColor
 {
-    return [UIColor whiteColor];
+    return UIColor.whiteColor;
 }
 
-+ (instancetype)subtitleColor
++ (UIColor *)subtitleColor
 {
     return KLColorWithRGB(145, 152, 159);
 }
 
-+ (instancetype)separatorColor
++ (UIColor *)separatorColor
 {
     return KLColorWithRGB(204, 204, 204);
 }
 
 #pragma mark - Button color
-+ (instancetype)defaultButtonColor
++ (UIColor *)defaultButtonColor
 {
-    return [UIColor whiteColor];
+    return UIColor.whiteColor;
 }
 
-+ (instancetype)primaryButtonColor
++ (UIColor *)primaryButtonColor
 {
     return KLColorWithHexString(@"3399FF");
 }
 
-+ (instancetype)destructiveButtonColor
++ (UIColor *)destructiveButtonColor
 {
-    return [UIColor redColor];
+    return UIColor.redColor;
 }
 
-+ (instancetype)disabledButtonColor
++ (UIColor *)disabledButtonColor
 {
     return KLColorWithRGB(219, 219, 219);
 }
 
-+ (instancetype)linkButtonColor
++ (UIColor *)linkButtonColor
 {
-    return [[UIColor blueColor] colorWithAlphaComponent:0.6];
+    return [UIColor.blueColor colorWithAlphaComponent:0.6];
 }
 
 @end

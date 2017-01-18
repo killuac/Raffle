@@ -22,7 +22,7 @@ UIImage *KLAlbumImageFromImage(UIImage *image)
     imageView.layer.masksToBounds = YES;
     imageView.layer.cornerRadius = 4;
     imageView.layer.borderWidth = 2;
-    imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    imageView.layer.borderColor = UIColor.whiteColor.CGColor;
     UIGraphicsBeginImageContextWithOptions(imageView.size, 0.0,  0.0);
     [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
     image = UIGraphicsGetImageFromCurrentImageContext();
@@ -121,7 +121,7 @@ static CGFloat lineSpacing;
     flowLayout.minimumInteritemSpacing = lineSpacing;
     
     self.collectionView.allowsMultipleSelection = YES;
-    self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
+    self.collectionView.backgroundColor = UIColor.darkBackgroundColor;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];

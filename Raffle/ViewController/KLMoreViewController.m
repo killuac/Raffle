@@ -70,7 +70,7 @@ static CGFloat sectionInset;
     self.navigationItem.rightBarButtonItem.enabled = self.dataController.itemCount > 0;
     self.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
     
-    self.view.backgroundColor = [UIColor darkBackgroundColor];
+    self.view.backgroundColor = UIColor.darkBackgroundColor;
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;

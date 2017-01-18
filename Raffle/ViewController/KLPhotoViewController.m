@@ -72,7 +72,7 @@ static CGFloat lineSpacing;
     flowLayout.minimumInteritemSpacing = lineSpacing;
     
     self.collectionView.allowsMultipleSelection = NO;
-    self.collectionView.backgroundColor = [UIColor darkBackgroundColor];
+    self.collectionView.backgroundColor = UIColor.darkBackgroundColor;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.collectionView.contentInset = IS_PAD ? UIEdgeInsetsMake(lineSpacing, lineSpacing, lineSpacing, lineSpacing) : UIEdgeInsetsMake(2, 0, 2, 0);
     [self.collectionView registerClass:[KLPhotoCell class] forCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER];

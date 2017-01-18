@@ -102,7 +102,7 @@
 
 - (void)prepareForUI
 {
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = UIColor.blackColor;
     [self addPageViewController];
     [self addSubviews];
 }
@@ -162,7 +162,7 @@
     self.pageViewController.delegate = self;
     self.pageViewController.dataSource = self;
     self.pageScrollView.delegate = self;
-    self.pageViewController.view.backgroundColor = [UIColor darkBackgroundColor];
+    self.pageViewController.view.backgroundColor = UIColor.darkBackgroundColor;
     self.pageViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
@@ -196,7 +196,7 @@
         _bottomBar = [UINavigationBar newAutoLayoutView];
         _bottomBar.barStyle = UIBarStyleBlack;
         _bottomBar.items = @[_bottomBarItem];
-        _bottomBar.tintColor = [UIColor whiteColor];
+        _bottomBar.tintColor = UIColor.whiteColor;
         
         _bottomBar;
     })];

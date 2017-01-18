@@ -18,13 +18,13 @@
 - (instancetype)swizzle_initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     UITableViewCell *cell = [self swizzle_initWithStyle:style reuseIdentifier:reuseIdentifier];
-    cell.textLabel.font = [UIFont titleFont];
-    cell.textLabel.textColor = [UIColor titleColor];
+    cell.textLabel.font = UIFont.largeFont;
+    cell.textLabel.textColor = UIColor.titleColor;
     cell.textLabel.backgroundColor = cell.backgroundColor;
     cell.textLabel.clipsToBounds = YES;
     
-    cell.detailTextLabel.font = [UIFont titleFont];
-    cell.detailTextLabel.textColor = [UIColor subtitleColor];
+    cell.detailTextLabel.font = UIFont.mediumFont;
+    cell.detailTextLabel.textColor = UIColor.subtitleColor;
     cell.detailTextLabel.backgroundColor = cell.backgroundColor;
     cell.detailTextLabel.clipsToBounds = YES;
     

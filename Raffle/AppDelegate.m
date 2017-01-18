@@ -44,13 +44,13 @@
 
 - (void)setupAppearance
 {
-    [UITableView appearance].backgroundColor = [UIColor backgroundColor];
-    [UICollectionView appearance].backgroundColor = [UIColor backgroundColor];
+    [UITableView appearance].backgroundColor = UIColor.backgroundColor;
+    [UICollectionView appearance].backgroundColor = UIColor.backgroundColor;
     
-    [UIToolbar appearance].tintColor = [UIColor tintColor];
-    [UIToolbar appearance].barTintColor = [UIColor barTintColor];
-    [UINavigationBar appearance].tintColor = [UIColor tintColor];
-    [UINavigationBar appearance].barTintColor = [UIColor barTintColor];
+    [UIToolbar appearance].tintColor = UIColor.tintColor;
+    [UIToolbar appearance].barTintColor = UIColor.barTintColor;
+    [UINavigationBar appearance].tintColor = UIColor.tintColor;
+    [UINavigationBar appearance].barTintColor = UIColor.barTintColor;
     UIImage *image = [UIImage imageNamed:@"icon_back"];
     [UINavigationBar appearance].backIndicatorImage = image;
     [UINavigationBar appearance].backIndicatorTransitionMaskImage = image;

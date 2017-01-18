@@ -18,11 +18,11 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGFloat width = CGRectGetWidth(rect);
     CGFloat height = CGRectGetHeight(rect);
-    UIColor *white = [UIColor whiteColor];
+    UIColor *white = UIColor.whiteColor;
     UIColor *whiteTransparent = [white colorWithAlphaComponent:0];
-    UIColor *black = [UIColor blackColor];
-    UIColor *gray = [UIColor grayColor];
-    UIColor *backgroundColor = self.backgroundColor ? : [UIColor clearColor];
+    UIColor *black = UIColor.blackColor;
+    UIColor *gray = UIColor.grayColor;
+    UIColor *backgroundColor = self.backgroundColor ? : UIColor.clearColor;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
     // Gradient

@@ -69,6 +69,7 @@
 {
     [super viewWillAppear:animated];
     [self becomeFirstResponder];
+    [self startColorAnimationForAddPhotoButton];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -85,7 +86,7 @@
 #pragma mark - Prepare UI
 - (void)prepareForUI
 {
-    self.view.backgroundColor = [UIColor darkBackgroundColor];
+    self.view.backgroundColor = UIColor.darkBackgroundColor;
     
     [self addPageViewController];
     [self addSubviews];
@@ -163,32 +164,17 @@
         _pageControl = [UIPageControl newAutoLayoutView];
         _pageControl.enabled = NO;
         _pageControl.numberOfPages = self.dataController.pageCount;
-        _pageControl.pageIndicatorTintColor = [UIColor grayColor];
-        _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        _pageControl.pageIndicatorTintColor = UIColor.grayColor;
+        _pageControl.currentPageIndicatorTintColor = UIColor.whiteColor;
         _pageControl;
     })];
     
 //  Add photo button
     [self.view addSubview:({
         _addPhotoButton = [KLBubbleButton buttonWithTitle:nil imageName:@"icon_main_add"];
-        _addPhotoButton.titleLabel.font = [UIFont titleFont];
-//        _addPhotoButton.backgroundColor = [KLColorWithRGB(199, 92, 92) colorWithAlphaComponent:0.2];
-//        _addPhotoButton.backgroundColor = [KLColorWithRGB(118, 194, 175) colorWithAlphaComponent:0.2];
-//        _addPhotoButton.backgroundColor = [KLColorWithRGB(119, 129, 212) colorWithAlphaComponent:0.2];
-//        _addPhotoButton.backgroundColor = [KLColorWithRGB(245, 207, 135) colorWithAlphaComponent:0.2];
-//        _addPhotoButton.backgroundColor = [KLColorWithRGB(224, 153, 94) colorWithAlphaComponent:0.2];
-//        _addPhotoButton.backgroundColor = [KLColorWithRGB(79, 93, 115) colorWithAlphaComponent:0.2];
+        _addPhotoButton.titleLabel.font = UIFont.largeFont;
         [self.addPhotoButton addTarget:self action:@selector(addPhotosToDrawBox:)];
         [self.addPhotoButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToShowCameraViewController:)]];
-        
-        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
-        animation.duration = 2.0;
-        animation.repeatCount = HUGE_VALF;
-        animation.autoreverses = YES;
-        animation.fromValue = (__bridge id)[KLColorWithRGB(199, 92, 92) colorWithAlphaComponent:0.3].CGColor;
-        animation.toValue = (__bridge id)[KLColorWithRGB(119, 129, 212) colorWithAlphaComponent:0.3].CGColor;
-        [self.addPhotoButton.layer addAnimation:animation forKey:@"ColorPulse"];
-        
         _addPhotoButton;
     })];
     [self.addPhotoButton constraintsCenterInSuperview];
@@ -237,6 +223,24 @@
     [self.wallpaperButton constraintsEqualWidthAndHeight];
 }
 
+- (void)startColorAnimationForAddPhotoButton
+{
+    [self.addPhotoButton.layer removeAllAnimations];
+    
+    CGColorRef redColor = [KLColorWithRGB(199, 92, 92) colorWithAlphaComponent:0.2].CGColor;
+    CGColorRef greenColor = [KLColorWithRGB(118, 194, 175) colorWithAlphaComponent:0.2].CGColor;
+    CGColorRef blueColor = [KLColorWithRGB(119, 129, 212) colorWithAlphaComponent:0.2].CGColor;
+    CGColorRef yellowColor = [KLColorWithRGB(245, 207, 135) colorWithAlphaComponent:0.2].CGColor;
+    
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"backgroundColor"];
+    animation.duration = 4.0;
+    animation.repeatCount = HUGE_VALF;
+    animation.autoreverses = YES;
+    animation.values = @[(__bridge id)redColor, (__bridge id)greenColor, (__bridge id)blueColor, (__bridge id)yellowColor];
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    [self.addPhotoButton.layer addAnimation:animation forKey:@"ColorPulse"];
+}
+
 - (void)updateAddPhotoButtonTitle
 {
     NSUInteger assetCount = self.dataController.currentDrawBoxDC.remainingAssetCount;
@@ -249,6 +253,7 @@
 - (void)addObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTouchStart:) name:KLPhotoViewControllerDidTouchStart object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startColorAnimationForAddPhotoButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)removeObservers

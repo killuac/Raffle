@@ -401,7 +401,7 @@ static void *SessionRunningContext = &SessionRunningContext;
         CGRect faceViewBounds = [self.previewView.previewLayer transformedMetadataObjectForMetadataObject:faceObject].bounds;
         UIView *faceBox = [[UIView alloc] initWithFrame:faceViewBounds];
         faceBox.layer.borderWidth = 1.0;
-        faceBox.layer.borderColor = [UIColor orangeColor].CGColor;
+        faceBox.layer.borderColor = UIColor.orangeColor.CGColor;
         [self.previewView addSubview:faceBox];
     }];
 }
@@ -520,7 +520,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 - (void)captureStillImage
 {
     UIView *blackView = [[UIView alloc] initWithFrame:self.previewView.bounds];
-    blackView.backgroundColor = [UIColor darkBackgroundColor];
+    blackView.backgroundColor = UIColor.darkBackgroundColor;
     [self.previewView addSubview:blackView];
     
     dispatch_async(self.sessionQueue, ^{

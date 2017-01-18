@@ -40,7 +40,7 @@
     [self.containerView addSubview:({
         _backView1 = [UIView newAutoLayoutView];
         _backView1.alpha = 0.5;
-        _backView1.backgroundColor = [UIColor whiteColor];
+        _backView1.backgroundColor = UIColor.whiteColor;
         _backView1.layer.allowsEdgeAntialiasing = YES;
         _backView1.transform = CGAffineTransformMakeRotation(M_PI / 45);
         _backView1;
@@ -49,7 +49,7 @@
     [self.containerView addSubview:({
         _backView2 = [UIView newAutoLayoutView];
         _backView2.alpha = 0.5;
-        _backView2.backgroundColor = [UIColor whiteColor];
+        _backView2.backgroundColor = UIColor.whiteColor;
         _backView2.layer.allowsEdgeAntialiasing = YES;
         _backView2.transform = CGAffineTransformMakeRotation(-M_PI / 45);
         _backView2;
@@ -60,7 +60,7 @@
         _imageView.clipsToBounds = YES;
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.layer.borderWidth = 5;
-        _imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        _imageView.layer.borderColor = UIColor.whiteColor.CGColor;
         _imageView;
     })];
     
@@ -75,7 +75,7 @@
         _deleteButton = [UIButton buttonWithImageName:@"icon_delete"];
         _deleteButton.hidden = YES;
         _deleteButton.contentMode = UIViewContentModeCenter;
-        _deleteButton.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.8];
+        _deleteButton.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.8];
         _deleteButton.layer.cornerRadius = buttonHeight / 2;
         _deleteButton;
     })];

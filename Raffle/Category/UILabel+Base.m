@@ -23,8 +23,8 @@ NSTimeInterval const KLLabelScrollDelay = 1.0;
 {
     UILabel *label = [UILabel newAutoLayoutView];
     label.text = text;
-    label.font = [UIFont subtitleFont];
-    label.textColor = [UIColor subtitleColor];
+    label.font = UIFont.mediumFont;
+    label.textColor = UIColor.subtitleColor;
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
     
@@ -127,8 +127,8 @@ NSTimeInterval const KLLabelScrollDelay = 1.0;
     gradientMask.endPoint = CGPointMake(1, 0.5);
     
     // Setup fade mask colors and location
-    id transparent = (id)[UIColor clearColor].CGColor;
-    id opaque = (id)[UIColor blackColor].CGColor;
+    id transparent = (__bridge id)UIColor.clearColor.CGColor;
+    id opaque = (__bridge id)UIColor.blackColor.CGColor;
     gradientMask.colors = @[transparent, opaque, opaque, transparent];
     gradientMask.locations = self.startGradientLocations;
     

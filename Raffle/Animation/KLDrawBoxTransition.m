@@ -20,7 +20,7 @@
         
         UICollectionView *fromCollectionView = fromView.subviews.firstObject;
         UICollectionView *toCollectionView = toView.subviews.firstObject;
-        toCollectionView.backgroundColor = [UIColor clearColor];
+        toCollectionView.backgroundColor = UIColor.clearColor;
         
         [UIView animateWithDuration:self.animationDuration delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:10 options:0 animations:^{
             fromCollectionView.alpha = 0;
@@ -29,7 +29,7 @@
             } completion:nil];
         } completion:^(BOOL finished) {
             fromCollectionView.alpha = 1;
-            toCollectionView.backgroundColor = [UIColor darkBackgroundColor];
+            toCollectionView.backgroundColor = UIColor.darkBackgroundColor;
             [fromView removeFromSuperview];
             [self.transitionContext completeTransition:!self.transitionContext.transitionWasCancelled];
         }];

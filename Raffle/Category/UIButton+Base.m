@@ -37,9 +37,9 @@ static CGFloat imageTitleEdgeVInset = 8.0;
 {
     UIButton *button = [self buttonWithType:buttonType];
     button.translatesAutoresizingMaskIntoConstraints = NO;
-    [button setTintColor:[UIColor tintColor]];
+    [button setTintColor:UIColor.tintColor];
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor buttonTitleColor] forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.buttonTitleColor forState:UIControlStateNormal];
     
     if (imageName.length) {
         button.imageName = imageName;
@@ -228,31 +228,31 @@ static CGFloat imageTitleEdgeVInset = 8.0;
     switch (self.style) {
         case KLButonStyleDefault:
             if (UIControlStateHighlighted == state) {
-                self.backgroundColor = [[UIColor defaultButtonColor] darkerColor];
+                self.backgroundColor = [UIColor.defaultButtonColor darkerColor];
             } else if (UIControlStateDisabled == state) {
-                self.backgroundColor = [UIColor disabledButtonColor];
+                self.backgroundColor = UIColor.disabledButtonColor;
             } else {
-                self.backgroundColor = [UIColor defaultButtonColor];
+                self.backgroundColor = UIColor.defaultButtonColor;
             }
             break;
             
         case KLButonStylePrimary:
             if (UIControlStateHighlighted == state) {
-                self.backgroundColor = [[UIColor primaryButtonColor] darkerColor];
+                self.backgroundColor = [UIColor.primaryButtonColor darkerColor];
             } else if (UIControlStateDisabled == state) {
-                self.backgroundColor = [UIColor disabledButtonColor];
+                self.backgroundColor = UIColor.disabledButtonColor;
             } else {
-                self.backgroundColor = [UIColor primaryButtonColor];
+                self.backgroundColor = UIColor.primaryButtonColor;
             }
             break;
             
         case KLButonStyleDestructive:
             if (UIControlStateHighlighted == state) {
-                self.backgroundColor = [[UIColor destructiveButtonColor] darkerColor];
+                self.backgroundColor = [UIColor.destructiveButtonColor darkerColor];
             } else if (UIControlStateDisabled == state) {
-                self.backgroundColor = [UIColor disabledButtonColor];
+                self.backgroundColor = UIColor.disabledButtonColor;
             } else {
-                self.backgroundColor = [UIColor destructiveButtonColor];
+                self.backgroundColor = UIColor.destructiveButtonColor;
             }
             break;
             
@@ -330,8 +330,8 @@ static CGFloat imageTitleEdgeVInset = 8.0;
 + (instancetype)linkButtonWithTitle:(NSString *)title
 {
     UIButton *button = [self systemButtonWithTitle:title];
-    button.tintColor = [UIColor linkButtonColor];
-    button.titleLabel.font = [UIFont defaultFont];
+    button.tintColor = UIColor.linkButtonColor;
+    button.titleLabel.font = UIFont.smallFont;
     
     return button;
 }
@@ -346,7 +346,7 @@ static CGFloat imageTitleEdgeVInset = 8.0;
 {
     UIButton *button = [self customButtonWithTitle:title];
     [button setStyle:KLButonStyleDefault];
-    [button setTitleColor:[UIColor titleColor] forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.titleColor forState:UIControlStateNormal];
     return button;
 }
 
@@ -354,8 +354,8 @@ static CGFloat imageTitleEdgeVInset = 8.0;
 {
     UIButton *button = [self customButtonWithTitle:title];
     [button setStyle:KLButonStylePrimary];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor titleColor] forState:UIControlStateDisabled];
+    [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.titleColor forState:UIControlStateDisabled];
     return button;
 }
 
@@ -363,8 +363,8 @@ static CGFloat imageTitleEdgeVInset = 8.0;
 {
     UIButton *button = [self customButtonWithTitle:title];
     [button setStyle:KLButonStyleDestructive];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor titleColor] forState:UIControlStateDisabled];
+    [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.titleColor forState:UIControlStateDisabled];
     return button;
 }
 

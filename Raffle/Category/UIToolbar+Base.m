@@ -46,7 +46,7 @@
         self.distributed = distributed;
         self.separators = [NSMutableArray array];
         self.barButtonItems = items;
-        [self setTopBorderColor:[UIColor clearColor]];
+        [self setTopBorderColor:UIColor.clearColor];
         
         NSMutableArray *barItems = [NSMutableArray arrayWithObject:[UIBarButtonItem flexibleSpaceBarButtonItem]];
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -55,7 +55,7 @@
             
             if (idx > 0 && separator) {
                 UIView *separator = [UIView newAutoLayoutView];
-                separator.backgroundColor = [UIColor separatorColor];
+                separator.backgroundColor = UIColor.separatorColor;
                 [self addSubview:separator];
                 [self.separators addObject:separator];
             }

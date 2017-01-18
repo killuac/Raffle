@@ -132,7 +132,7 @@
     if (self = [super initWithFrame:frame]) {
         self.clipsToBounds = YES;
         self.userInteractionEnabled = NO;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = UIColor.clearColor;
         
         self.shadowLayer.actions = @{ @"bounds"        : [NSNull null],
                                       @"position"      : [NSNull null],

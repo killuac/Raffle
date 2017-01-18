@@ -31,7 +31,7 @@
     else {
         [containerView insertSubview:toView belowSubview:fromView];
         
-        fromView.layer.shadowColor = [UIColor blackColor].CGColor;
+        fromView.layer.shadowColor = UIColor.blackColor.CGColor;
         fromView.layer.shadowOpacity = 0.3;
         fromView.layer.shadowOffset = self.isVertical ? CGSizeMake(0, -3) : CGSizeMake(-3, 0);
         fromView.layer.shadowRadius = 5.0;

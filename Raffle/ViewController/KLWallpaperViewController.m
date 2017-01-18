@@ -44,7 +44,7 @@ static CGFloat lineSpacing;
 - (void)prepareForUI
 {
     self.title = TITLE_CHOOSE_WALLPAPER;
-    self.navigationBar.barTintColor = [UIColor whiteColor];
+    self.navigationBar.barTintColor = UIColor.whiteColor;
     
     UICollectionViewFlowLayout *flowLayout = (id)self.collectionViewLayout;
     flowLayout.itemSize = cellItemSize;

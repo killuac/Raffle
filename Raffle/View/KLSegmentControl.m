@@ -8,10 +8,6 @@
 
 #import "KLSegmentControl.h"
 
-#define TITLE_LABEL_FONT        [UIFont subtitleFont]
-#define TITLE_LABEL_COLOR       KLColorWithRGB(127, 132, 137)
-#define SELECTION_MARK_MARGIN   (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 8.0 : 5.0)
-
 #pragma mark - Class: KLSegmentCollectionViewCell
 #pragma mark -
 @interface KLSegmentCollectionViewCell : UICollectionViewCell
@@ -34,8 +30,8 @@
 {
     [self.contentView addSubview:({
         _titleLabel = [UILabel newAutoLayoutView];
-        _titleLabel.font = TITLE_LABEL_FONT;
-        _titleLabel.textColor = TITLE_LABEL_COLOR;
+        _titleLabel.font = UIFont.mediumFont;
+        _titleLabel.textColor = UIColor.grayColor;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel;
     })];
@@ -46,14 +42,14 @@
 - (void)setHighlighted:(BOOL)highlighted
 {
     [super setHighlighted:highlighted];
-    self.titleLabel.textColor = highlighted ? [self.titleLabel.textColor darkerColor] : TITLE_LABEL_COLOR;
+    self.titleLabel.textColor = highlighted ? [self.titleLabel.textColor darkerColor] : UIColor.grayColor;
 }
 
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
     self.userInteractionEnabled = !self.isSelected;
-    self.titleLabel.textColor = selected ? [UIColor whiteColor] : TITLE_LABEL_COLOR;
+    self.titleLabel.textColor = selected ? UIColor.whiteColor : UIColor.grayColor;
 }
 
 @end
@@ -105,7 +101,7 @@
     _itemSizes = [NSMutableDictionary dictionary];
     [items enumerateObjectsUsingBlock:^(NSString *item, NSUInteger idx, BOOL * _Nonnull stop) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:idx inSection:0];
-        self.itemSizes[indexPath] = [NSValue valueWithCGSize:[item sizeWithFont:TITLE_LABEL_FONT]];
+        self.itemSizes[indexPath] = [NSValue valueWithCGSize:[item sizeWithFont:UIFont.mediumFont]];
     }];
 }
 
@@ -121,7 +117,7 @@
         
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _collectionView.backgroundColor = [UIColor barTintColor];
+        _collectionView.backgroundColor = UIColor.barTintColor;
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
@@ -135,7 +131,7 @@
     // Add current selection mark
     [self.collectionView addSubview:({
         _currentSelectionMark = [UIView new];
-        _currentSelectionMark.backgroundColor = [UIColor blackColor];
+        _currentSelectionMark.backgroundColor = UIColor.blackColor;
         _currentSelectionMark.userInteractionEnabled = NO;
         _currentSelectionMark.layer.zPosition = -1;
         _currentSelectionMark;
@@ -264,9 +260,14 @@
     }
 }
 
+- (CGFloat)selectionMarkInset
+{
+    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 8.0 : 5.0;
+}
+
 - (void)setCurrentSelectionMarkFrameByCell:(KLSegmentCollectionViewCell *)cell
 {
-    CGFloat dy = (cell.height - cell.titleLabel.intrinsicContentHeight - SELECTION_MARK_MARGIN) / 2;
+    CGFloat dy = (cell.height - cell.titleLabel.intrinsicContentHeight - self.selectionMarkInset) / 2;
     self.currentSelectionMark.frame = CGRectInset(cell.frame, self.itemInset/3, dy);
     self.currentSelectionMark.layer.cornerRadius = self.currentSelectionMark.height / 2;
 }

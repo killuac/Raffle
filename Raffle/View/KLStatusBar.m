@@ -110,7 +110,7 @@ static KLStatusBar *sharedStatusBar = nil;
     _statusBarWindow = [[KLStatusWindow alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
     _statusBarWindow.hidden = NO;
     _statusBarWindow.windowLevel = UIWindowLevelStatusBar;
-    _statusBarWindow.backgroundColor = [UIColor clearColor];
+    _statusBarWindow.backgroundColor = UIColor.clearColor;
     _statusBarWindow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _statusBarWindow.rootViewController = [UIViewController new];
     
@@ -123,7 +123,7 @@ static KLStatusBar *sharedStatusBar = nil;
     
     _notificationView = [[UIView alloc] initWithFrame:CGRectMake(0, -self.statusBarHeight, SCREEN_WIDTH, self.statusBarHeight)];
     _notificationView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _notificationView.backgroundColor = [UIColor whiteColor];
+    _notificationView.backgroundColor = UIColor.whiteColor;
     [_notificationView addSubview:self.contentView];
     [_notificationView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)]];
     
@@ -147,8 +147,8 @@ static KLStatusBar *sharedStatusBar = nil;
     
     _messageLabel = [UILabel newAutoLayoutView];
     _messageLabel.textAlignment = NSTextAlignmentCenter;
-    _messageLabel.font = [UIFont defaultFont];
-    _messageLabel.textColor = [UIColor blackColor];
+    _messageLabel.font = UIFont.smallFont;
+    _messageLabel.textColor = UIColor.blackColor;
     
     return _messageLabel;
 }
