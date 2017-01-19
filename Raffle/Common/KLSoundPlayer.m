@@ -14,10 +14,22 @@
 + (void)playSound:(NSString *)fileName
 {
     SystemSoundID soundID;
-    NSURL *url = [[NSBundle mainBundle] URLForResource:fileName withExtension:@"m4a"];
-    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundID);
-    AudioServicesPlaySystemSoundWithCompletion(soundID, NULL);
-    AudioServicesDisposeSystemSoundID(soundID);
+    NSURL *url = [NSBundle.mainBundle URLForResource:fileName withExtension:@"caf"];
+    AudioServicesCreateSystemSoundID((__bridge_retained CFURLRef)url, &soundID);
+    AudioServicesPlaySystemSoundWithCompletion(soundID, ^{
+        AudioServicesDisposeSystemSoundID(soundID);
+    });
+}
+
++ (void)playSystemSound:(NSString *)filePath
+{
+    SystemSoundID soundID;
+    NSString *sysSoundsDir = @"/System/Library/Audio/UISounds";
+    NSURL *url = [NSURL fileURLWithPath:[sysSoundsDir stringByAppendingPathComponent:filePath]];
+    AudioServicesCreateSystemSoundID((__bridge_retained CFURLRef)url, &soundID);
+    AudioServicesPlaySystemSoundWithCompletion(soundID, ^{
+        AudioServicesDisposeSystemSoundID(soundID);
+    });
 }
 
 + (void)playVibrate
@@ -27,18 +39,29 @@
 
 + (void)playBubbleButtonSound
 {
-    // TODO: Play
+    [self playSystemSound:@"acknowledgment_sent.caf"];
 }
 
 + (void)playStartDrawSound
 {
     [self playVibrate];
-    [self playSound:@""];
+    [self playSound:@"shake"];
 }
 
 + (void)playStopDrawSound
 {
-    // TODO: Play
+    [self playSound:@"cheer"];
+}
+
++ (void)playReloadPhotoSound
+{
+    [self playSystemSound:@"nano/Alert_PassbookBalance_Haptic.caf"];
+}
+
++ (void)playShowCameraSound
+
+{
+    [self playSystemSound:@"acknowledgment_received.caf"];
 }
 
 + (void)playCameraShutterSound

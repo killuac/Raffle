@@ -83,16 +83,75 @@
         _bgImageView;
     })];
     
-    [self updateWallpaper];
+    [self updateWallpaperAnimated:NO];
 }
 
-- (void)updateWallpaper
+- (void)updateWallpaperAnimated:(BOOL)animated
 {
+    NSArray<UIView *> *oldSliceViews;
+    if (animated) {
+        oldSliceViews = [self createSliceViews];
+        [oldSliceViews enumerateObjectsUsingBlock:^(UIView * _Nonnull view, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.view addSubview:view];
+        }];
+    }
+    
     if (self.dataController.hasCustomWallpaper) {
         self.bgImageView.image = [UIImage imageWithContentsOfFile:self.dataController.wallpaperFilePath];
     } else {
         self.bgImageView.image = [UIImage imageNamed:self.dataController.wallpaperName];
     }
+    
+    if (!animated) return;
+    
+    NSArray<UIView *> *newSliceViews = [self createSliceViews];
+    [self repositionSliceViews:newSliceViews fromUp:NO];
+    [newSliceViews enumerateObjectsUsingBlock:^(UIView * _Nonnull view, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.view addSubview:view];
+    }];
+    
+    self.bgImageView.hidden = YES;
+    [UIView animateWithDuration:2 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [self repositionSliceViews:oldSliceViews fromUp:YES];
+        [self resetYForSliceViews:newSliceViews];
+    } completion:^(BOOL finished) {
+        self.bgImageView.hidden = NO;
+        [oldSliceViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [newSliceViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    }];
+}
+
+#pragma mark - Change wallpaper animation
+- (NSArray *)createSliceViews
+{
+    CGFloat sliceWidth = 5.0;
+    UIView *view = [self.bgImageView snapshotViewAfterScreenUpdates:YES];
+    NSMutableArray *sliceViews = [NSMutableArray array];
+    
+    for (NSUInteger x = 0; x < self.view.width; x += sliceWidth) {
+        CGRect rect = CGRectMake(x, 0, sliceWidth, view.height);
+        UIView *sliceView = [view resizableSnapshotViewFromRect:rect afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
+        sliceView.frame = rect;
+        [sliceViews addObject:sliceView];
+    }
+    
+    return sliceViews;
+}
+
+- (void)repositionSliceViews:(NSArray *)sliceViews fromUp:(BOOL)fromUp
+{
+    CGFloat height;
+    BOOL isFromUp = fromUp;
+    for (UIView *sliceView in sliceViews) {
+        height = sliceView.height * KLRandomFloat(1.0, 4.0);
+        sliceView.top += isFromUp ? -height : height;
+        isFromUp = !isFromUp;
+    }
+}
+
+- (void)resetYForSliceViews:(NSArray *)sliceViews
+{
+    [sliceViews setValue:@(self.view.top) forKey:@"top"];
 }
 
 #pragma mark - Observers
@@ -135,7 +194,7 @@
 - (void)controllerDidChangeContent:(KLDataController *)controller
 {
     [self reloadData];
-    [self updateWallpaper];
+    [self updateWallpaperAnimated:YES];
 }
 
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
@@ -188,40 +247,6 @@ const CGFloat popoverContentHeight = 280;
 - (void)wallpaperViewController:(KLWallpaperViewController *)wallpaperVC didChooseWallpaperImageName:(NSString *)imageName
 {
     [self.dataController changeWallpaperWithImageName:imageName];
-    // TODO: Select wallpaper animation
-}
-
-#pragma mark - Change wallpaper animation
-- (NSArray *)createSliceViews
-{
-    CGFloat sliceWidth = 5.0;
-    UIView *view = [self.view snapshotViewAfterScreenUpdates:NO];
-    NSMutableArray *sliceViews = [NSMutableArray array];
-    
-    for (NSUInteger x = 0; x < self.view.width; x += sliceWidth) {
-        CGRect rect = CGRectMake(x, 0, sliceWidth, view.height);
-        UIView *sliceView = [view resizableSnapshotViewFromRect:rect afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
-        sliceView.frame = rect;
-        [sliceViews addObject:sliceView];
-    }
-    
-    return sliceViews;
-}
-
-- (void)randomPositionOfViewSlices:(NSArray *)sliceViews fromUp:(BOOL)fromUp
-{
-    CGFloat height;
-    BOOL isFromUp = fromUp;
-    for (UIView *sliceView in sliceViews) {
-        height = sliceView.height * KLRandomFloat(1.0, 4.0);
-        sliceView.top += fromUp ? -height : height;
-        isFromUp = !isFromUp;
-    }
-}
-
-- (void)resetYForSliceViews:(NSArray *)sliceViews
-{
-    [sliceViews setValue:@(self.view.top) forKey:@"top"];
 }
 
 @end

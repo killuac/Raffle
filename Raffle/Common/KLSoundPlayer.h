@@ -13,6 +13,8 @@
 + (void)playBubbleButtonSound;
 + (void)playStartDrawSound;
 + (void)playStopDrawSound;
++ (void)playReloadPhotoSound;
++ (void)playShowCameraSound;
 + (void)playCameraShutterSound;
 
 + (void)playMessageSentSound;

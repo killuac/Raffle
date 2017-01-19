@@ -11,40 +11,30 @@
 				<string>MainVC_AddPhotosToDrawBox</string>
 				<key>KLLogEventSelectorName</key>
 				<string>addPhotosToDrawBox:</string>
-				<key>KLIsNeedPlaySound</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_LongPressToShowCameraViewController</string>
 				<key>KLLogEventSelectorName</key>
 				<string>longPressToShowCameraViewController:</string>
-				<key>KLIsNeedPlaySound</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_SwitchDrawMode</string>
 				<key>KLLogEventSelectorName</key>
 				<string>switchDrawMode:</string>
-				<key>KLIsNeedPlaySound</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_ReloadDrawBox</string>
 				<key>KLLogEventSelectorName</key>
 				<string>reloadDrawBox:</string>
-				<key>KLIsNeedPlaySound</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
 				<string>MainVC_MoreDrawBoxes</string>
 				<key>KLLogEventSelectorName</key>
 				<string>showMoreDrawBoxes:</string>
-				<key>KLIsNeedPlaySound</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>KLLogEventName</key>
