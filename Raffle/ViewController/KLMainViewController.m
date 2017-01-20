@@ -450,6 +450,7 @@
 
 - (void)addPhotosToDrawBox:(id)sender
 {
+    [KLSoundPlayer playBubbleButtonSound];
     [KLImagePickerController checkAuthorization:^{
         KLImagePickerController *imagePicker = [KLImagePickerController imagePickerController];
         imagePicker.transition = [KLCircleTransition transition];
@@ -474,6 +475,7 @@
 
 - (void)reloadDrawBox:(id)sender
 {
+    [KLSoundPlayer playReloadPhotoSound];
     [self setReloadButtonHidden:YES];
     [self setSwitchModeButtonHidden:NO];
     [self.dataController.currentDrawBoxDC reloadAllAssets];
@@ -497,6 +499,7 @@
 {
     if (recognizer.state != UIGestureRecognizerStateBegan) return;
     
+    [KLSoundPlayer playShowCameraSound];
     KLCameraViewController *cameraVC = [KLCameraViewController cameraViewControllerWithAlbumImage:nil];
     cameraVC.transition = [KLCircleTransition transition];
     cameraVC.delegate = self.dataController.pageCount > 0 ? self.drawBoxViewController : self;
