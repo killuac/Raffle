@@ -24,7 +24,7 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
 
 - (CGFloat)statusBarHeight
 {
-    return CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
+    return CGRectGetHeight(UIApplication.sharedApplication.statusBarFrame);
 }
 
 - (id)viewController
@@ -341,23 +341,7 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
 
 - (void)singleTap:(UITapGestureRecognizer *)recognizer
 {
-    [self findAndResignFirstResponder];
-}
-
-- (void)findAndResignFirstResponder
-{
-    if (self.isFirstResponder) {
-        [self resignFirstResponder];
-        return;
-    }
-    
-    if (self.subviews.count != 0) {
-        for (UIView *subView in self.subviews) {
-            [subView findAndResignFirstResponder];
-        }
-    } else {
-        return;
-    }
+    [self endEditing:YES];
 }
 
 #pragma mark - Background view

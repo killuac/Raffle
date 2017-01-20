@@ -75,8 +75,6 @@ UIKIT_EXTERN const CGFloat KLViewDefaultCornerRadius;
 - (void)setCornerRadius:(CGFloat)radius byRoundingCorners:(UIRectCorner)corners;
 - (void)setCornerRadius:(CGFloat)radius byRoundingCorners:(UIRectCorner)corners borderWidth:(CGFloat)width borderColor:(UIColor *)color;
 
-- (void)findAndResignFirstResponder;
-
 - (void)addBlurBackground;
 - (void)removeBlurBackground;
 - (void)addDimBackground;

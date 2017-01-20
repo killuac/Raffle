@@ -168,7 +168,7 @@ static CGFloat lineSpacing;
     KLVoidBlockType completionBlock = ^{
         presentingViewController.view.alpha = 1.0;
         presentingViewController.view.transform = CGAffineTransformIdentity;
-        [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
+        [UIApplication.sharedApplication.keyWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
     };
     
     if ([presentingViewController respondsToSelector:@selector(saveImagesToPhotoAlbum:completion:)]) {

@@ -9,27 +9,6 @@
 @import UIKit;
 @import ImageIO;
 
-typedef NS_ENUM(NSInteger, KLGenderType) {
-    KLGenderTypeUnknown = 0,
-    KLGenderTypeFemale = -1,
-    KLGenderTypeMale = 1
-};
-
-NS_INLINE UIImage *KLImageEmpty() { return [UIImage imageNamed:@"image_empty.png"]; }
-NS_INLINE UIImage *KLImagePlaceholder() { return [UIImage imageNamed:@"image_default.png"]; }
-NS_INLINE UIImage *KLImageLoadFailed() { return [UIImage imageNamed:@"image_load_failed.png"]; }
-NS_INLINE UIImage *KLImageOfficialAvatar() { return [UIImage imageNamed:@"image_official_avatar.png"]; }
-
-NS_INLINE UIImage *KLImageIconByGender(KLGenderType gender) {
-    if (gender == 0) return nil;
-    return (gender > 0) ? [UIImage imageNamed:@"icon_male.png"] : [UIImage imageNamed:@"icon_female.png"];
-}
-
-NS_INLINE UIImage *KLImageAvatarByGender(KLGenderType gender) {
-    if (gender == 0) return [UIImage imageNamed:@"image_default_avatar.png"];
-    return (gender > 0) ? [UIImage imageNamed:@"image_male_avatar.png"] : [UIImage imageNamed:@"image_male_avatar.png"];
-}
-
 UIKIT_EXTERN BOOL KLImageOrientationIsPortrait(UIImageOrientation imageOrientation);
 UIKIT_EXTERN CGImagePropertyOrientation KLEXIFImageOrientationFromImageOrientation(UIImageOrientation imageOrientation);
 

@@ -47,7 +47,7 @@ typedef void (^KLAspectHandlerBlock)(id<AspectInfo> aspectInfo);
 
 - (void)prepareForAnalytics
 {
-    self.configs = [NSMutableDictionary dictionaryWithContentsOfURL:KLURLPlistFile(@"Analytics")];
+    self.configs = [NSMutableDictionary dictionaryWithContentsOfURL:KLURLForPlistFile(@"Analytics")];
     
 //  Hook view controllers
 //    [UIViewController aspect_hookSelector:@selector(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {

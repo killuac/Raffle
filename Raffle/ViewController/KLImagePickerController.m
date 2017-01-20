@@ -60,7 +60,7 @@
 {
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
     UIAlertAction *setting = [UIAlertAction actionWithTitle:TITLE_SETTINGS style:UIAlertActionStyleCancel handler:^(id action) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        [UIApplication.sharedApplication openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }];
     
     NSString *message = [NSString localizedStringWithFormat:ALERT_ACCESS_PHOTOS_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_PHOTOS_SETTING quotedString]];
@@ -224,7 +224,7 @@
 
 - (CGFloat)bottomBarHeight
 {
-    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 44 : 34;
+    return IS_PORTRAIT ? 44 : 34;
 }
 
 #pragma mark - Page view controller datasource and delegate

@@ -25,9 +25,9 @@ static KLProgressHUD *sharedProgressHUD = nil;
 {
     if (!sharedProgressHUD) {
         sharedProgressHUD = [KLProgressHUD new];
-        sharedProgressHUD.frame = [UIApplication sharedApplication].keyWindow.bounds;
+        sharedProgressHUD.frame = UIApplication.sharedApplication.keyWindow.bounds;
         sharedProgressHUD.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [[UIApplication sharedApplication].keyWindow addSubview:sharedProgressHUD];
+        [UIApplication.sharedApplication.keyWindow addSubview:sharedProgressHUD];
     }
     return sharedProgressHUD;
 }

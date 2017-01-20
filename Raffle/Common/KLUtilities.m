@@ -18,8 +18,8 @@ NSURL *FetchOrCreateFileURL(NSString *path)
     }
     NSURL *pathURL = [NSURL URLWithString:path];
     
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        [[NSFileManager defaultManager] createDirectoryAtURL:pathURL
+    if (![NSFileManager.defaultManager fileExistsAtPath:path]) {
+        [NSFileManager.defaultManager createDirectoryAtURL:pathURL
                                  withIntermediateDirectories:YES
                                                   attributes:nil
                                                        error:nil];
@@ -28,37 +28,37 @@ NSURL *FetchOrCreateFileURL(NSString *path)
     return (lastPathComponent.length ? [pathURL URLByAppendingPathComponent:lastPathComponent] : pathURL);
 }
 
-NSURL *KLURLDocumentFile(NSString *filePath)
+NSURL *KLURLForDocumentFile(NSString *filePath)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
     NSString *path = [docDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLCacheFile(NSString *filePath)
+NSURL *KLURLForCacheFile(NSString *filePath)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     NSString *path = [docDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLTemporaryFile(NSString *filePath)
+NSURL *KLURLForTemporaryFile(NSString *filePath)
 {
     NSString *tmpDir = NSTemporaryDirectory();
     NSString *path = [tmpDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLApplicationSupportFile(NSString *filePath)
+NSURL *KLURLForApplicationSupportFile(NSString *filePath)
 {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).firstObject;
     NSString *path = [docDir stringByAppendingPathComponent:filePath];
     return FetchOrCreateFileURL(path);
 }
 
-NSURL *KLURLPlistFile(NSString *fileName)
+NSURL *KLURLForPlistFile(NSString *fileName)
 {
-    return [[NSBundle mainBundle] URLForResource:fileName withExtension:@"plist"];
+    return [NSBundle.mainBundle URLForResource:fileName withExtension:@"plist"];
 }
 
 #pragma mark - Runtime helper method

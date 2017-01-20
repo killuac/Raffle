@@ -122,7 +122,7 @@ NSTimeInterval const KLLabelScrollDelay = 1.0;
     gradientMask.bounds = self.superview.bounds;
     gradientMask.position = CGPointMake(CGRectGetMidX(self.superview.bounds), CGRectGetMidY(self.superview.bounds));
     gradientMask.shouldRasterize = YES;
-    gradientMask.rasterizationScale = [UIScreen mainScreen].scale;
+    gradientMask.rasterizationScale = UIScreen.mainScreen.scale;
     gradientMask.startPoint = CGPointMake(0, 0.5);
     gradientMask.endPoint = CGPointMake(1, 0.5);
     

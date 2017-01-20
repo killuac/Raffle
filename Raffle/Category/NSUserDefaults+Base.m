@@ -12,27 +12,27 @@
 
 + (BOOL)isEmpty
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(flashMode))] == nil;
+    return [NSUserDefaults.standardUserDefaults objectForKey:NSStringFromSelector(@selector(flashMode))] == nil;
 }
 
 + (NSInteger)flashMode
 {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:NSStringFromSelector(@selector(flashMode))];
+    return [NSUserDefaults.standardUserDefaults integerForKey:NSStringFromSelector(@selector(flashMode))];
 }
 
 + (void)setFlashMode:(NSInteger)flashMode
 {
-    [[NSUserDefaults standardUserDefaults] setInteger:flashMode forKey:NSStringFromSelector(@selector(flashMode))];
+    [NSUserDefaults.standardUserDefaults setInteger:flashMode forKey:NSStringFromSelector(@selector(flashMode))];
 }
 
 + (BOOL)isFaceDetectionOn
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:NSStringFromSelector(@selector(isFaceDetectionOn))];
+    return [NSUserDefaults.standardUserDefaults boolForKey:NSStringFromSelector(@selector(isFaceDetectionOn))];
 }
 
 + (void)setFaceDetectionOn:(BOOL)faceDetectionOn
 {
-    [[NSUserDefaults standardUserDefaults] setBool:faceDetectionOn forKey:NSStringFromSelector(@selector(isFaceDetectionOn))];
+    [NSUserDefaults.standardUserDefaults setBool:faceDetectionOn forKey:NSStringFromSelector(@selector(isFaceDetectionOn))];
 }
 
 @end

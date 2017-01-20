@@ -14,7 +14,7 @@
 + (void)playSound:(NSString *)fileName
 {
     SystemSoundID soundID;
-    NSURL *url = [[NSBundle mainBundle] URLForResource:fileName withExtension:@"m4a"];
+    NSURL *url = [NSBundle.mainBundle URLForResource:fileName withExtension:@"m4a"];
     AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundID);
     AudioServicesPlaySystemSoundWithCompletion(soundID, NULL);
     AudioServicesDisposeSystemSoundID(soundID);

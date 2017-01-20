@@ -21,7 +21,7 @@
 
 - (CGFloat)statusBarHeight
 {
-    return UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? super.statusBarHeight : 20;
+    return IS_PORTRAIT ? super.statusBarHeight : 20;
 }
 
 @end
@@ -97,7 +97,7 @@ static KLStatusBar *sharedStatusBar = nil;
     [self.statusBarWindow addSubview:self];
     [self.statusBarWindow addSubview:self.notificationView];
     
-    self.snapshotView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
+    self.snapshotView = [UIScreen.mainScreen snapshotViewAfterScreenUpdates:NO];
     [self addSubview:self.snapshotView];
     
     [self addContraints];
@@ -107,7 +107,7 @@ static KLStatusBar *sharedStatusBar = nil;
 {
     if (_statusBarWindow) return _statusBarWindow;
     
-    _statusBarWindow = [[KLStatusWindow alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
+    _statusBarWindow = [[KLStatusWindow alloc] initWithFrame:UIApplication.sharedApplication.keyWindow.bounds];
     _statusBarWindow.hidden = NO;
     _statusBarWindow.windowLevel = UIWindowLevelStatusBar;
     _statusBarWindow.backgroundColor = UIColor.clearColor;
@@ -180,7 +180,7 @@ static KLStatusBar *sharedStatusBar = nil;
 
 - (void)orientationDidChange
 {
-    if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+    if (IS_PORTRAIT) {
         self.hidden = NO;
         if (!self.snapshotView.superview)
             [self addSubview:self.snapshotView];    // Replace animation

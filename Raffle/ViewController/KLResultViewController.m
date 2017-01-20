@@ -134,8 +134,7 @@
 {
     bannerView.hidden = hidden;
     NSLayoutConstraint *constraint = (bannerView == self.topAdBannerView) ? self.topBannerHeightConstraint : self.bottomBannerHeightConstraint;
-    BOOL isPortrait = UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
-    constraint.constant = hidden ? 0 : (IS_PHONE ? (isPortrait ? 50 : 32) : 90);
+    constraint.constant = hidden ? 0 : (IS_PHONE ? (IS_PORTRAIT ? 50 : 32) : 90);
     
     [UIView animateWithDefaultDuration:^{
         [self.view layoutIfNeeded];

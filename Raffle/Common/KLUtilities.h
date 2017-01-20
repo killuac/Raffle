@@ -7,23 +7,23 @@
 //
 
 @import Foundation;
+@import UIKit;
 
 #define IS_PHONE                (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define IS_PAD                  (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_PORTRAIT             UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation)
+#define IS_LANDSCAPE            UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation)
 
-#define UUID_STRING             [UIDevice currentDevice].identifierForVendor.UUIDString
-#define APP_VERSION             [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleShortVersionString"]
-#define APP_BUNDLE_NAME         [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleName"]
-#define APP_DISPLAY_NAME        [NSBundle mainBundle].localizedInfoDictionary[@"CFBundleDisplayName"]
-#define APP_COPYRIGHT           [NSBundle mainBundle].localizedInfoDictionary[@"NSHumanReadableCopyright"]
+#define UUID_STRING             UIDevice.currentDevice.identifierForVendor.UUIDString
+#define APP_VERSION             NSBundle.mainBundle.localizedInfoDictionary[@"CFBundleShortVersionString"]
+#define APP_BUNDLE_NAME         NSBundle.mainBundle.localizedInfoDictionary[@"CFBundleName"]
+#define APP_DISPLAY_NAME        NSBundle.mainBundle.localizedInfoDictionary[@"CFBundleDisplayName"]
+#define APP_COPYRIGHT           NSBundle.mainBundle.localizedInfoDictionary[@"NSHumanReadableCopyright"]
 
-#define SCREEN_SCALE            [UIScreen mainScreen].scale
-#define SCREEN_BOUNDS           [UIScreen mainScreen].bounds
-#define SCREEN_SIZE             SCREEN_BOUNDS.size
-#define SCREEN_WIDTH            SCREEN_SIZE.width
-#define SCREEN_HEIGHT           SCREEN_SIZE.height
-#define SCREEN_CENTER           CGPointMake(CGRectGetMidX(SCREEN_BOUNDS), CGRectGetMidY(SCREEN_BOUNDS))
-#define RESOLUTION_SIZE         [UIScreen mainScreen].preferredMode.size
+#define SCREEN_WIDTH            UIScreen.mainScreen.bounds.size.width
+#define SCREEN_HEIGHT           UIScreen.mainScreen.bounds.size.height
+#define SCREEN_CENTER           CGPointMake(CGRectGetMidX(UIScreen.mainScreen.bounds), CGRectGetMidY(UIScreen.mainScreen.bounds))
+#define RESOLUTION_SIZE         UIScreen.mainScreen.preferredMode.size
 
 #define TVC_REUSE_IDENTIFIER    @"TableViewCellReuseIdentifier"
 #define CVC_REUSE_IDENTIFIER    @"CollectionViewCellReuseIdentifier"
@@ -41,7 +41,7 @@ typedef void (^KLVoidBlockType)(void);
 typedef void (^KLBOOLBlockType)(BOOL finished);
 typedef void (^KLObjectBlockType)(id object);
 
-NS_INLINE BOOL KLSystemVersionGreaterThanOrEqualTo(NSInteger version) { return [NSProcessInfo processInfo].operatingSystemVersion.majorVersion > version; }
+NS_INLINE BOOL KLSystemVersionGreaterThanOrEqualTo(NSInteger version) { return NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > version; }
 NS_INLINE NSUInteger KLRandomInteger(NSUInteger min, NSUInteger max) { return arc4random() % (max - min) + min; }    // Exclude max
 NS_INLINE CGFloat KLRandomFloat(CGFloat min, CGFloat max) { return (CGFloat)arc4random() / 0x100000000 * (max - min) + min; }   // Exclude max
 NS_INLINE CGFloat KLPointDistance(CGPoint p1, CGPoint p2) { return sqrtf(powf(p2.x-p1.x, 2) + powf(p2.y-p1.y, 2)); }
@@ -69,11 +69,11 @@ NS_INLINE void KLDispatchGroupMainNotify(dispatch_group_t group, dispatch_block_
 }
 
 
-FOUNDATION_EXPORT NSURL *KLURLDocumentFile(NSString *filePath);
-FOUNDATION_EXPORT NSURL *KLURLCacheFile(NSString *filePath);
-FOUNDATION_EXPORT NSURL *KLURLTemporaryFile(NSString *filePath);
-FOUNDATION_EXPORT NSURL *KLURLApplicationSupportFile(NSString *filePath);
-FOUNDATION_EXPORT NSURL *KLURLPlistFile(NSString *fileName);
+FOUNDATION_EXPORT NSURL *KLURLForDocumentFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLForCacheFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLForTemporaryFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLForApplicationSupportFile(NSString *filePath);
+FOUNDATION_EXPORT NSURL *KLURLForPlistFile(NSString *fileName);
 
 FOUNDATION_EXPORT NSArray *KLClassGetSubClasses(Class superClass);
 FOUNDATION_EXPORT void KLClassSwizzleMethod(Class clazz, SEL originalSelector, SEL swizzledSelector, BOOL isClassMethod);

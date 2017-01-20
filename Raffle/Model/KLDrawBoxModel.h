@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define WALLPAPER_DIRECTORY KLURLDocumentFile(@"Wallpaper").absoluteString
+#define WALLPAPER_DIRECTORY KLURLForDocumentFile(@"Wallpaper").absoluteString
 
 @interface KLDrawBoxModel : NSManagedObject
 

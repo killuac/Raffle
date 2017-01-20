@@ -75,7 +75,7 @@
 
 - (UIViewController *)rootViewController
 {
-    return [[UIApplication sharedApplication].delegate window].rootViewController;
+    return [UIApplication.sharedApplication.delegate window].rootViewController;
 }
 
 - (UIViewController *)visibleViewController
@@ -140,7 +140,7 @@
 
 - (void)singleTap:(UITapGestureRecognizer *)recognizer
 {
-    [self.view findAndResignFirstResponder];
+    [self.view endEditing:YES];
 }
 
 #pragma mark - Text field handling
@@ -181,7 +181,7 @@
 - (void)showInitialViewController
 {
 //    UIViewController *VC = [[KLInitialViewController alloc] init];
-//    UIWindow *window = [[UIApplication sharedApplication].delegate window];
+//    UIWindow *window = [UIApplication.sharedApplication.delegate window];
 //    window.rootViewController = VC;
 //    [window makeKeyAndVisible];
 }
@@ -190,7 +190,7 @@
 {
     KLMainViewController *VC = [[KLMainViewController alloc] init];
     
-    UIWindow *window = [[UIApplication sharedApplication].delegate window];
+    UIWindow *window = [UIApplication.sharedApplication.delegate window];
     window.rootViewController = VC;
     [window makeKeyAndVisible];
     

@@ -70,7 +70,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 {
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:TITLE_CANCEL style:UIAlertActionStyleDefault handler:nil];
     UIAlertAction *setting = [UIAlertAction actionWithTitle:TITLE_SETTINGS style:UIAlertActionStyleCancel handler:^(id action) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        [UIApplication.sharedApplication openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }];
     
     NSString *message = [NSString localizedStringWithFormat:ALERT_ACCESS_CAMERA_SETTING, [APP_DISPLAY_NAME quotedString], [PATH_CAMERA_SETTING quotedString]];
@@ -182,7 +182,7 @@ static void *SessionRunningContext = &SessionRunningContext;
 //    [CATransaction begin];
 //    [CATransaction setDisableActions:YES];
 //    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-//        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+//        UIDeviceOrientation deviceOrientation = UIDevice.currentDevice.orientation;
 //        if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
 //            self.previewView.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
 //        }

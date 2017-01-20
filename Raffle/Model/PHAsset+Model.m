@@ -49,7 +49,8 @@
 - (void)thumbnailImageProgressHandler:(PHAssetImageProgressHandler)progressHandler resultHandler:(KLAssetBlockType)resultHandler
 {
     NSParameterAssert(resultHandler);
-    CGSize targetSize = CGSizeMake(SCREEN_WIDTH * SCREEN_SCALE / 4, SCREEN_HEIGHT * SCREEN_SCALE / 4);
+    CGFloat scale = UIScreen.mainScreen.scale;
+    CGSize targetSize = CGSizeMake(SCREEN_WIDTH * scale / 4, SCREEN_HEIGHT * scale / 4);
     [self requestImageWithTargetSize:targetSize progressHandler:progressHandler resultHandler:resultHandler];
 }
 

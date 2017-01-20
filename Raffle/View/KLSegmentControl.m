@@ -92,7 +92,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? CGSizeMake(self.width, 36) : CGSizeMake(self.width, 30);
+    return IS_PORTRAIT ? CGSizeMake(self.width, 36) : CGSizeMake(self.width, 30);
 }
 
 - (void)setItems:(NSArray *)items
@@ -262,7 +262,7 @@
 
 - (CGFloat)selectionMarkInset
 {
-    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? 8.0 : 5.0;
+    return IS_PORTRAIT ? 8.0 : 5.0;
 }
 
 - (void)setCurrentSelectionMarkFrameByCell:(KLSegmentCollectionViewCell *)cell

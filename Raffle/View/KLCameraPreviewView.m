@@ -84,7 +84,7 @@
 
 - (void)orientationDidChange:(NSNotification *)notification
 {
-    UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    UIInterfaceOrientation statusBarOrientation = UIApplication.sharedApplication.statusBarOrientation;
     if (statusBarOrientation != UIInterfaceOrientationUnknown) {
         self.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
     }
@@ -116,7 +116,7 @@
     if ([self.session canAddInput:videoDeviceInput]) {
         [self.session addInput:videoDeviceInput];
         KLDispatchMainAsync(^{
-            UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
+            UIInterfaceOrientation statusBarOrientation = UIApplication.sharedApplication.statusBarOrientation;
             AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
             if (statusBarOrientation != UIInterfaceOrientationUnknown) {
                 initialVideoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
