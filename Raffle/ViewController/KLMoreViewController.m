@@ -100,7 +100,7 @@ static CGFloat sectionInset;
 {
     if (indexPath.item == self.dataController.itemCount) {  // Add Button
         KLAddButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class]) forIndexPath:indexPath];
-        [cell setHidden:self.editMode animated:YES];
+        [cell setAnimatedHidden:self.editMode completion:nil];
         return cell;
     } else {
         KLDrawBoxCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
@@ -187,13 +187,12 @@ static CGFloat sectionInset;
     }
 }
 
-#pragma mark - KLImagePickerController delegate
+#pragma mark - Image picker and camera delegate
 - (void)imagePickerController:(KLImagePickerController *)picker didFinishPickingImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addDrawBoxWithAssets:assets];
 }
 
-#pragma mark - KLCameraViewController delegate
 - (void)cameraViewController:(KLCameraViewController *)cameraVC didFinishSaveImageAssets:(NSArray<PHAsset *> *)assets
 {
     [self.dataController addDrawBoxWithAssets:assets];

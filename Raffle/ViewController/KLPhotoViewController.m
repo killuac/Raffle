@@ -104,7 +104,7 @@ static CGFloat lineSpacing;
 {
     if (indexPath.item == self.dataController.itemCount) {  // Add Button
         KLAddButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([KLAddButtonCell class]) forIndexPath:indexPath];
-        [cell setHidden:self.deleteMode animated:YES];
+        [cell setAnimatedHidden:self.deleteMode completion:nil];
         return cell;
     } else {
         KLPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CVC_REUSE_IDENTIFIER forIndexPath:indexPath];
@@ -225,7 +225,7 @@ static CGFloat lineSpacing;
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
     
     KLAddButtonCell *cell = (id)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.dataController.itemCount inSection:0]];
-    [cell setHidden:YES animated:YES];
+    [cell setAnimatedHidden:YES completion:nil];
 }
 
 - (void)tapRightNavBarButton:(UIBarButtonItem *)sender

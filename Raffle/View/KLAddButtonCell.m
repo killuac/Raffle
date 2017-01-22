@@ -11,7 +11,7 @@
 
 @interface KLAddButtonCell ()
 
-@property (nonatomic, strong) UIImageView *addImageView;
+@property (nonatomic, strong) UIButton *addButton;
 
 @end
 
@@ -33,13 +33,13 @@
     })];
     
     [self.contentView addSubview:({
-        _addImageView = [UIImageView newAutoLayoutView];
-        _addImageView.contentMode = UIViewContentModeCenter;
-        _addImageView.image = [UIImage imageNamed:@"icon_cv_add"];
-        _addImageView;
+        _addButton = [UIButton buttonWithImageName:@"icon_cv_add"];
+        _addButton.tintColor = [UIColor blackColor];
+        _addButton.userInteractionEnabled = NO;
+        _addButton;
     })];
     
-    [self.addImageView constraintsEqualWithSuperView];
+    [self.addButton constraintsEqualWithSuperView];
 }
 
 - (void)setHighlighted:(BOOL)highlighted

@@ -20,8 +20,8 @@ UIKIT_EXTERN const CGFloat KLViewDefaultCornerRadius;
 - (void)addSubviews;
 - (void)addSubviews:(NSArray *)subviews;
 
-- (void)addTapGesture;
-- (void)removeTapGesture;
+- (void)addSingleTapGesture;
+- (void)removeSingleTapGesture;
 - (void)singleTap:(UITapGestureRecognizer *)recognizer;
 
 - (void)addObservers;
@@ -79,12 +79,14 @@ UIKIT_EXTERN const CGFloat KLViewDefaultCornerRadius;
 - (void)removeBlurBackground;
 - (void)addDimBackground;
 - (void)removeDimBackground;
+- (void)addDarkDimBackground;
+- (void)removeDarkDimBackground;
 
 + (void)animateWithDefaultDuration:(KLVoidBlockType)animations;
 + (void)animateWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion;
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations;
 + (void)animateSpringWithDefaultDuration:(KLVoidBlockType)animations completion:(KLBOOLBlockType)completion;
 - (void)animateSpringScale;
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
+- (void)setAnimatedHidden:(BOOL)hidden completion:(KLVoidBlockType)completion;
 
 @end

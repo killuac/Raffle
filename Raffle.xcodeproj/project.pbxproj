@@ -68,6 +68,7 @@
 		E30E57001DCA44D600EEB6B3 /* NSDictionary+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = E30E56FF1DCA44D600EEB6B3 /* NSDictionary+Base.m */; };
 		E34E26CA1E314805006C1CEB /* cheer.caf in Resources */ = {isa = PBXBuildFile; fileRef = E34E26C81E314805006C1CEB /* cheer.caf */; };
 		E34E26CB1E314805006C1CEB /* shake.caf in Resources */ = {isa = PBXBuildFile; fileRef = E34E26C91E314805006C1CEB /* shake.caf */; };
+		E34E26CE1E330984006C1CEB /* KLInfoTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = E34E26CD1E330984006C1CEB /* KLInfoTipView.m */; };
 		E3539C7A1D9041BD00CBE9F2 /* KLResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */; };
 		E3539C7D1D90421000CBE9F2 /* KLPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3539C7C1D90421000CBE9F2 /* KLPhotoViewController.m */; };
 		E3684C441D86DBFD004E4636 /* KLDrawBoxDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3684C321D86DBFD004E4636 /* KLDrawBoxDataController.m */; };
@@ -249,6 +250,8 @@
 		E30E56FF1DCA44D600EEB6B3 /* NSDictionary+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Base.m"; sourceTree = "<group>"; };
 		E34E26C81E314805006C1CEB /* cheer.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = cheer.caf; sourceTree = "<group>"; };
 		E34E26C91E314805006C1CEB /* shake.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = shake.caf; sourceTree = "<group>"; };
+		E34E26CC1E330984006C1CEB /* KLInfoTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLInfoTipView.h; sourceTree = "<group>"; };
+		E34E26CD1E330984006C1CEB /* KLInfoTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLInfoTipView.m; sourceTree = "<group>"; };
 		E3539C781D9041BD00CBE9F2 /* KLResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLResultViewController.h; sourceTree = "<group>"; };
 		E3539C791D9041BD00CBE9F2 /* KLResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLResultViewController.m; sourceTree = "<group>"; };
 		E3539C7B1D90421000CBE9F2 /* KLPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLPhotoViewController.h; sourceTree = "<group>"; };
@@ -369,8 +372,6 @@
 			children = (
 				4176C43E1DC31C660054FF13 /* KLAddButtonCell.h */,
 				4176C43F1DC31C660054FF13 /* KLAddButtonCell.m */,
-				415BFE861D5B20FC002053D6 /* KLPhotoCell.h */,
-				415BFE871D5B20FC002053D6 /* KLPhotoCell.m */,
 				E30DF89E1D92E70300161EAE /* KLBubbleButton.h */,
 				E30DF89F1D92E70300161EAE /* KLBubbleButton.m */,
 				41E163001E01395200A53B72 /* KLCameraPreviewView.h */,
@@ -379,8 +380,12 @@
 				415BFE891D5B20FC002053D6 /* KLCircleLayout.m */,
 				415BFE8A1D5B20FC002053D6 /* KLDrawBoxCell.h */,
 				415BFE8B1D5B20FC002053D6 /* KLDrawBoxCell.m */,
+				E34E26CC1E330984006C1CEB /* KLInfoTipView.h */,
+				E34E26CD1E330984006C1CEB /* KLInfoTipView.m */,
 				4176C4451DC341B30054FF13 /* KLInnerShadowView.h */,
 				4176C4461DC341B30054FF13 /* KLInnerShadowView.m */,
+				415BFE861D5B20FC002053D6 /* KLPhotoCell.h */,
+				415BFE871D5B20FC002053D6 /* KLPhotoCell.m */,
 				412DCD0C1DC04770007A3F7D /* KLPhotoView.h */,
 				412DCD0D1DC04770007A3F7D /* KLPhotoView.m */,
 				E3FD190C1E222D7F00A82D7F /* KLPieProgressView.h */,
@@ -893,6 +898,7 @@
 				41FE178B1D5B15AB00CABFCA /* NSData+Base.m in Sources */,
 				4176C4471DC341B30054FF13 /* KLInnerShadowView.m in Sources */,
 				41FE17921D5B15AB00CABFCA /* UIButton+Base.m in Sources */,
+				E34E26CE1E330984006C1CEB /* KLInfoTipView.m in Sources */,
 				41FE178E1D5B15AB00CABFCA /* NSString+Base.m in Sources */,
 				E3684C4C1D86DBFD004E4636 /* KLMoreViewController.m in Sources */,
 				41FE171A1D5B10A200CABFCA /* AppDelegate.m in Sources */,

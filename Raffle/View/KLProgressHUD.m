@@ -85,7 +85,7 @@ static KLProgressHUD *sharedProgressHUD = nil;
 {
     self.showing = YES;
     [self addSubview:self.activityView];
-    [self setHidden:NO animated:YES];
+    [self setAnimatedHidden:NO completion:nil];
     [self.activityView constraintsCenterInSuperview];
 }
 
@@ -107,7 +107,7 @@ static KLProgressHUD *sharedProgressHUD = nil;
     
     self.showing = YES;
     [self addSubview:self.progressView];
-    [self setHidden:NO animated:YES];
+    [self setAnimatedHidden:NO completion:nil];
     [self.progressView constraintsCenterInSuperview];
 }
 

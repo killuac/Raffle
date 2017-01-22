@@ -15,6 +15,8 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
 
 @implementation UIView (Base)
 
+const CGFloat kBackgroundViewTag = 9999;
+
 - (void)addSubviews:(NSArray *)subviews
 {
     [subviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger idx, BOOL *stop) {
@@ -328,13 +330,13 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
 }
 
 #pragma mark - Gesture
-- (void)addTapGesture
+- (void)addSingleTapGesture
 {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
     [self addGestureRecognizer:tap];
 }
 
-- (void)removeTapGesture
+- (void)removeSingleTapGesture
 {
     [self removeGestureRecognizer:self.gestureRecognizers.firstObject];
 }
@@ -351,36 +353,51 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
     
     [self addSubview:({
         UIVisualEffectView *background = [[UIVisualEffectView alloc] initWithFrame:self.bounds];
-        background.tag = 100;
+        background.tag = kBackgroundViewTag;
         background.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [background setHidden:NO animated:YES];
+        [background setAnimatedHidden:NO completion:nil];
         background;
     })];
 }
 
 - (void)removeBlurBackground
 {
-    [[self viewWithTag:100] removeFromSuperview];
+    [[self viewWithTag:kBackgroundViewTag] removeFromSuperview];
 }
 
 - (void)addDimBackground
+{
+    [self addBackgroundWithColor:[UIColor colorWithWhite:0 alpha:0.4]];
+}
+
+- (void)addBackgroundWithColor:(UIColor *)backgroundColor
 {
     [self removeDimBackground];
     
     [self addSubview:({
         UIView *background = [[UIView alloc] initWithFrame:self.bounds];
-        background.tag = 101;
-        background.backgroundColor = UIColor.dimmingBackgroundColor;
+        background.tag = kBackgroundViewTag;
+        background.backgroundColor = backgroundColor;
         background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [background setHidden:NO animated:YES];
+        [background setAnimatedHidden:NO completion:nil];
         background;
     })];
 }
 
 - (void)removeDimBackground
 {
-    [[self viewWithTag:101] removeFromSuperview];
+    [[self viewWithTag:kBackgroundViewTag] removeFromSuperview];
+}
+
+- (void)addDarkDimBackground
+{
+    [self addBackgroundWithColor:[UIColor colorWithWhite:0 alpha:0.8]];
+}
+
+- (void)removeDarkDimBackground
+{
+    [self removeDimBackground];
 }
 
 #pragma mark - Animation
@@ -421,13 +438,8 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
     }];
 }
 
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated
+- (void)setAnimatedHidden:(BOOL)hidden completion:(KLVoidBlockType)completion
 {
-    if (!animated) {
-        self.hidden = hidden;
-        return;
-    }
-    
     if (!hidden) {
         self.hidden = hidden;
         self.alpha = 0.0;
@@ -437,6 +449,7 @@ const CGFloat KLViewDefaultCornerRadius = 5.0f;
         self.alpha = hidden ? 0.0 : 1.0;
     } completion:^(BOOL finished) {
         self.hidden = hidden;
+        if (completion) completion();
     }];
 }
 

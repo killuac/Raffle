@@ -37,9 +37,11 @@
 
 - (void)setupUserDefaults
 {
-    if (!NSUserDefaults.isEmpty) return;
-    NSUserDefaults.flashMode = AVCaptureFlashModeOff;
-    NSUserDefaults.faceDetectionOn = YES;
+    if (!NSUserDefaults.hasLaunchedOnce) {
+        NSUserDefaults.launchedOnce = YES;
+        NSUserDefaults.flashMode = AVCaptureFlashModeOff;
+        NSUserDefaults.faceDetectionOn = YES;
+    }
 }
 
 - (void)setupAppearance

@@ -61,11 +61,6 @@
     return self.drawBoxes[indexPath.item];
 }
 
-- (BOOL)isRepeatMode
-{
-    return self.currentDrawBoxDC.isRepeatMode;
-}
-
 - (void)switchDrawMode
 {
     [self.currentDrawBoxDC switchDrawMode];

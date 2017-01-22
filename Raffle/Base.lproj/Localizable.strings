@@ -31,7 +31,7 @@
 "HUDEmptyDrawBox" = "No photo in draw box, please add photo or reload.";
 "HUDNotRecognizeFace" = "Not recognize face";
 
-"TipShakeToStart" = "Shake phone to start";
+"TipShakeToStart" = "Shake it to start draw";
 "TipReloadAllPhotos" = "Reload all photos to restart";
 "TipFaceDetectionSwitcher" = "Face Detection (On/Off)";
 "TipLongPressToDeletePhoto" = "Long press to delete photo";

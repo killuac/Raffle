@@ -13,6 +13,7 @@
 
 @property (nonatomic, assign) NSUInteger pageIndex;
 @property (nonatomic, readonly) BOOL isRepeatMode;
+@property (nonatomic, readonly) BOOL isReloadHidden;
 @property (nonatomic, readonly) BOOL canStartDraw;
 @property (nonatomic, readonly) BOOL hasCustomWallpaper;
 

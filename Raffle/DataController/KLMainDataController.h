@@ -12,7 +12,6 @@
 @interface KLMainDataController : KLDataController
 
 @property (nonatomic, strong, readonly) KLDrawBoxDataController *currentDrawBoxDC;
-@property (nonatomic, readonly) BOOL isRepeatMode;
 
 - (void)switchDrawMode;
 - (void)addDrawBoxWithAssets:(NSArray<PHAsset *> *)assets;

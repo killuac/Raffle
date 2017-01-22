@@ -21,6 +21,7 @@
 #import "KLPieProgressView.h"
 #import "KLStatusBar.h"
 #import "KLProgressHUD.h"
+#import "KLInfoTipView.h"
 
 #import "NSData+Base.h"
 #import "NSString+Base.h"

@@ -30,10 +30,10 @@
 "HUDRepeatModeOn" = "複数回モード：同じ写真が複数回を選択でき、取り除きません。";
 "HUDRepeatModeOff" = "ワンタイムモード：一枚の写真あたり一回のみ選択できて、その後取り除きます。";
 "HUDEmptyDrawBox" = "抽選箱に写真がないため、写真を添付若しくはもう一回アップロードしてください。";
-"HUDNotRecognizedFace" = "顔が見当たらない";
+"HUDNotRecognizedFace" = "顔が見当たりません。";
 
-"TipShakeToStart" = "携帯をシェイクして、抽選を開始する";
-"TipReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始する";
+"TipShakeToStart" = "シェイクして、抽選が開始します。";
+"TipReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始します。";
 "TipFaceDetectionSwitcher" = "顔認識機能オン/オフ";
 "TipLongPressToDeletePhoto" = "長押しで写真を削除する";
 "TipLongPressToFaceDetection" = "長押しで顔を認識する";

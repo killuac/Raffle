@@ -63,6 +63,11 @@
     }];
 }
 
+- (BOOL)isReloadHidden
+{
+    return self.remainingAssetCount == self.itemCount;
+}
+
 - (void)reloadAllAssets
 {
     [self willChangeValueForRemainingAssetCount];

@@ -127,13 +127,13 @@
 }
 
 #pragma mark - Gesture
-- (void)addTapGesture
+- (void)addSingleTapGesture
 {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
     [self.view addGestureRecognizer:tap];
 }
 
-- (void)removeTapGesture
+- (void)removeSingleTapGesture
 {
     [self.view removeGestureRecognizer:self.view.gestureRecognizers.firstObject];
 }

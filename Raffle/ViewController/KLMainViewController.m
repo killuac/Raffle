@@ -32,10 +32,13 @@
 @property (nonatomic, strong) UIButton *wallpaperButton;
 
 @property (nonatomic, assign) BOOL isDrawing;
+@property (nonatomic, assign) BOOL isShowingTip;
 
 @end
 
 @implementation KLMainViewController
+
+const CGFloat kInfoTipViewTag = 1000;
 
 #pragma mark - Lifecycle
 - (instancetype)init
@@ -90,7 +93,7 @@
     
     [self addPageViewController];
     [self addSubviews];
-    [self addTapGesture];
+    [self addSingleTapGesture];
 }
 
 - (void)reloadData
@@ -113,11 +116,10 @@
 - (void)updateUI
 {
     BOOL isHidden = (self.dataController.pageCount > 0);
-    [self.bgImageView setHidden:isHidden animated:YES];
+    self.bgImageView.hidden = isHidden;
     self.wallpaperButton.enabled = isHidden;
     self.switchModeButton.enabled = isHidden;
     
-    self.pageControl.hidden = (self.dataController.pageCount <= 1);
     self.pageControl.numberOfPages = self.dataController.pageCount;
     self.pageControl.currentPage = self.dataController.currentPageIndex;
     self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
@@ -152,7 +154,7 @@
     [self.view addSubview:({
         _bgImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
         _bgImageView.hidden = YES;
-        _bgImageView.alpha = 0.8;
+        _bgImageView.alpha = 0.7;
         _bgImageView.image = [UIImage imageNamed:@"wallpaper0.jpg"];
         _bgImageView.contentMode = UIViewContentModeScaleAspectFill;
         _bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -163,6 +165,7 @@
     [self.view addSubview:({
         _pageControl = [UIPageControl newAutoLayoutView];
         _pageControl.enabled = NO;
+        _pageControl.hidesForSinglePage = YES;
         _pageControl.numberOfPages = self.dataController.pageCount;
         _pageControl.pageIndicatorTintColor = UIColor.grayColor;
         _pageControl.currentPageIndicatorTintColor = UIColor.whiteColor;
@@ -304,6 +307,10 @@
     if (completed) {
         self.dataController.currentPageIndex = self.drawBoxViewController.pageIndex;
         self.pageControl.currentPage = self.dataController.currentPageIndex;
+        
+        BOOL isReloadHidden = self.dataController.currentDrawBoxDC.isReloadHidden;
+        [self setReloadButtonHidden:isReloadHidden];
+        [self setSwitchModeButtonHidden:!isReloadHidden];
         [self updateAddPhotoButtonTitle];
     }
 }
@@ -338,6 +345,38 @@
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
 {
     [self reloadData];
+    
+    if (!NSUserDefaults.hasShownShakeTip) {
+        self.isShowingTip = YES;
+        NSUserDefaults.shownShakeTip = YES;
+        [self showShakeTipInfo];
+    }
+}
+
+- (void)showShakeTipInfo
+{
+    [self setAddPhotoButtonHidden:YES];
+    [self.view addDarkDimBackground];
+    
+    UIView *tipView = [UIView newAutoLayoutView];
+    tipView.tag = kInfoTipViewTag;
+    [self.view addSubview:tipView];
+    [tipView constraintsCenterInSuperview];
+    
+    UIImageView *imageView = [UIImageView newAutoLayoutView];
+    imageView.image = [UIImage imageNamed:@"icon_shake_phone"];
+    [tipView addSubview:imageView];
+    
+    UILabel *label = [UILabel labelWithText:TIP_SHAKE_TO_START];
+    label.font = UIFont.boldLargeFont;
+    label.textColor = [UIColor whiteColor];
+    [tipView addSubview:label];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(imageView, label);
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[label]|" options:0 metrics:nil views:views]];
+    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[imageView]-20-[label]|" options:NSLayoutFormatAlignAllCenterX metrics:nil views:views]];
+    
+    [tipView setAnimatedHidden:NO completion:nil];
 }
 
 #pragma mark - Motion
@@ -346,6 +385,10 @@
     if (self.isFirstResponder && motion == UIEventSubtypeMotionShake) {
         if (self.dataController.currentDrawBoxDC.canStartDraw) {
             [self startDraw:event];
+            if (self.isShowingTip) {
+                [self.view removeDimBackground];
+                [[self.view viewWithTag:kInfoTipViewTag] removeFromSuperview];
+            }
         } else {
             [KLStatusBar showWithText:HUD_EMPTY_DRAW_BOX];
         }
@@ -403,7 +446,7 @@
 - (void)setPageControlHidden:(BOOL)hidden
 {
     self.pageScrollView.scrollEnabled = !hidden;
-    [self.pageControl setHidden:hidden animated:YES];
+    [self.pageControl setAnimatedHidden:hidden completion:nil];
 }
 
 #pragma mark - Event handling
@@ -425,6 +468,13 @@
         [self becomeFirstResponder];
         [self stopDraw:recognizer];
     }
+    
+    if (self.isShowingTip) {
+        [self setAddPhotoButtonHidden:NO];
+        [self.view removeDarkDimBackground];
+        [[self.view viewWithTag:kInfoTipViewTag] removeFromSuperview];
+        self.isShowingTip = NO;
+    }
 }
 
 - (void)stopDraw:(id)sender
@@ -436,14 +486,24 @@
     resultVC.dismissBlock = ^(id object) {
         [self reloadData];
     };
+    
     [self presentViewController:resultVC animated:YES completion:^{
         [self setAddPhotoButtonHidden:NO];
         [self setBottomButtonsHidden:NO];
         [self setPageControlHidden:NO];
+        
         if (self.dataController.currentDrawBoxDC.isRepeatMode) {
             [self setReloadButtonHidden:YES];
         } else {
             [self setSwitchModeButtonHidden:YES];
+        }
+        
+        if (!NSUserDefaults.hasShownReloadTip) {
+            self.isShowingTip = YES;
+            NSUserDefaults.shownReloadTip = YES;
+            KLInfoTipView *tipView = [KLInfoTipView infoTipViewWithText:TIP_RELOAD_ALL_PHOTOS];
+            [self.view addSubview:tipView];
+            [tipView setAnimatedHidden:NO completion:nil];
         }
     }];
 }
@@ -462,14 +522,16 @@
 - (void)switchDrawMode:(id)sender
 {
     [self.dataController switchDrawMode];
-    [KLStatusBar showWithText:self.dataController.isRepeatMode ? HUD_REPEAT_MODE_ON: HUD_REPEAT_MODE_OFF];
+    
+    BOOL isRepeatMode = self.dataController.currentDrawBoxDC.isRepeatMode;
+    [KLStatusBar showWithText:isRepeatMode ? HUD_REPEAT_MODE_ON: HUD_REPEAT_MODE_OFF];
     
     [UIView animateWithDefaultDuration:^{
         self.switchModeButton.alpha = 0;
     } completion:^(BOOL finished) {
-        NSString *imageName = self.dataController.isRepeatMode ? @"icon_repeat_on" : @"icon_repeat_off";
+        NSString *imageName = isRepeatMode ? @"icon_repeat_on" : @"icon_repeat_off";
         [self.switchModeButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        [self.switchModeButton setHidden:NO animated:YES];
+        [self.switchModeButton setAnimatedHidden:NO completion:nil];
     }];
 }
 

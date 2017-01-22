@@ -95,9 +95,9 @@
 {
     _editMode = editMode;
     
-    [self.deleteButton setHidden:!editMode animated:YES];
-    [UIView animateWithDefaultDuration:^{
-        self.containerView.alpha = editMode ? 0.5 : 1.0;
+    __weak typeof(self) weakSelf = self;
+    [self.deleteButton setAnimatedHidden:!editMode completion:^{
+        weakSelf.containerView.alpha = editMode ? 0.5 : 1.0;
     }];
 }
 
