@@ -89,9 +89,8 @@ NSString *const KLAlphabet62 = @"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJK
 #pragma mark - Localization
 - (NSString *)quotedString
 {
-    NSLocale *locale = [NSLocale currentLocale];
-    id bQuote = [locale objectForKey:NSLocaleQuotationBeginDelimiterKey];
-    id eQuote = [locale objectForKey:NSLocaleQuotationEndDelimiterKey];
+    id bQuote = [NSLocale.currentLocale objectForKey:NSLocaleQuotationBeginDelimiterKey];
+    id eQuote = [NSLocale.currentLocale objectForKey:NSLocaleQuotationEndDelimiterKey];
     return [NSString stringWithFormat:@"%@%@%@", bQuote, self, eQuote];
 }
 

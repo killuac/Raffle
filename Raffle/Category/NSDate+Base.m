@@ -21,9 +21,9 @@ static NSDateFormatter *sharedDateFormatter = nil;
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NSCurrentLocaleDidChangeNotification
                                                           object:nil
-                                                           queue:[NSOperationQueue currentQueue]
+                                                           queue:NSOperationQueue.currentQueue
                                                       usingBlock:^(NSNotification * _Nonnull note) {
-                                                          [sharedDateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
+                                                          [sharedDateFormatter setLocale:NSLocale.autoupdatingCurrentLocale];
                                                       }];
     });
 }
@@ -71,27 +71,27 @@ static NSDateFormatter *sharedDateFormatter = nil;
 #pragma mark - Properties
 - (BOOL)isToday
 {
-    return [[NSCalendar currentCalendar] isDateInToday:self];
+    return [NSCalendar.currentCalendar isDateInToday:self];
 }
 
 - (BOOL)isTomorrow
 {
-    return [[NSCalendar currentCalendar] isDateInTomorrow:self];
+    return [NSCalendar.currentCalendar isDateInTomorrow:self];
 }
 
 - (BOOL)isYesterday
 {
-    return [[NSCalendar currentCalendar] isDateInYesterday:self];
+    return [NSCalendar.currentCalendar isDateInYesterday:self];
 }
 
 - (BOOL)isWeekend
 {
-    return [[NSCalendar currentCalendar] isDateInWeekend:self];
+    return [NSCalendar.currentCalendar isDateInWeekend:self];
 }
 
 - (BOOL)isThisYear
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar = NSCalendar.currentCalendar;
     NSInteger year = [calendar component:NSCalendarUnitYear fromDate:self];
     NSInteger currYear = [calendar component:NSCalendarUnitYear fromDate:[NSDate date]];
     return (year == currYear);
