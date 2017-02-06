@@ -138,6 +138,11 @@ static void *SessionRunningContext = &SessionRunningContext;
     self.topToolbar = [UIToolbar toolbarWithItems:items];
     [self.view addSubview:self.topToolbar];
     
+    if (!NSUserDefaults.hasShownFaceDetectionTip) {
+//        NSUserDefaults.shownFaceDetectionTip = YES;
+        [KLInfoTipView showInfoTipWithText:TIP_FACE_DETECTION_SWITCHER sourceView:self.topToolbar targetView:self.view];
+    }
+    
     // Bottom toolbar
     self.closeBarButton = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeCamera:)];
     self.takePhotoBarButton = [UIBarButtonItem barButtonItemWithImageName:@"button_camera" target:self action:@selector(takePhoto:)];

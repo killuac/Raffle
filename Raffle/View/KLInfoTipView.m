@@ -8,9 +8,18 @@
 
 #import "KLInfoTipView.h"
 
+typedef NS_ENUM(NSUInteger, KLInfoTipViewArrowDirection) {
+    KLInfoTipViewArrowDirectionUp,
+    KLInfoTipViewArrowDirectionDown,
+    KLInfoTipViewArrowDirectionLeft,
+    KLInfoTipViewArrowDirectionRight
+};
+
 @interface KLInfoTipView ()
 
-@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UIView *sourceView;
+@property (nonatomic, assign) KLInfoTipViewArrowDirection arrowDirection;
 
 @end
 
@@ -27,11 +36,16 @@ static KLInfoTipView *sharedTipView = nil;
 {
     if (self = [super init]) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        _text = text;
+        self.backgroundColor = UIColor.whiteColor;
+        self.layer.shadowColor = UIColor.blackColor.CGColor;
+        self.layer.shadowOpacity = 0.3;
+        self.layer.shadowOffset = CGSizeMake(0, -3);
+        self.layer.shadowRadius = 5.0;
         
         [self addSubview:({
             _textLabel = [UILabel newAutoLayoutView];
-            _textLabel.font = UIFont.boldLargeFont;
+            _textLabel.text = text;
+            _textLabel.font = UIFont.largeFont;
             _textLabel.textColor = UIColor.blackColor;
             _textLabel.numberOfLines = 0;
             _textLabel;
@@ -44,22 +58,56 @@ static KLInfoTipView *sharedTipView = nil;
     return self;
 }
 
-- (void)setFrame:(CGRect)frame
+- (CGSize)intrinsicContentSize
 {
-    [super setFrame:frame];
+    return CGSizeMake(200, [self.textLabel.text heightWithFont:self.textLabel.font] + 16*2);
+}
+
+- (void)drawBubbleBox
+{
     
 }
 
-- (CGSize)intrinsicContentSize
+- (void)updateConstraints
 {
-    return CGSizeMake(200, [self.textLabel.text heightWithFont:self.textLabel.font]);
+    switch (self.arrowDirection) {
+        case KLInfoTipViewArrowDirectionUp:
+            [self constraintsCenterXWithView:self.sourceView];
+            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+                                            toItem:self.sourceView attribute:NSLayoutAttributeBottom multiplier:1 constant:0].active = YES;
+            break;
+            
+        case KLInfoTipViewArrowDirectionDown:
+            [self constraintsCenterXWithView:self.sourceView];
+            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+                                            toItem:self.sourceView attribute:NSLayoutAttributeTop multiplier:1 constant:0].active = YES;
+            break;
+            
+        case KLInfoTipViewArrowDirectionLeft:
+            [self constraintsCenterYWithView:self.sourceView];
+            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual
+                                            toItem:self.sourceView attribute:NSLayoutAttributeRight multiplier:1 constant:0].active = YES;
+            break;
+            
+        case KLInfoTipViewArrowDirectionRight:
+            [self constraintsCenterYWithView:self.sourceView];
+            [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual
+                                            toItem:self.sourceView attribute:NSLayoutAttributeLeft multiplier:1 constant:0].active = YES;
+            break;
+    }
+    
+    [super updateConstraints];
 }
 
 + (void)showInfoTipWithText:(NSString *)text sourceView:(UIView *)sourceView targetView:(UIView *)targetView
 {
-    KLInfoTipView *tipView = [KLInfoTipView infoTipViewWithText:text];
+    sharedTipView = [KLInfoTipView infoTipViewWithText:text];
+    sharedTipView.sourceView = sourceView;
+    [targetView addSubview:sharedTipView];
     
-    sharedTipView = tipView;
+    [sharedTipView drawBubbleBox];
+    [sharedTipView setNeedsUpdateConstraints];
+    [sharedTipView setAnimatedHidden:NO completion:nil];
 }
 
 + (void)dismiss

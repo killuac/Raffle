@@ -10,8 +10,6 @@
 
 @interface KLInfoTipView : UIView
 
-@property (nonatomic, strong, readonly) UILabel *textLabel;
-
 + (instancetype)infoTipViewWithText:(NSString *)text;
 
 + (void)showInfoTipWithText:(NSString *)text sourceView:(UIView *)sourceView targetView:(UIView *)targetView;
