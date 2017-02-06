@@ -239,7 +239,7 @@ static CGFloat lineSpacing;
 
 - (void)startDrawFromPhotoVC:(id)sender
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:KLPhotoViewControllerDidTouchStart object:self.dataController];
+    [NSNotificationCenter.defaultCenter postNotificationName:KLPhotoViewControllerDidTouchStart object:self.dataController];
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 

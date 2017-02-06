@@ -255,13 +255,13 @@ const CGFloat kInfoTipViewTag = 1000;
 #pragma mark - Observers
 - (void)addObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTouchStart:) name:KLPhotoViewControllerDidTouchStart object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startColorAnimationForAddPhotoButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(didTouchStart:) name:KLPhotoViewControllerDidTouchStart object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(startColorAnimationForAddPhotoButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)removeObservers
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (void)dealloc

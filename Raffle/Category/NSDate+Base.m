@@ -19,7 +19,7 @@ static NSDateFormatter *sharedDateFormatter = nil;
     KLDispatchOnce(^{
         sharedDateFormatter = [[NSDateFormatter alloc] init];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NSCurrentLocaleDidChangeNotification
+        [NSNotificationCenter.defaultCenter addObserverForName:NSCurrentLocaleDidChangeNotification
                                                           object:nil
                                                            queue:NSOperationQueue.currentQueue
                                                       usingBlock:^(NSNotification * _Nonnull note) {
