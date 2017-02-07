@@ -441,6 +441,15 @@ const CGFloat kInfoTipViewTag = 1000;
     } completion:^(BOOL finished) {
         self.reloadButton.hidden = hidden;
     }];
+    
+    if (hidden) {
+        [KLInfoTipView dismiss];
+    } else {
+        if (!NSUserDefaults.hasShownReloadTip) {
+    //        NSUserDefaults.shownReloadTip = YES;
+            [KLInfoTipView showInfoTipWithText:TIP_RELOAD_ALL_PHOTOS sourceView:self.reloadButton targetView:self.view];
+        }
+    }
 }
 
 - (void)setPageControlHidden:(BOOL)hidden
@@ -496,14 +505,6 @@ const CGFloat kInfoTipViewTag = 1000;
             [self setReloadButtonHidden:YES];
         } else {
             [self setSwitchModeButtonHidden:YES];
-        }
-        
-        if (!NSUserDefaults.hasShownReloadTip) {
-            self.isShowingTip = YES;
-            NSUserDefaults.shownReloadTip = YES;
-            KLInfoTipView *tipView = [KLInfoTipView infoTipViewWithText:TIP_RELOAD_ALL_PHOTOS];
-            [self.view addSubview:tipView];
-            [tipView setAnimatedHidden:NO completion:nil];
         }
     }];
 }

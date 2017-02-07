@@ -216,10 +216,13 @@ static KLStatusBar *sharedStatusBar = nil;
         self.notificationView.top = 0;
         self.frame = CGRectMake(0, self.statusBarHeight, self.width, 0);
     } completion:^(BOOL finished) {
-        KLDispatchMainAfter(delay, ^{
-            [self dismissAnimated:YES];
-        });
+        [self performSelector:@selector(dismiss) withObject:nil afterDelay:delay];
     }];
+}
+
+- (void)dismiss
+{
+    [self dismissAnimated:YES];
 }
 
 - (void)dismissAnimated:(BOOL)animated
@@ -238,11 +241,13 @@ static KLStatusBar *sharedStatusBar = nil;
 
 - (void)resetAllSubviews
 {
+    [self.class cancelPreviousPerformRequestsWithTarget:self];
     [self.statusBarWindow.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    self.statusBarWindow.hidden = YES;
-    self.statusBarWindow = nil;
     
-    self.showing = NO;
+    self.statusBarWindow.hidden = YES;
+    self.statusBarWindow.rootViewController = nil;
+    
+    _statusBarWindow = nil;
     sharedStatusBar = nil;
 }
 
@@ -257,7 +262,7 @@ static KLStatusBar *sharedStatusBar = nil;
 
 - (void)tapToDismiss:(UITapGestureRecognizer *)recognizer
 {
-    [self.class dismiss];
+    [self dismissAnimated:YES];
 }
 
 @end

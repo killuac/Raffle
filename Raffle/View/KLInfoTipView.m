@@ -52,24 +52,29 @@ static KLInfoTipView *sharedTipView = nil;
         })];
         
         NSDictionary *views = NSDictionaryOfVariableBindings(_textLabel);
-        [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[_textLabel]-16-|" views:views]];
-        [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-16-[_textLabel]-16-|" views:views]];
+        [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[_textLabel]-10-|" views:views]];
+        [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-10-[_textLabel]-10-|" views:views]];
     }
     return self;
 }
 
-- (CGSize)intrinsicContentSize
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    return CGSizeMake(200, [self.textLabel.text heightWithFont:self.textLabel.font] + 16*2);
+    [self.class dismiss];
+    return [super hitTest:point withEvent:event];
 }
 
 - (void)drawBubbleBox
 {
+    self.arrowDirection = KLInfoTipViewArrowDirectionDown;
     
 }
 
 - (void)updateConstraints
 {
+    [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+                                    toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:200].active = YES;
+    
     switch (self.arrowDirection) {
         case KLInfoTipViewArrowDirectionUp:
             [self constraintsCenterXWithView:self.sourceView];

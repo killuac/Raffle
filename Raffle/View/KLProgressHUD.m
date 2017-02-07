@@ -84,6 +84,7 @@ static KLProgressHUD *sharedProgressHUD = nil;
 - (void)showActivity
 {
     self.showing = YES;
+    self.userInteractionEnabled = NO;
     [self addSubview:self.activityView];
     [self setAnimatedHidden:NO completion:nil];
     [self.activityView constraintsCenterInSuperview];
@@ -133,8 +134,6 @@ static KLProgressHUD *sharedProgressHUD = nil;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.activityView = nil;
     self.progressView = nil;
-    
-    self.showing = NO;
     sharedProgressHUD = nil;
 }
 
