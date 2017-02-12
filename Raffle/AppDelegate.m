@@ -37,7 +37,13 @@
 
 - (void)setupUserDefaults
 {
-    if (!NSUserDefaults.hasLaunchedOnce) {
+    if (NSUserDefaults.hasLaunchedOnce) {
+        NSUserDefaults.shownShakeTip = NO;
+        NSUserDefaults.shownReloadTip = NO;
+        NSUserDefaults.shownDeleteTip = NO;
+        NSUserDefaults.shownFaceDetectionTip = NO;
+        NSUserDefaults.shownFaceDetectionSwitcherTip = NO;
+    } else {
         NSUserDefaults.launchedOnce = YES;
         NSUserDefaults.flashMode = AVCaptureFlashModeOff;
         NSUserDefaults.faceDetectionOn = YES;

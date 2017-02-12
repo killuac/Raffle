@@ -15,6 +15,7 @@
 @property (class, nonatomic, assign, getter=hasShownReloadTip) BOOL shownReloadTip;
 @property (class, nonatomic, assign, getter=hasShownDeleteTip) BOOL shownDeleteTip;
 @property (class, nonatomic, assign, getter=hasShownFaceDetectionTip) BOOL shownFaceDetectionTip;
+@property (class, nonatomic, assign, getter=hasShownFaceDetectionSwitcherTip) BOOL shownFaceDetectionSwitcherTip;
 
 @property (class, nonatomic, assign) NSInteger flashMode;
 @property (class, nonatomic, assign, getter=isFaceDetectionOn) BOOL faceDetectionOn;

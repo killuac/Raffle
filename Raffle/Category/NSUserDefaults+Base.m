@@ -60,6 +60,16 @@
     [NSUserDefaults.standardUserDefaults setBool:shownFaceDetectionTip forKey:NSStringFromSelector(@selector(hasShownFaceDetectionTip))];
 }
 
++ (BOOL)hasShownFaceDetectionSwitcherTip
+{
+    return [NSUserDefaults.standardUserDefaults boolForKey:NSStringFromSelector(@selector(hasShownFaceDetectionSwitcherTip))];
+}
+
++ (void)setShownFaceDetectionSwitcherTip:(BOOL)shownFaceDetectionSwitcherTip
+{
+    [NSUserDefaults.standardUserDefaults setBool:shownFaceDetectionSwitcherTip forKey:NSStringFromSelector(@selector(hasShownFaceDetectionSwitcherTip))];
+}
+
 + (NSInteger)flashMode
 {
     return [NSUserDefaults.standardUserDefaults integerForKey:NSStringFromSelector(@selector(flashMode))];

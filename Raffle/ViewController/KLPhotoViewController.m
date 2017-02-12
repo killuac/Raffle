@@ -61,6 +61,16 @@ static CGFloat lineSpacing;
     [self prepareForUI];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (!NSUserDefaults.hasShownDeleteTip && self.dataController.itemCount > 0) {
+        UIView *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        [KLInfoTipView showInfoTipWithText:TIP_LONG_PRESS_TO_DELETE_PHOTO sourceView:cell targetView:self.collectionView];
+    }
+}
+
 - (void)prepareForUI
 {
     self.title = TITLE_DRAW_BOX;

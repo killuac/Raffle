@@ -34,6 +34,7 @@
 #define HUD_NOT_RECOGNIZE_FACE                  NSLocalizedString(@"HUDNotRecognizeFace", "")
 
 #define TIP_SHAKE_TO_START                      NSLocalizedString(@"TipShakeToStart", "")
+#define TIP_TAP_SCREEN_TO_STOP                  NSLocalizedString(@"TipTapScreenToStop", "")
 #define TIP_RELOAD_ALL_PHOTOS                   NSLocalizedString(@"TipReloadAllPhotos", "")
 #define TIP_FACE_DETECTION_SWITCHER             NSLocalizedString(@"TipFaceDetectionSwitcher", "")
 #define TIP_LONG_PRESS_TO_DELETE_PHOTO          NSLocalizedString(@"TipLongPressToDeletePhoto", "")

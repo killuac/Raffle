@@ -106,6 +106,17 @@ static CGFloat lineSpacing;
     }];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (!NSUserDefaults.hasShownFaceDetectionTip && self.assetsCount > 1) {
+        NSUserDefaults.shownFaceDetectionTip = YES;
+        UIView *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+        [KLInfoTipView showInfoTipWithText:TIP_LONG_PRESS_TO_FACE_DETECTION sourceView:cell targetView:self.collectionView];
+    }
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];

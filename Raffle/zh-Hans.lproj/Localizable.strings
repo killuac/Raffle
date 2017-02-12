@@ -33,6 +33,7 @@
 "HUDNotRecognizeFace" = "没有识别到人脸";
 
 "TipShakeToStart" = "摇一摇即可开始抽奖";
+"TipTapScreenToStop" = "点击屏幕停止抽奖";
 "TipReloadAllPhotos" = "重新加载所有照片，开始新一轮抽奖。";
 "TipFaceDetectionSwitcher" = "人脸识别功能（开/关）";
 "TipLongPressToDeletePhoto" = "长按可以删除照片";

@@ -120,11 +120,11 @@ static CGFloat imageTitleEdgeVInset = 8.0;
 {
     objc_setAssociatedObject(self, @selector(layout), @(layout), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (layout == KLButtonLayoutNone) return;
-    
     self.imageEdgeInsets = UIEdgeInsetsZero;
     self.titleEdgeInsets = UIEdgeInsetsZero;
     self.contentEdgeInsets = UIEdgeInsetsZero;
+    
+    if (layout == KLButtonLayoutNone) return;
     
     [self sizeToFit];   // For call setLayout multiple times
     

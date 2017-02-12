@@ -120,6 +120,7 @@ const CGFloat kInfoTipViewTag = 1000;
     self.wallpaperButton.enabled = isHidden;
     self.switchModeButton.enabled = isHidden;
     
+    self.pageControl.hidden = isHidden;
     self.pageControl.numberOfPages = self.dataController.pageCount;
     self.pageControl.currentPage = self.dataController.currentPageIndex;
     self.pageScrollView.scrollEnabled = self.dataController.pageCount > 0;
@@ -346,7 +347,7 @@ const CGFloat kInfoTipViewTag = 1000;
 {
     [self reloadData];
     
-    if (!NSUserDefaults.hasShownShakeTip) {
+    if (!NSUserDefaults.hasShownShakeTip && type == KLDataChangeTypeInsert) {
         self.isShowingTip = YES;
         NSUserDefaults.shownShakeTip = YES;
         [self showShakeTipInfo];
@@ -379,6 +380,15 @@ const CGFloat kInfoTipViewTag = 1000;
     [tipView setAnimatedHidden:NO completion:nil];
 }
 
+- (void)removeShakeTipView
+{
+    __weak UIView *tipView = [self.view viewWithTag:kInfoTipViewTag];
+    [self.view removeDimBackground];
+    [tipView setAnimatedHidden:YES completion:^{
+        [tipView removeFromSuperview];
+    }];
+}
+
 #pragma mark - Motion
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
@@ -386,8 +396,7 @@ const CGFloat kInfoTipViewTag = 1000;
         if (self.dataController.currentDrawBoxDC.canStartDraw) {
             [self startDraw:event];
             if (self.isShowingTip) {
-                [self.view removeDimBackground];
-                [[self.view viewWithTag:kInfoTipViewTag] removeFromSuperview];
+                [self removeShakeTipView];
             }
         } else {
             [KLStatusBar showWithText:HUD_EMPTY_DRAW_BOX];
@@ -446,7 +455,7 @@ const CGFloat kInfoTipViewTag = 1000;
         [KLInfoTipView dismiss];
     } else {
         if (!NSUserDefaults.hasShownReloadTip) {
-    //        NSUserDefaults.shownReloadTip = YES;
+            NSUserDefaults.shownReloadTip = YES;
             [KLInfoTipView showInfoTipWithText:TIP_RELOAD_ALL_PHOTOS sourceView:self.reloadButton targetView:self.view];
         }
     }
@@ -462,6 +471,7 @@ const CGFloat kInfoTipViewTag = 1000;
 - (void)startDraw:(id)sender
 {
     [KLSoundPlayer playStartDrawSound];
+    [KLStatusBar showWithText:TIP_TAP_SCREEN_TO_STOP];
     
     self.isDrawing = YES;
     [self resignFirstResponder];
@@ -480,8 +490,7 @@ const CGFloat kInfoTipViewTag = 1000;
     
     if (self.isShowingTip) {
         [self setAddPhotoButtonHidden:NO];
-        [self.view removeDarkDimBackground];
-        [[self.view viewWithTag:kInfoTipViewTag] removeFromSuperview];
+        [self removeShakeTipView];
         self.isShowingTip = NO;
     }
 }

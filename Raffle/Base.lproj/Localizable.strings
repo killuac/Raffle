@@ -32,6 +32,7 @@
 "HUDNotRecognizeFace" = "Not recognize face";
 
 "TipShakeToStart" = "Shake it to start draw";
+"TipTapScreenToStop" = "Tap screen to stop draw";
 "TipReloadAllPhotos" = "Reload all photos to restart";
 "TipFaceDetectionSwitcher" = "Face Detection (On/Off)";
 "TipLongPressToDeletePhoto" = "Long press to delete photo";

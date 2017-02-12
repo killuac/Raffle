@@ -33,6 +33,7 @@
 "HUDNotRecognizedFace" = "顔が見当たりません。";
 
 "TipShakeToStart" = "シェイクして、抽選が開始します。";
+"TipTapScreenToStop" = "画面タッチして、抽選が停止します。";
 "TipReloadAllPhotos" = "全ての写真をリロードして、新しい抽選を開始します。";
 "TipFaceDetectionSwitcher" = "顔認識機能オン/オフ";
 "TipLongPressToDeletePhoto" = "長押しで写真を削除する";

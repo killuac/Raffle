@@ -113,6 +113,16 @@ static void *SessionRunningContext = &SessionRunningContext;
     self.albumBarButton.enabled = ![self.presentingViewController isKindOfClass:[KLMainViewController class]];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (!NSUserDefaults.hasShownFaceDetectionSwitcherTip) {
+        NSUserDefaults.shownFaceDetectionSwitcherTip = YES;
+        [KLInfoTipView showInfoTipWithText:TIP_FACE_DETECTION_SWITCHER sourceView:self.topToolbar targetView:self.view];
+    }
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
@@ -137,11 +147,6 @@ static void *SessionRunningContext = &SessionRunningContext;
     NSArray *items = @[flashButtonItem, faceButtonItem, switchCameraItem];
     self.topToolbar = [UIToolbar toolbarWithItems:items];
     [self.view addSubview:self.topToolbar];
-    
-    if (!NSUserDefaults.hasShownFaceDetectionTip) {
-//        NSUserDefaults.shownFaceDetectionTip = YES;
-        [KLInfoTipView showInfoTipWithText:TIP_FACE_DETECTION_SWITCHER sourceView:self.topToolbar targetView:self.view];
-    }
     
     // Bottom toolbar
     self.closeBarButton = [UIBarButtonItem barButtonItemWithImageName:@"button_close" target:self action:@selector(closeCamera:)];
