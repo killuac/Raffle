@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, KLInfoTipViewArrowDirection) {
 
 @property (nonatomic, assign) KLInfoTipViewArrowDirection arrowDirection;
 @property (nonatomic, strong) NSArray *textLabelConstraints;
+@property (nonatomic, strong) NSArray *tipConstraints;
 
 @end
 
@@ -142,7 +143,8 @@ static const CGFloat kInfoTipViewMaxWidth = 220;
     
     NSDictionary *views = NSDictionaryOfVariableBindings(self);
     NSDictionary *metrics = @{ @"maxWidth": @(kInfoTipViewMaxWidth) };
-    [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=0@999)-[self(<=maxWidth)]-(>=0@998)-|" options:0 metrics:metrics views:views]];
+    self.tipConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=0@999)-[self(<=maxWidth)]-(>=0@999)-|" options:0 metrics:metrics views:views];
+    [NSLayoutConstraint activateConstraints:self.tipConstraints];
     
     switch (self.arrowDirection) {
         case KLInfoTipViewArrowDirectionUp:
@@ -178,6 +180,8 @@ static const CGFloat kInfoTipViewMaxWidth = 220;
 + (void)dismiss
 {
     [sharedTipView.transparentView removeFromSuperview];
+    [NSLayoutConstraint deactivateConstraints:sharedTipView.tipConstraints];    // If not deactivate, will lead to targetView can't scroll.
+    
     [sharedTipView setAnimatedHidden:YES completion:^{
         [sharedTipView removeFromSuperview];
         sharedTipView = nil;
