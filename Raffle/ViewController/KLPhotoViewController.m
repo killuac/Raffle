@@ -71,6 +71,12 @@ static CGFloat lineSpacing;
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [KLInfoTipView dismiss];
+}
+
 - (void)prepareForUI
 {
     self.title = TITLE_DRAW_BOX;
