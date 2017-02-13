@@ -94,11 +94,11 @@
     [self addObservers];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self reloadData];
-}
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [self reloadData];    // Sometimes, it will lead to load wrong photo assets.
+//}
 
 - (void)prepareForUI
 {

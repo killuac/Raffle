@@ -104,6 +104,7 @@
 
 - (void)changeWallpaperWithImageName:(NSString *)imageName
 {
+    _isAnimatedChangeWallpaper = YES;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
         KLDrawBoxModel *localDrawBox = [self.drawBox MR_inContext:localContext];
         localDrawBox.wallpaperName = imageName;
@@ -114,6 +115,7 @@
 
 - (void)changeWallpaperWithAsset:(PHAsset *)asset completion:(KLVoidBlockType)completion
 {
+    _isAnimatedChangeWallpaper = YES;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
         [asset originalImageResultHandler:^(UIImage *image, NSDictionary *info) {
             KLDrawBoxModel *localDrawBox = [self.drawBox MR_inContext:localContext];
@@ -251,6 +253,8 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
 {
+    _isAnimatedChangeWallpaper = NO;
+    
     [self.allAssets removeAllObjects];
     [self.allAssets addObjectsFromArray:self.drawBox.assets];
     

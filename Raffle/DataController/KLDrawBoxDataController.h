@@ -12,10 +12,12 @@
 @interface KLDrawBoxDataController : KLDataController
 
 @property (nonatomic, assign) NSUInteger pageIndex;
+
 @property (nonatomic, readonly) BOOL isRepeatMode;
 @property (nonatomic, readonly) BOOL isReloadHidden;
 @property (nonatomic, readonly) BOOL canStartDraw;
 @property (nonatomic, readonly) BOOL hasCustomWallpaper;
+@property (nonatomic, readonly) BOOL isAnimatedChangeWallpaper;
 
 @property (nonatomic, readonly) NSUInteger remainingAssetCount;
 @property (nonatomic, readonly) NSUInteger selectedAssetCount;

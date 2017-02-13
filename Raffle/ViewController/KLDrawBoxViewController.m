@@ -194,7 +194,10 @@
 - (void)controllerDidChangeContent:(KLDataController *)controller
 {
     [self reloadData];
-    [self updateWallpaperAnimated:YES];
+    
+    if (self.dataController.isAnimatedChangeWallpaper) {
+        [self updateWallpaperAnimated:YES];
+    }
 }
 
 - (void)controller:(KLDataController *)controller didChangeAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths forChangeType:(KLDataChangeType)type
